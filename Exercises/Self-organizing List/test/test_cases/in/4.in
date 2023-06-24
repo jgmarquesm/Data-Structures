@@ -1,0 +1,52 @@
+add 1 Playstation5 4999.99
+add 2 Lapiseira 5.00
+add 3 BolaDeFutebol 89.90
+add 4 MouseGamer 120.00
+add 5 Chiclete 0.99
+add 6 Chupeta 31.47
+add 7 Game_Fifa_2021 249.99
+add 8 Esmalte 7.65
+add 9 GuardaChuva 32.84
+add 10 XboxOne 2100.00
+access 99
+access 1
+access 2
+access 3
+access 4
+access 5
+access 6
+access 7
+access 8
+access 9
+access 10
+add 11 CamisaRealMadrid 180.00
+add 12 ChaveiroLegal 4.89
+add 13 TV55 2299.99
+add 14 Oculos 486.98
+add 15 Ventilador 178.90
+add 16 Caneca 8.90
+add 17 BarraDeChocolate 5.00
+add 18 RefriLata 3.80
+add 19 TecladoGamer 571.11
+add 20 Game_GearsOfWar 69.90
+access 11
+access 12
+access 13
+access 14
+access 15
+access 16
+access 17
+access 18
+access 19
+access 20
+access 1
+access 2
+access 3
+access 4
+access 5
+access 6
+access 7
+access 8
+access 9
+access 10
+stop
