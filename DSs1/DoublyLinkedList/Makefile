@@ -21,33 +21,49 @@ UNITY = unity
 FLAGS = -O3 -Wall -pedantic -Warray-bounds
 LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 
-pack: $(MAIN)/$(OBJ)/$(ADT).o
+--private-create_folders:
+	mkdir $(MAIN)/$(LIB)
+	mkdir $(MAIN)/$(OBJ)
+	mkdir $(MAIN)/$(BIN)
+	mkdir $(TEST)/$(BIN)
+
+--private-get_unity:
+	cp ../../${UNITY}/${INCLUDE}/* ${MAIN}/${INCLUDE}/
+	cp ../../${UNITY}/${SRC}/* ${MAIN}/${SRC}/
+
+pack: clean_all --private-create_folders --private-get_unity \
+	$(MAIN)/$(OBJ)/$(ADT).o
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
-compile_apps: clean_apps \
-	$(MAIN)/$(BIN)/$(APP_NAME)
+compile_apps: $(MAIN)/$(BIN)/$(APP_NAME)
 
 compile_test: $(MAIN)/$(OBJ)/$(ADT).o \
 	$(MAIN)/$(OBJ)/$(UNITY).o \
-	clean_test \
  	$(TEST)/$(BIN)/$(TEST_ADT)
 
 run_apps: pack compile_apps
 	$(MAIN)/$(BIN)/$(APP_NAME)
+	make clean_unity
 
-run_tests: compile_test
+run_tests: pack compile_test
 	$(TEST)/$(BIN)/$(TEST_ADT)
+	make clean_unity
 
-clean_all: clean_libs clean_apps clean_test
+clean_all: clean_libs clean_apps clean_test clean_unity
 
 clean_libs:
-	rm -rf $(MAIN)/$(OBJ)/* $(MAIN)/$(LIB)/*
+	rm -rf $(MAIN)/$(OBJ) $(MAIN)/$(LIB)
 
 clean_apps:
-	rm -rf $(MAIN)/$(BIN)/*
+	rm -rf $(MAIN)/$(BIN)
 
 clean_test:
-	rm -rf $(TEST)/$(BIN)/*
+	rm -rf $(TEST)/$(BIN)
+
+clean_unity:
+	rm -rf $(MAIN)/$(SRC)/unity.c
+	rm -rf $(MAIN)/$(INCLUDE)/unity.h
+	rm -rf $(MAIN)/$(INCLUDE)/unity_internals.h
 
 $(MAIN)/$(OBJ)/%.o: $(MAIN)/$(SRC)/%.c $(MAIN)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(MAIN)/$(INCLUDE) -o $@

@@ -15,10 +15,13 @@ INCLUDE = include
 SRC = src
 OBJ = obj
 TEST = test
+SCRP = scripts
+CRT = create
 
 LIB_NAME = ds1
 TEST_SCRIPT = test_suite.sh
 BUILD_TEST_SCRIPT = build_test_suite.sh
+DS_CREATE_SCRIPT = DS_create.sh
 
 # Data Structures
 ED1 = array
@@ -69,10 +72,10 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	rm -rf *.tar.gz
 
 --private-test: --private-clean_all
-	$(TEST)/$(TEST_SCRIPT)
+	$(SCRP)/$(TEST)/$(TEST_SCRIPT)
 
 --private-build_test: --private-clean_all
-	$(TEST)/$(BUILD_TEST_SCRIPT)
+	$(SCRP)/$(TEST)/$(BUILD_TEST_SCRIPT)
 
 compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED2).o \
@@ -93,6 +96,9 @@ pack: build
 	rm -rf $(APP)
 
 test: --private-test
+
+create:
+	$(SCRP)/$(CRT)/$(DS_CREATE_SCRIPT)
 
 $(APP)/$(AUX)/$(OBJ)/%.o: $(APP)/$(AUX)/$(SRC)/%.c $(APP)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(APP)/$(INCLUDE) -o $@
