@@ -236,6 +236,11 @@ clean_external:
 " > DSs1/"$1"/Makefile
 }
 
+AppendOnTestScript() {
+  echo "cd ../${1} && make clean_all && make run_tests && make clean_all || exit 1" >> ./scripts/test/build_test_suite.sh
+  echo "cd ../${1} && make clean_all && make run_tests && make clean_all" >> ./scripts/test/test_suite.sh
+}
+
 echo 'Data Structure Name:'
 read -r NAME
 
@@ -331,3 +336,4 @@ esac
 CreateApp "$NAME" "$LOWER_NAME"
 CreateHeader "$NAME" "$LOWER_NAME" "$UPPER_NAME"
 CreateTest "$NAME" "$LOWER_NAME"
+AppendOnTestScript "$NAME"
