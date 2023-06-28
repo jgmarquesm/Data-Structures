@@ -28,8 +28,8 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(TEST)/$(BIN)
 
 --private-get_unity:
-	cp ../../${UNITY}/${INCLUDE}/* ${MAIN}/${INCLUDE}/
-	cp ../../${UNITY}/${SRC}/* ${MAIN}/${SRC}/
+	cp ../../$(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
+	cp ../../$(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_unity \
 	$(MAIN)/$(OBJ)/$(ADT).o

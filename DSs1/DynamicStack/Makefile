@@ -34,8 +34,8 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 --private-get_external_lib:
 	cp $(EXTERNAL)/$(SRC)/$(BASE_ADT).c $(MAIN)/$(SRC)/
 	cp $(EXTERNAL)/$(INCLUDE)/$(BASE_ADT).h $(MAIN)/$(INCLUDE)/
-	cp ../../${UNITY}/${INCLUDE}/* ${MAIN}/${INCLUDE}/
-	cp ../../${UNITY}/${SRC}/* ${MAIN}/${SRC}/
+	cp ../../$(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
+	cp ../../$(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(ADT).o \
