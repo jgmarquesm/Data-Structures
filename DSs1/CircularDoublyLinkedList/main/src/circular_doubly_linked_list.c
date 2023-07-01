@@ -27,7 +27,7 @@ typedef struct _circular_linked_list {
     int sort_order;
 } CircularLinkedList;
 
-void _left_right_split(CircularNode *cnode, CircularNode **left_ref, CircularNode **right_ref) {
+void _cll_left_right_split(CircularNode *cnode, CircularNode **left_ref, CircularNode **right_ref) {
     CircularNode *slow = cnode;
     CircularNode *fast = cnode;
 
@@ -57,7 +57,7 @@ void _left_right_split(CircularNode *cnode, CircularNode **left_ref, CircularNod
     slow->next = cnode;
 }
 
-CircularNode *_sorted_merge_aux(CircularNode *left, CircularNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
+CircularNode *_cll_sorted_merge_aux(CircularNode *left, CircularNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
     if (left == NULL) {
         return right;
     }
@@ -67,24 +67,24 @@ CircularNode *_sorted_merge_aux(CircularNode *left, CircularNode *right, int (*t
 
     if (order == ASC) {
         if (type_compare_function(left->data, right->data) >= 0) {
-            left->next = _sorted_merge_aux(left->next, right, type_compare_function, order);
+            left->next = _cll_sorted_merge_aux(left->next, right, type_compare_function, order);
             left->next->prev = left;
             left->prev = NULL;
             return left;
         } else {
-            right->next = _sorted_merge_aux(left, right->next, type_compare_function, order);
+            right->next = _cll_sorted_merge_aux(left, right->next, type_compare_function, order);
             right->next->prev = right;
             right->prev = NULL;
             return right;
         }
     } else {
         if (type_compare_function(left->data, right->data) <= 0) {
-            left->next = _sorted_merge_aux(left->next, right, type_compare_function, order);
+            left->next = _cll_sorted_merge_aux(left->next, right, type_compare_function, order);
             left->next->prev = left;
             left->prev = NULL;
             return left;
         } else {
-            right->next = _sorted_merge_aux(left, right->next, type_compare_function, order);
+            right->next = _cll_sorted_merge_aux(left, right->next, type_compare_function, order);
             right->next->prev = right;
             right->prev = NULL;
             return right;
@@ -92,7 +92,7 @@ CircularNode *_sorted_merge_aux(CircularNode *left, CircularNode *right, int (*t
     }
 }
 
-CircularNode *_sorted_merge(CircularNode *left, CircularNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
+CircularNode *_cll_sorted_merge(CircularNode *left, CircularNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
     if (left == NULL) {
         return right;
     }
@@ -118,14 +118,14 @@ CircularNode *_sorted_merge(CircularNode *left, CircularNode *right, int (*type_
 
     left->prev->next = right->prev->next = NULL;
 
-    CircularNode *result = _sorted_merge_aux(left, right, type_compare_function, order);
+    CircularNode *result = _cll_sorted_merge_aux(left, right, type_compare_function, order);
     result->prev = last_node;
     last_node->next = result;
 
     return result;
 }
 
-void _merge_sort(CircularNode **CLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
+void _cll_merge_sort(CircularNode **CLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
     CircularNode *CLL_begin = *CLL_begin_ref, *left, *right;
 
     if (CLL_begin == NULL || CLL_begin->next == CLL_begin) {
@@ -138,11 +138,11 @@ void _merge_sort(CircularNode **CLL_begin_ref, int (*type_compare_function)(void
         exit(EXIT_FAILURE);
     }
 
-    _left_right_split(CLL_begin, &left, &right);
-    _merge_sort(&left, type_compare_function, order);
-    _merge_sort(&right, type_compare_function, order);
+    _cll_left_right_split(CLL_begin, &left, &right);
+    _cll_merge_sort(&left, type_compare_function, order);
+    _cll_merge_sort(&right, type_compare_function, order);
 
-    *CLL_begin_ref = _sorted_merge(left, right, type_compare_function, order);
+    *CLL_begin_ref = _cll_sorted_merge(left, right, type_compare_function, order);
 }
 
 CircularNode *_get_cnode(const CircularLinkedList *CLL, size_t index) {
@@ -247,7 +247,7 @@ void CircularLinkedList_add_last(CircularLinkedList *CLL, void *data) {
     CLL->sort_order = UNSORTED;
 }
 
-void _sorted_insert_asc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+void _cll_sorted_insert_asc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (type_compare_function(CLL->begin->data, data) <= 0) {
         CircularLinkedList_add_first(CLL, data);
         CLL->sort_order = ASC;
@@ -269,7 +269,7 @@ void _sorted_insert_asc(CircularLinkedList *CLL, void *data, int (*type_compare_
     }
 }
 
-void _sorted_insert_desc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+void _cll_sorted_insert_desc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (type_compare_function(CLL->begin->data, data) >= 0) {
         CircularLinkedList_add_first(CLL, data);
         CLL->sort_order = DESC;
@@ -669,7 +669,7 @@ void CircularLinkedList_sort_asc(CircularLinkedList **CLL_ref, int (*type_compar
     } else if (CLL->sort_order == DESC) {
         *CLL_ref = CircularLinkedList_reverse(CLL);
     } else {
-        _merge_sort(&CLL->begin, type_compare_function, ASC);
+        _cll_merge_sort(&CLL->begin, type_compare_function, ASC);
         CLL->sort_order = ASC;
         CLL->end = _get_cnode(CLL, CLL->size - 1);
         CLL->end->next = CLL->begin;
@@ -694,7 +694,7 @@ void CircularLinkedList_sort_desc(CircularLinkedList **CLL_ref, int (*type_compa
     } else if (CLL->sort_order == ASC) {
         *CLL_ref = CircularLinkedList_reverse(CLL);
     } else {
-        _merge_sort(&CLL->begin, type_compare_function, DESC);
+        _cll_merge_sort(&CLL->begin, type_compare_function, DESC);
         CLL->sort_order = DESC;
         CLL->end = _get_cnode(CLL, CLL->size-1);
         CLL->end->next = CLL->begin;
@@ -710,9 +710,9 @@ void CircularLinkedList_sorted_insert(CircularLinkedList *CLL, void *data, int (
     }
 
     if (CLL->sort_order == ASC) {
-        _sorted_insert_asc(CLL, data, type_compare_function);
+        _cll_sorted_insert_asc(CLL, data, type_compare_function);
     } else {
-        _sorted_insert_desc(CLL, data, type_compare_function);
+        _cll_sorted_insert_desc(CLL, data, type_compare_function);
     }
 }
 

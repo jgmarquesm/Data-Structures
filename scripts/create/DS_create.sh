@@ -71,8 +71,8 @@ int main(){
 
 SimpleMake() {
   echo "# Directories
-MAIN = ./main
-TEST = ./test
+MAIN = main
+TEST = test
 # Generics
 APPS = apps
 TESTS = tests
@@ -149,9 +149,11 @@ clean_unity:
 }
 
 ComplexMake() {
-echo "# Directories
-MAIN = ./main
-TEST = ./test
+  string=("${(f)$(< ./DSs1/$3/.info)}")
+  array=($(echo $string | tr '\n' "\n"))
+  echo "# Directories
+MAIN = main
+TEST = test
 # Generics
 APPS = apps
 TESTS = tests
@@ -160,18 +162,34 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-BASE_ADT_FOLDER = ${3}
-
+BASE_ADT_FOLDER_0 = ../${3}/\$(MAIN)" > DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  i=1
+  for element in "${array[@]}"
+  do
+      echo "BASE_ADT_FOLDER_${i} = ../${element}/\$(MAIN)" >> DSs1/"$1"/Makefile
+      let i++
+  done
+fi
+echo "
 # Names Definition
 APP_NAME = app_${2}
 LIB_NAME = ${5}
 ADT = ${2}
 TEST_ADT = ${2}.test
 UNITY = unity
-BASE_ADT = ${4}
-
-EXTERNAL = ../\${BASE_ADT_FOLDER}/main
-
+BASE_ADT_0 = ${4}" >> DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  j=1
+  for element in "${array[@]}"
+  do
+      echo "BASE_ADT_${j} = "$(echo "${element//_/ }" | sed 's/\(.\)\([A-Z]\)/\1_\2/g' | tr '[:upper:]' '[:lower:]')"" >> DSs1/"$1"/Makefile
+      let j++
+  done
+fi
+echo "
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l\$(LIB_NAME) -L \$(MAIN)/\$(LIB)
@@ -183,21 +201,53 @@ LIBS = -l\$(LIB_NAME) -L \$(MAIN)/\$(LIB)
 \tmkdir \$(TEST)/\$(BIN)
 
 --private-get_external_lib:
-\tcp \$(EXTERNAL)/\$(SRC)/\$(BASE_ADT).c \$(MAIN)/\$(SRC)/
-\tcp \$(EXTERNAL)/\$(INCLUDE)/\$(BASE_ADT).h \$(MAIN)/\$(INCLUDE)/
-\tcp ../../\${UNITY}/\${INCLUDE}/* \${MAIN}/\${INCLUDE}/
-\tcp ../../\${UNITY}/\${SRC}/* \${MAIN}/\${SRC}/
+\tcp \$(BASE_ADT_FOLDER_0)/\$(SRC)/\$(BASE_ADT_0).c \$(MAIN)/\$(SRC)/
+\tcp \$(BASE_ADT_FOLDER_0)/\$(INCLUDE)/\$(BASE_ADT_0).h \$(MAIN)/\$(INCLUDE)/" >> DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  let i--
+  for index in {1..$i}
+  do
+      echo "\tcp \$(BASE_ADT_FOLDER_${index})/\$(SRC)/\$(BASE_ADT_${index}).c \$(MAIN)/\$(SRC)/" >> DSs1/"$1"/Makefile
+      echo "\tcp \$(BASE_ADT_FOLDER_${index})/\$(INCLUDE)/\$(BASE_ADT_${index}).h \$(MAIN)/\$(INCLUDE)/" >> DSs1/"$1"/Makefile
+  done
+fi
+echo "\tcp ../../\$(UNITY)/\$(INCLUDE)/* \$(MAIN)/\$(INCLUDE)/
+\tcp ../../\$(UNITY)/\$(SRC)/* \$(MAIN)/\$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
-  \$(MAIN)/\$(OBJ)/\$(ADT).o \
-  \$(MAIN)/\$(OBJ)/\$(BASE_ADT).o
-\tar -rcs \$(MAIN)/\$(LIB)/lib\$(LIB_NAME).a \$(MAIN)/\$(OBJ)/*.o
+\$(MAIN)/\$(OBJ)/\$(ADT).o \\" >> DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  echo "\$(MAIN)/\$(OBJ)/\$(BASE_ADT_0).o \\" >> DSs1/"$1"/Makefile
+  let i--
+  let j--
+  for index in {1..$i}
+  do
+    echo "\$(MAIN)/\$(OBJ)/\$(BASE_ADT_${index}).o \\" >> DSs1/"$1"/Makefile
+  done
+  if [[ -n "${string}" ]]
+  then
+    echo "\$(MAIN)/\$(OBJ)/\$(BASE_ADT_${j}).o" >> DSs1/"$1"/Makefile
+  fi
+else
+  echo "\$(MAIN)/\$(OBJ)/\$(BASE_ADT_0).o" >> DSs1/"$1"/Makefile
+fi
+echo "\tar -rcs \$(MAIN)/\$(LIB)/lib\$(LIB_NAME).a \$(MAIN)/\$(OBJ)/*.o
 
 compile_apps: \$(MAIN)/\$(BIN)/\$(APP_NAME)
 
-compile_test: \$(MAIN)/\$(OBJ)/\$(ADT).o \
-  \$(MAIN)/\$(OBJ)/\$(BASE_ADT).o \
-  \$(MAIN)/\$(OBJ)/\$(UNITY).o \
+compile_test: \$(MAIN)/\$(OBJ)/\$(ADT).o \\
+  \$(MAIN)/\$(OBJ)/\$(BASE_ADT_0).o \\" >> DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  let i++
+  for index in {1..$i}
+  do
+      echo "  \$(MAIN)/\$(OBJ)/\$(BASE_ADT_${index}).o \\" >> DSs1/"$1"/Makefile
+  done
+fi
+echo "  \$(MAIN)/\$(OBJ)/\$(UNITY).o \\
   \$(TEST)/\$(BIN)/\$(TEST_ADT)
 
 run_apps: pack compile_apps
@@ -220,9 +270,17 @@ clean_test:
 \trm -rf \$(TEST)/\$(BIN)
 
 clean_external:
-\trm -rf \$(MAIN)/\$(SRC)/\$(BASE_ADT).c
-\trm -rf \$(MAIN)/\$(SRC)/unity.c
-\trm -rf \$(MAIN)/\$(INCLUDE)/\$(BASE_ADT).h
+\trm -rf \$(MAIN)/\$(SRC)/\$(BASE_ADT_0).c
+\trm -rf \$(MAIN)/\$(INCLUDE)/\$(BASE_ADT_0).h" >> DSs1/"$1"/Makefile
+if [[ -n "${string}" ]]
+then
+  for index in {1..$i}
+  do
+      echo "\trm -rf \$(MAIN)/\$(SRC)/\$(BASE_ADT_${index}).c" >> DSs1/"$1"/Makefile
+      echo "\trm -rf \$(MAIN)/\$(INCLUDE)/\$(BASE_ADT_${index}).h" >> DSs1/"$1"/Makefile
+  done
+fi
+echo "\trm -rf \$(MAIN)/\$(SRC)/unity.c
 \trm -rf \$(MAIN)/\$(INCLUDE)/unity.h
 \trm -rf \$(MAIN)/\$(INCLUDE)/unity_internals.h
 
@@ -234,7 +292,16 @@ clean_external:
 
 \$(TEST)/\$(BIN)/%: \$(TEST)/\$(TESTS)/%.c
 \tgcc \$(FLAGS) \$< \$(MAIN)/\$(OBJ)/*.o -I \$(MAIN)/\$(INCLUDE) -o \$@
-" > DSs1/"$1"/Makefile
+" >> DSs1/"$1"/Makefile
+
+echo "${3}" > DSs1/"$1"/.info
+if [[ -n "${string}" ]]
+then
+  for element in "${array[@]}"
+    do
+      echo "${element}" >> DSs1/"$1"/.info
+    done
+fi
 }
 
 AppendOnTestScript() {
@@ -276,6 +343,7 @@ ss  ) Static Stack
 ds  ) Dynamic Stack
 sq  ) Static Queue
 dq  ) Dynamic Queue
+tt  ) Teste
 Which?"
         read -r SELECTION
         declare -l SELECTION
@@ -312,6 +380,10 @@ Which?"
             dq )
               BASE_ADT="DynamicQueue"
               LOWER_BASE_ADT="dynamic_queue"
+            ;;
+            tt )
+              BASE_ADT="Teste"
+              LOWER_BASE_ADT="teste"
             ;;
             * )
               rm -rf DSs1/"$NAME"

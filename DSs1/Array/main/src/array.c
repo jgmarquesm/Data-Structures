@@ -19,7 +19,7 @@ void *_get(const Array *array, const long index) {
     return array->data + (index * array->size_of_type);
 }
 
-void _sorted_merge(Array *array, long first_index, long mid_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
+void _array_sorted_merge(Array *array, long first_index, long mid_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
     long left_capacity = mid_index - first_index + 1;
     long right_capacity = last_index - mid_index;
 
@@ -78,12 +78,12 @@ void _sorted_merge(Array *array, long first_index, long mid_index, long last_ind
     }
 }
 
-void _merge_sort(Array *array, long first_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
+void _array_merge_sort(Array *array, long first_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
     if (first_index < last_index) {
         long mid_index = first_index + (last_index - first_index) / 2;
-        _merge_sort(array, first_index, mid_index, type_compare_function, sort_order);
-        _merge_sort(array, mid_index + 1, last_index, type_compare_function, sort_order);
-        _sorted_merge(array, first_index, mid_index, last_index, type_compare_function, sort_order);
+        _array_merge_sort(array, first_index, mid_index, type_compare_function, sort_order);
+        _array_merge_sort(array, mid_index + 1, last_index, type_compare_function, sort_order);
+        _array_sorted_merge(array, first_index, mid_index, last_index, type_compare_function, sort_order);
     }
 }
 
@@ -579,7 +579,7 @@ void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void
         array->sort_order = reverse->sort_order;
         return;
     }
-    _merge_sort(array, 0, array->size-1, type_compare_function, 1);
+    _array_merge_sort(array, 0, array->size-1, type_compare_function, 1);
     array->sort_order = ASC;
 }
 
@@ -600,7 +600,7 @@ void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, voi
         array->sort_order = DESC;
         return;
     }
-    _merge_sort(array, 0, array->size-1, type_compare_function, -1);
+    _array_merge_sort(array, 0, array->size-1, type_compare_function, -1);
     array->sort_order = DESC;
 }
 

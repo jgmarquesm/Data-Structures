@@ -25,7 +25,7 @@ typedef struct _singly_linked_list {
     int sort_order;
 } SinglyLinkedList;
 
-void _left_right_split(SimpleNode *SN, SimpleNode **left_ref, SimpleNode **right_ref) {
+void _sll_left_right_split(SimpleNode *SN, SimpleNode **left_ref, SimpleNode **right_ref) {
     SimpleNode *slow = SN, *fast = SN->next;
 
     while (fast != NULL && fast->next != NULL) {
@@ -38,7 +38,7 @@ void _left_right_split(SimpleNode *SN, SimpleNode **left_ref, SimpleNode **right
     slow->next = NULL;
 }
 
-SimpleNode *_sorted_merge(SimpleNode *left, SimpleNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
+SimpleNode *_sll_sorted_merge(SimpleNode *left, SimpleNode *right, int (*type_compare_function)(void *data1, void *data2), int order) {
     SimpleNode *SLL_begin_result = NULL;
 
     if (left == NULL) {
@@ -50,25 +50,25 @@ SimpleNode *_sorted_merge(SimpleNode *left, SimpleNode *right, int (*type_compar
     if (order == ASC) {
         if (type_compare_function(left->data, right->data) >= 0) {
             SLL_begin_result = left;
-            SLL_begin_result->next = _sorted_merge(left->next, right, type_compare_function, order);
+            SLL_begin_result->next = _sll_sorted_merge(left->next, right, type_compare_function, order);
         } else {
             SLL_begin_result = right;
-            SLL_begin_result->next = _sorted_merge(left, right->next, type_compare_function, order);
+            SLL_begin_result->next = _sll_sorted_merge(left, right->next, type_compare_function, order);
         }
     } else {
         if (type_compare_function(left->data, right->data) <= 0) {
             SLL_begin_result = left;
-            SLL_begin_result->next = _sorted_merge(left->next, right, type_compare_function, order);
+            SLL_begin_result->next = _sll_sorted_merge(left->next, right, type_compare_function, order);
         } else {
             SLL_begin_result = right;
-            SLL_begin_result->next = _sorted_merge(left, right->next, type_compare_function, order);
+            SLL_begin_result->next = _sll_sorted_merge(left, right->next, type_compare_function, order);
         }
     }
 
     return SLL_begin_result;
 }
 
-void _merge_sort(SimpleNode **SLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
+void _sll_merge_sort(SimpleNode **SLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
     SimpleNode *SLL_begin = *SLL_begin_ref, *left, *right;
 
     if ((SLL_begin == NULL) || (SLL_begin->next == NULL)) {
@@ -81,11 +81,11 @@ void _merge_sort(SimpleNode **SLL_begin_ref, int (*type_compare_function)(void *
         exit(EXIT_FAILURE);
     }
 
-    _left_right_split(SLL_begin, &left, &right);
-    _merge_sort(&left, type_compare_function, order);
-    _merge_sort(&right, type_compare_function, order);
+    _sll_left_right_split(SLL_begin, &left, &right);
+    _sll_merge_sort(&left, type_compare_function, order);
+    _sll_merge_sort(&right, type_compare_function, order);
 
-    *SLL_begin_ref = _sorted_merge(left, right, type_compare_function, order);
+    *SLL_begin_ref = _sll_sorted_merge(left, right, type_compare_function, order);
 }
 
 SimpleNode *_get_node(const SinglyLinkedList *SLL, const size_t index) {
@@ -494,13 +494,13 @@ bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinked
 }
 
 void SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
-    _merge_sort(&SLL->begin, type_compare_function, 1);
+    _sll_merge_sort(&SLL->begin, type_compare_function, 1);
     SLL->sort_order = ASC;
     SLL->end = _get_node(SLL, SLL->size-1);
 }
 
 void SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
-    _merge_sort(&SLL->begin, type_compare_function, -1);
+    _sll_merge_sort(&SLL->begin, type_compare_function, -1);
     SLL->sort_order = DESC;
     SLL->end = _get_node(SLL, SLL->size-1);
 }

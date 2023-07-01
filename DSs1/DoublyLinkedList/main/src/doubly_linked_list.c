@@ -28,7 +28,7 @@ typedef struct _linked_list {
     int sort_order;
 } LinkedList;
 
-void _left_right_split(Node *node, Node **left_ref, Node **right_ref) {
+void _dll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node *slow = node, *fast = node->next;
 
     while (fast != NULL && fast->next != NULL) {
@@ -41,7 +41,7 @@ void _left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     slow->next = NULL;
 }
 
-Node *_sorted_merge(Node *left, Node *right, int (*type_compare_function)(void *data1, void *data2), int order) {
+Node *_dll_sorted_merge(Node *left, Node *right, int (*type_compare_function)(void *data1, void *data2), int order) {
     Node *LL_begin_result = NULL;
 
     if (left == NULL) {
@@ -53,25 +53,25 @@ Node *_sorted_merge(Node *left, Node *right, int (*type_compare_function)(void *
     if (order == ASC) {
         if (type_compare_function(left->data, right->data) >= 0) {
             LL_begin_result = left;
-            LL_begin_result->next = _sorted_merge(left->next, right, type_compare_function, order);
+            LL_begin_result->next = _dll_sorted_merge(left->next, right, type_compare_function, order);
         } else {
             LL_begin_result = right;
-            LL_begin_result->next = _sorted_merge(left, right->next, type_compare_function, order);
+            LL_begin_result->next = _dll_sorted_merge(left, right->next, type_compare_function, order);
         }
     } else {
         if (type_compare_function(left->data, right->data) <= 0) {
             LL_begin_result = left;
-            LL_begin_result->next = _sorted_merge(left->next, right, type_compare_function, order);
+            LL_begin_result->next = _dll_sorted_merge(left->next, right, type_compare_function, order);
         } else {
             LL_begin_result = right;
-            LL_begin_result->next = _sorted_merge(left, right->next, type_compare_function, order);
+            LL_begin_result->next = _dll_sorted_merge(left, right->next, type_compare_function, order);
         }
     }
 
     return LL_begin_result;
 }
 
-void _merge_sort(Node **LL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
+void _dll_merge_sort(Node **LL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
     Node *LL_begin = *LL_begin_ref, *left, *right;
 
     if ((LL_begin == NULL) || (LL_begin->next == NULL)) {
@@ -84,11 +84,11 @@ void _merge_sort(Node **LL_begin_ref, int (*type_compare_function)(void *data1, 
         exit(EXIT_FAILURE);
     }
 
-    _left_right_split(LL_begin, &left, &right);
-    _merge_sort(&left, type_compare_function, order);
-    _merge_sort(&right, type_compare_function, order);
+    _dll_left_right_split(LL_begin, &left, &right);
+    _dll_merge_sort(&left, type_compare_function, order);
+    _dll_merge_sort(&right, type_compare_function, order);
 
-    *LL_begin_ref = _sorted_merge(left, right, type_compare_function, order);
+    *LL_begin_ref = _dll_sorted_merge(left, right, type_compare_function, order);
 }
 
 Node *_get_node(const LinkedList *LL, const size_t index) {
@@ -531,13 +531,13 @@ bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*ty
 }
 
 void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
-    _merge_sort(&LL->begin, type_compare_function, 1);
+    _dll_merge_sort(&LL->begin, type_compare_function, 1);
     LL->sort_order = ASC;
     LL->end = _get_node(LL, LL->size-1);
 }
 
 void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
-    _merge_sort(&LL->begin, type_compare_function, -1);
+    _dll_merge_sort(&LL->begin, type_compare_function, -1);
     LL->sort_order = DESC;
     LL->end = _get_node(LL, LL->size-1);
 }
