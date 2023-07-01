@@ -18,7 +18,7 @@ TEST_ADT = singly_linked_list.test
 UNITY = unity
 
 # Compilation Flags
-FLAGS = -O3 -Wall -pedantic -Warray-bounds
+FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 
 --private-create_folders:

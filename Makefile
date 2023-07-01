@@ -34,7 +34,7 @@ ED7 = static_queue
 ED8 = dynamic_queue
 
 # Compilation Flags
-FLAGS = -O3 -Wall -pedantic -Warray-bounds
+FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l$(LIB_NAME) -L $(LIB)
 
 --private-create_lib:

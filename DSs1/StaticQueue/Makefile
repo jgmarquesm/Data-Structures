@@ -22,7 +22,7 @@ BASE_ADT = array
 EXTERNAL = ../${BASE_ADT_FOLDER}/main
 
 # Compilation Flags
-FLAGS = -O3 -Wall -pedantic -Warray-bounds
+FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 
 --private-create_folders:
