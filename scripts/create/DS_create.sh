@@ -343,47 +343,42 @@ ss  ) Static Stack
 ds  ) Dynamic Stack
 sq  ) Static Queue
 dq  ) Dynamic Queue
-tt  ) Teste
 Which?"
         read -r SELECTION
         declare -l SELECTION
 
         case ${SELECTION} in
-            arr )
+            arr|ARR )
               BASE_ADT="Array"
               LOWER_BASE_ADT="array"
             ;;
-            sll )
+            sll|SLL )
               BASE_ADT="SinglyLinkedList"
               LOWER_BASE_ADT="singly_linked_list"
             ;;
-            dll )
+            dll|DLL )
               BASE_ADT="DoublyLinkedList"
               LOWER_BASE_ADT="doubly_linked_list"
             ;;
-            cdll )
+            cdll|CDLL )
               BASE_ADT="CircularDoublyLinkedList"
               LOWER_BASE_ADT="circular_doubly_linked_list"
             ;;
-            ss )
+            ss|SS )
               BASE_ADT="StaticStack"
               LOWER_BASE_ADT="static_stack"
             ;;
-            ds )
+            ds|DS )
               BASE_ADT="DynamicStack"
               LOWER_BASE_ADT="dynamic_stack"
             ;;
-            sq )
+            sq|SQ )
               BASE_ADT="StaticQueue"
               LOWER_BASE_ADT="static_queue"
             ;;
-            dq )
+            dq|DQ )
               BASE_ADT="DynamicQueue"
               LOWER_BASE_ADT="dynamic_queue"
-            ;;
-            tt )
-              BASE_ADT="Teste"
-              LOWER_BASE_ADT="teste"
             ;;
             * )
               rm -rf DSs1/"$NAME"
