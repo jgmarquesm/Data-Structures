@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
+#define UNSORTED 0
 #define ASC 1
 #define DESC -1
 
@@ -96,7 +98,7 @@ Array *Array_create(long capacity, unsigned int size_of_type) {
     array->data = data;
     array->capacity = capacity;
     array->size = 0;
-    array->sort_order = 0;
+    array->sort_order = UNSORTED;
     array->size_of_type = size_of_type;
     return array;
 }
@@ -105,6 +107,8 @@ void Array_clean(Array *array) {
     free(array->data);
     array->data = NULL;
     array->size = 0;
+    array->sort_order = UNSORTED;
+    array->size_of_type = 0;
 }
 
 void Array_delete(Array **array_ref) {
@@ -135,7 +139,7 @@ bool Array_is_full(const Array *array) {
 }
 
 bool Array_is_sorted(const Array *array) {
-    return array->sort_order == 1 || array->sort_order == -1;
+    return array->sort_order == ASC || array->sort_order == DESC;
 }
 
 void Array_add_first(Array *array, void *data) {
@@ -151,7 +155,7 @@ void Array_add_first(Array *array, void *data) {
     }
     void *index_ptr = _get(array, 0);
     memcpy(index_ptr, data, sizeof(array->size_of_type));
-    array->sort_order = 0;
+    array->sort_order = UNSORTED;
     array->size++;
 }
 
@@ -163,7 +167,7 @@ void Array_add_last(Array *array, void *data) {
     }
     void *index_ptr = _get(array, array->size);
     memcpy(index_ptr, data, sizeof(array->size_of_type));
-    array->sort_order = 0;
+    array->sort_order = UNSORTED;
     array->size++;
 }
 
@@ -312,7 +316,7 @@ void Array_insert_at(Array *array, void *data, const long index) {
     }
     void *ith_data = _get(array, index);
     memcpy(ith_data, data, array->size_of_type);
-    array->sort_order = 0;
+    array->sort_order = UNSORTED;
     array->size++;
 }
 
@@ -329,7 +333,7 @@ void Array_set(Array *array, void *data, const long index) {
     }
     void *ith_data = _get(array, index);
     memcpy(ith_data, data, array->size_of_type);
-    array->sort_order = 0;
+    array->sort_order = UNSORTED;
 }
 
 void *Array_get_at(const Array *array, const long index) {
