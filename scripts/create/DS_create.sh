@@ -10,7 +10,8 @@ echo "#include <stdlib.h>
 int main() {
 
     char *command = \"make run_tests\";
-    system(command);
+    int executed = system(command);
+    if (executed != 0) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }" > DSs1/"$1"/main/apps/app_"$2".c
@@ -89,7 +90,7 @@ TEST_ADT = ${2}.test
 UNITY = unity
 
 # Compilation Flags
-FLAGS = -O3 -Wall -pedantic -Warray-bounds
+FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l\$(LIB_NAME) -L \$(MAIN)/\$(LIB)
 
 --private-create_folders:
@@ -172,7 +173,7 @@ BASE_ADT = ${4}
 EXTERNAL = ../\${BASE_ADT_FOLDER}/main
 
 # Compilation Flags
-FLAGS = -O3 -Wall -pedantic -Warray-bounds
+FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
 LIBS = -l\$(LIB_NAME) -L \$(MAIN)/\$(LIB)
 
 --private-create_folders:

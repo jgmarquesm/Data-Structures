@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdio.h>
 
 int main() {
 
@@ -8,7 +9,8 @@ int main() {
      * aplicar, seja um tipo primitivo ou um ADT.
      */
     char *command = "make run_tests";
-    system(command);
+    int executed = system(command);
+    if (executed != 0) return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }
