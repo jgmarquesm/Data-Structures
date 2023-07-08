@@ -146,6 +146,7 @@ clean_unity:
 \$(TEST)/\$(BIN)/%: \$(TEST)/\$(TESTS)/%.c
 	gcc \$(FLAGS) \$< \$(MAIN)/\$(OBJ)/*.o -I \$(MAIN)/\$(INCLUDE) -o \$@
 " > DSs1/"$1"/Makefile
+echo "" > DSs1/"$1"/.info
 }
 
 ComplexMake() {
