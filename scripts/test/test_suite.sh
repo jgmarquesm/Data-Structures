@@ -8,3 +8,4 @@ cd ../StaticStack && make clean_all && make run_tests && make clean_all
 cd ../DynamicStack && make clean_all && make run_tests && make clean_all
 cd ../StaticQueue && make clean_all && make run_tests && make clean_all
 cd ../DynamicQueue && make clean_all && make run_tests && make clean_all
+cd ../Matrix && make clean_all && make run_tests && make clean_all
