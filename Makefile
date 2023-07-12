@@ -7,6 +7,7 @@ SS = DSs1/StaticStack
 DS = DSs1/DynamicStack
 SQ = DSs1/StaticQueue
 DQ = DSs1/DynamicQueue
+MAT = DSs1/Matrix
 APP = LIBDS1
 AUX = aux
 MAIN = main
@@ -32,6 +33,7 @@ ED5 = static_stack
 ED6 = dynamic_stack
 ED7 = static_queue
 ED8 = dynamic_queue
+ED9 = matrix
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -54,6 +56,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(DS)/$(MAIN)/$(SRC)/$(ED6).c $(APP)/$(AUX)/$(SRC)
 	cp $(SQ)/$(MAIN)/$(SRC)/$(ED7).c $(APP)/$(AUX)/$(SRC)
 	cp $(DQ)/$(MAIN)/$(SRC)/$(ED8).c $(APP)/$(AUX)/$(SRC)
+	cp $(MAT)/$(MAIN)/$(SRC)/$(ED9).c $(APP)/$(AUX)/$(SRC)
 
 --private-get_headers:
 	cp $(ARRAY)/$(MAIN)/$(INCLUDE)/$(ED1).h $(APP)/$(INCLUDE)
@@ -64,6 +67,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(DS)/$(MAIN)/$(INCLUDE)/$(ED6).h $(APP)/$(INCLUDE)
 	cp $(SQ)/$(MAIN)/$(INCLUDE)/$(ED7).h $(APP)/$(INCLUDE)
 	cp $(DQ)/$(MAIN)/$(INCLUDE)/$(ED8).h $(APP)/$(INCLUDE)
+	cp $(MAT)/$(MAIN)/$(INCLUDE)/$(ED9).h $(APP)/$(INCLUDE)
 
 --private-get_eds: --private-create_lib --private-get_srcs --private-get_headers
 
@@ -84,7 +88,8 @@ compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED5).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED6).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED7).o \
-	$(APP)/$(AUX)/$(OBJ)/$(ED8).o
+	$(APP)/$(AUX)/$(OBJ)/$(ED8).o \
+	$(APP)/$(AUX)/$(OBJ)/$(ED9).o
 	ar -rcs $(APP)/$(LIB)/lib$(LIB_NAME).a $(APP)/$(AUX)/$(OBJ)/*.o
 	rm -rf $(APP)/$(AUX)
 
