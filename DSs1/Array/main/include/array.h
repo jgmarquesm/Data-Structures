@@ -49,13 +49,13 @@ int Array_sort_order(const Array *array);
 /**
  *
  * @param array -> Array to check emptiness;
- * @return true if: Array is empty;\n false if: Array not empty.
+ * @return true if: Array is empty (size == 0);\n false if: Array not empty (size > 0).
  */
 bool Array_is_empty(const Array *array);
 /**
  *
  * @param array -> Array to check the fullness;
- * @return true if: Array is full (size == capacity);\n false if: Array is not full (size \< capacity).
+ * @return true if: Array is full (size == capacity);\n false if: Array is not full (size <= capacity).
  */
 bool Array_is_full(const Array *array);
 /**
@@ -159,10 +159,11 @@ Array *Array_clone(const Array *array);
  */
 Array *Array_concat(const Array *array1, const Array *array2);
 /**
-*
-* @param array -> Array to be taken a sub-Array
-* @return A sub-Array of Array
-*/
+ * @param array -> Array to be taken a sub-Array
+ * @param first_index -> index tha will be the first index of the new array.
+ * @param last_index -> index tha will be the last index of the new array.
+ * @return A sub-Array of Array
+ */
 Array *Array_sub(const Array *array, const long first_index, const long last_index);
 /**
  *
@@ -172,8 +173,9 @@ Array *Array_sub(const Array *array, const long first_index, const long last_ind
 Array *Array_reverse(Array *array);
 /**
  *
- * @param Array -> Array to check if data is contained
+ * @param array -> Array to check if data is contained
  * @param data -> Data that will be checked if it is contained in Array
+ * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if Array contains the data, false otherwise
  */
 bool Array_contains(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
@@ -181,6 +183,7 @@ bool Array_contains(const Array *array, void *data, int (*type_compare_function)
  *
  * @param array -> Array to count number os occurrences of data
  * @param data -> Data that the number of occurrences will be returned
+ * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The number of occurrences of data in the Array
  */
 long Array_count(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
@@ -188,6 +191,7 @@ long Array_count(const Array *array, void *data, int (*type_compare_function)(vo
  *
  * @param array1 -> First Array to check equality
  * @param array2 -> Second Array to check equality
+ * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if array1 == array2;\n false if array1 != array2
  */
 bool Array_is_equals(const Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2));
@@ -209,19 +213,19 @@ long Array_index_of(const Array *array, void *data, int (*type_compare_function)
 long Array_last_index_of(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the Array in ascending order
- * @param array_ref -> Array reference to sort in ascending order
+ * @param array -> Array to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
 void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the Array in descending order
- * @param array_ref -> Array reference to sort in descending order
+ * @param array -> Array to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
 void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will add data to Array following the order sort
- * @param Array -> Array to add data
+ * @param array -> Array to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
