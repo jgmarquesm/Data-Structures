@@ -1,5 +1,13 @@
 # Summary
 
+## TODOs
+
+- UWG - escrever seus testes
+
+- refact de todas as DS já criadas para usar os helpers
+
+- Atualizar o README.md
+
 1. [Data Structures](#data-structures)
    1. [Array](#array)
    2. [List](#list)
@@ -12,6 +20,7 @@
    4. [Queue](#queue)
       1. [Static Queue](#static-queue)
       2. [Dynamic Queue](#dynamic-queue)
+   5. [Graph](#graph)
 2. [How to Test, Build and Pack](#how-to-test-build-and-pack)
    1. [Test Command](#test-command)
       1. [Test Only One Data Structure](#test-only-one-data-structure)
@@ -35,9 +44,9 @@ An _Array_ is a fundamental [_Data Structure_](#data-structures) that allows sto
 of the same type. It provides a way to organize and access data in a contiguous block of memory. Each element in an 
 array is identified by its index, which represents its position within the _Array_.
 
-[Click here to see its Spec.](DSs1/Array/main/include/array.h)
+[Click here to see its Spec.](main/Array/main/include/array.h)
 
-[Click here to see its implementation.](DSs1/Array/main/src/array.c)
+[Click here to see its implementation.](main/Array/main/src/array.c)
 
 ## List
 A _List_ is a [_Data Structure_](#data-structures) that stores a collection of elements in a specific order. It is a 
@@ -48,9 +57,9 @@ A _Singly Linked List_ is a [_Data Structure_](#data-structures) used to store a
 a sequence of nodes, where each node contains both the element and a reference (or pointer) to the next node in the 
 _List_. The last node in the _List_ has a reference to null, indicating the end of the _List_.
 
-[Click here to see its Spec.](DSs1/SinglyLinkedList/main/include/singly_linked_list.h)
+[Click here to see its Spec.](main/SinglyLinkedList/main/include/singly_linked_list.h)
 
-[Click here to see its implementation.](DSs1/SinglyLinkedList/main/src/singly_linked_list.c)
+[Click here to see its implementation.](main/SinglyLinkedList/main/src/singly_linked_list.c)
 
 ### Doubly Linked List
 A _Doubly Linked List_ is a [_Data Structure_](#data-structures) that extends the functionality of a [_Singly Linked List_](#singly-linked-list) 
@@ -58,18 +67,18 @@ by providing links or references to both the previous and next nodes in the [_Li
 _Doubly Linked List_ contains three components: the data or element to be stored, a reference to the previous node, 
 and a reference to the next node.
 
-[Click here to see its Spec.](DSs1/DoublyLinkedList/main/include/doubly_linked_list.h)
+[Click here to see its Spec.](main/DoublyLinkedList/main/include/doubly_linked_list.h)
 
-[Click here to see its implementation.](DSs1/DoublyLinkedList/main/src/doubly_linked_list.c)
+[Click here to see its implementation.](main/DoublyLinkedList/main/src/doubly_linked_list.c)
 
 ### Circular Doubly Linked List
 A _Circular Doubly Linked List_ is a variation of a [_Doubly Linked List_](#doubly-linked-list) where the last node in 
 the [_List_](#list) has a reference to the first node, creating a circular structure. This means that the next node of 
 the last node points back to the first node, and the previous node of the first node points to the last node.
 
-[Click here to see its Spec.](DSs1/CircularDoublyLinkedList/main/include/circular_doubly_linked_list.h)
+[Click here to see its Spec.](main/CircularDoublyLinkedList/main/include/circular_doubly_linked_list.h)
 
-[Click here to see its implementation.](DSs1/CircularDoublyLinkedList/main/src/circular_doubly_linked_list.c)
+[Click here to see its implementation.](main/CircularDoublyLinkedList/main/src/circular_doubly_linked_list.c)
 
 ## Stack
 A _Stack_ is a fundamental [_Data Structure_](#data-structures) in computer science that follows the **LIFO (Last-In, First-Out)** principle. 
@@ -81,18 +90,18 @@ A _Static Stack_ is a [_Stack_](#stack) [_Data Structure_](#data-structures) tha
 shrink dynamically as elements are pushed or popped, a _Static Stack_ has a predetermined size that is allocated at the 
 time of its creation.
 
-[Click here to see its Spec.](DSs1/StaticStack/main/include/static_stack.h)
+[Click here to see its Spec.](main/StaticStack/main/include/static_stack.h)
 
-[Click here to see its implementation.](DSs1/StaticStack/main/src/static_stack.c)
+[Click here to see its implementation.](main/StaticStack/main/src/static_stack.c)
 
 ### Dynamic Stack
 A _Dynamic Stack_ is a [_Stack_](#stack) [_Data Structure_](#data-structures) that can grow or shrink in size dynamically 
 as elements are pushed or popped. Unlike a [_Static Stack_](#static-stack), which has a fixed size allocated at the time
 of creation, a _Dynamic Stack_ can adjust its capacity based on the number of elements it currently holds.
 
-[Click here to see its Spec.](DSs1/DynamicStack/main/include/dynamic_stack.h)
+[Click here to see its Spec.](main/DynamicStack/main/include/dynamic_stack.h)
 
-[Click here to see its implementation.](DSs1/DynamicStack/main/src/dynamic_stack.c)
+[Click here to see its implementation.](main/DynamicStack/main/src/dynamic_stack.c)
 
 ## Queue
 A _Queue_ is a [_Data Structure_](#data-structures) that follows the **FIFO (First-In, First-Out)** principle, where 
@@ -103,9 +112,9 @@ A _Static Queue_, if referring to a fixed-size [_Queue_](#queue), would be imple
 static memory allocation. The capacity of the _Static Queue_ would be predetermined and remain constant throughout its 
 lifetime.
 
-[Click here to see its Spec.](DSs1/StaticQueue/main/include/static_queue.h)
+[Click here to see its Spec.](main/StaticQueue/main/include/static_queue.h)
 
-[Click here to see its implementation.](DSs1/StaticQueue/main/src/static_queue.c)
+[Click here to see its implementation.](main/StaticQueue/main/src/static_queue.c)
 
 ### Dynamic Queue
 A _Dynamic Queue_ is a [_Queue_](#queue) [_Data Structure_](#data-structures) that can grow or shrink dynamically as 
@@ -113,9 +122,14 @@ elements are enqueued (added) or dequeued (removed). Unlike a [_Static Queue_](#
 allocated at the time of creation, a _Dynamic Queue_can adjust its capacity based on the number of elements it currently 
 holds.
 
-[Click here to see its Spec.](DSs1/DynamicQueue/main/include/dynamic_queue.h)
+[Click here to see its Spec.](main/DynamicQueue/main/include/dynamic_queue.h)
 
-[Click here to see its implementation.](DSs1/DynamicQueue/main/src/dynamic_queue.c)
+[Click here to see its implementation.](main/DynamicQueue/main/src/dynamic_queue.c)
+
+## Graph
+A _Graph_ is a [_Data Structure_](#data-structures) that represents a collection of interconnected nodes or vertices,
+often referred to as "points," and the connections between them, known as "edges." Graphs are used to model relationships
+between objects or entities.
 
 # How to Test, Build and Pack
 To compile all the code, the **Makefile** was used. This way, 
@@ -138,7 +152,7 @@ make run_tests
 For example, if I want to run Unit Tests for Array, then:
 
 ```shell
-`cd DSs1/Array && make run_tests`
+`cd main/Array && make run_tests`
 ```
 
 ### Test Suite
