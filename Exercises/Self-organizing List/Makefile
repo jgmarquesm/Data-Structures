@@ -39,7 +39,7 @@ clean_apps:
 	rm -rf $(MAIN)/$(BIN)/*
 
 clean_test:
-	rm -rf $(TEST)/*.test
+	rm -rf $(TEST)/*.test $(TEST)/test_cases/out/*.res
 
 $(MAIN)/$(OBJ)/%.o: $(MAIN)/$(SRC)/%.c $(MAIN)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(MAIN)/$(INCLUDE) -o $@

@@ -1,7 +1,7 @@
 #ifndef SELF_ORGANIZING_LINKED_LIST_H
 #define SELF_ORGANIZING_LINKED_LIST_H
 
-#include "../include/product.h"
+#include "product.h"
 
 typedef struct _list List;
 

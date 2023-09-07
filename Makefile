@@ -1,28 +1,35 @@
-#FOLDERS
-ARRAY = DSs1/Array
-SLL = DSs1/SinglyLinkedList
-DLL = DSs1/DoublyLinkedList
-CLL = DSs1/CircularDoublyLinkedList
-SS = DSs1/StaticStack
-DS = DSs1/DynamicStack
-SQ = DSs1/StaticQueue
-DQ = DSs1/DynamicQueue
-MAT = DSs1/Matrix
-APP = LIBDS1
-AUX = aux
 MAIN = main
+HELPERS = resources/helpers
+ARRAY = $(MAIN)/Array
+SLL = $(MAIN)/SinglyLinkedList
+DLL = $(MAIN)/DoublyLinkedList
+CLL = $(MAIN)/CircularDoublyLinkedList
+SS = $(MAIN)/StaticStack
+DS = $(MAIN)/DynamicStack
+SQ = $(MAIN)/StaticQueue
+DQ = $(MAIN)/DynamicQueue
+MAT = $(MAIN)/Matrix
+UWG = $(MAIN)/UndirectedWeightedGraph
+#--NEW_DS_DIR
+EH = $(HELPERS)/ExceptionHandler
+N = $(HELPERS)/Node
+V = $(HELPERS)/Vertex
+#--NEW_HELPER_DIR
+
+APP = LIBDS
+AUX = aux
 LIB = lib
 INCLUDE = include
 SRC = src
 OBJ = obj
-TEST = test
-SCRP = scripts
-CRT = create
 
-LIB_NAME = ds1
-TEST_SCRIPT = test_suite.sh
-BUILD_TEST_SCRIPT = build_test_suite.sh
-DS_CREATE_SCRIPT = DS_create.sh
+LIB_NAME = ds
+
+SCRIPTS = resources/scripts
+TEST_SCRIPT = test/test_suite.sh
+BUILD_TEST_SCRIPT = test/build_test_suite.sh
+CREATE_DS_SCRIPT = create/create_ds.sh
+CREATE_HELPER_SCRIPT = create/create_helper.sh
 
 # Data Structures
 ED1 = array
@@ -34,6 +41,14 @@ ED6 = dynamic_stack
 ED7 = static_queue
 ED8 = dynamic_queue
 ED9 = matrix
+ED10 = undirected_weighted_graph
+#--ADD_NEW_DS
+#DS11
+H1 = exception_handler
+H2 = node
+H3 = vertex
+#--ADD_NEW_HELPER
+#H4
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -57,6 +72,11 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(SQ)/$(MAIN)/$(SRC)/$(ED7).c $(APP)/$(AUX)/$(SRC)
 	cp $(DQ)/$(MAIN)/$(SRC)/$(ED8).c $(APP)/$(AUX)/$(SRC)
 	cp $(MAT)/$(MAIN)/$(SRC)/$(ED9).c $(APP)/$(AUX)/$(SRC)
+	cp $(UWG)/$(MAIN)/$(SRC)/$(ED10).c $(APP)/$(AUX)/$(SRC)
+	cp $(EH)/$(MAIN)/$(SRC)/$(H1).c $(APP)/$(AUX)/$(SRC)
+	cp $(N)/$(MAIN)/$(SRC)/$(H2).c $(APP)/$(AUX)/$(SRC)
+	cp $(V)/$(MAIN)/$(SRC)/$(H3).c $(APP)/$(AUX)/$(SRC)
+#--GET_SRC
 
 --private-get_headers:
 	cp $(ARRAY)/$(MAIN)/$(INCLUDE)/$(ED1).h $(APP)/$(INCLUDE)
@@ -68,6 +88,11 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(SQ)/$(MAIN)/$(INCLUDE)/$(ED7).h $(APP)/$(INCLUDE)
 	cp $(DQ)/$(MAIN)/$(INCLUDE)/$(ED8).h $(APP)/$(INCLUDE)
 	cp $(MAT)/$(MAIN)/$(INCLUDE)/$(ED9).h $(APP)/$(INCLUDE)
+	cp $(UWG)/$(MAIN)/$(INCLUDE)/$(ED10).h $(APP)/$(INCLUDE)
+	cp $(EH)/$(MAIN)/$(INCLUDE)/$(H1).h $(APP)/$(INCLUDE)
+	cp $(N)/$(MAIN)/$(INCLUDE)/$(H2).h $(APP)/$(INCLUDE)
+	cp $(V)/$(MAIN)/$(INCLUDE)/$(H3).h $(APP)/$(INCLUDE)
+#--GET_H
 
 --private-get_eds: --private-create_lib --private-get_srcs --private-get_headers
 
@@ -76,10 +101,10 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	rm -rf *.tar.gz
 
 --private-test: --private-clean_all
-	$(SCRP)/$(TEST)/$(TEST_SCRIPT)
+	$(SCRIPTS)/$(TEST_SCRIPT)
 
 --private-build_test: --private-clean_all
-	$(SCRP)/$(TEST)/$(BUILD_TEST_SCRIPT)
+	$(SCRIPTS)/$(BUILD_TEST_SCRIPT)
 
 compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED2).o \
@@ -89,12 +114,23 @@ compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED6).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED7).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED8).o \
-	$(APP)/$(AUX)/$(OBJ)/$(ED9).o
+	$(APP)/$(AUX)/$(OBJ)/$(ED9).o \
+	$(APP)/$(AUX)/$(OBJ)/$(ED10).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H1).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H2).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H3).o \
+#--ADD_TO_COMPILE
 	ar -rcs $(APP)/$(LIB)/lib$(LIB_NAME).a $(APP)/$(AUX)/$(OBJ)/*.o
 	rm -rf $(APP)/$(AUX)
 
 build: --private-build_test --private-get_eds
 	make compile
+
+create:
+	$(SCRIPTS)/$(CREATE_DS_SCRIPT)
+
+create-helper:
+	$(SCRIPTS)/$(CREATE_HELPER_SCRIPT)
 
 pack: build
 	tar -zcvf lib$(LIB_NAME).tar.gz $(APP)
@@ -102,8 +138,20 @@ pack: build
 
 test: --private-test
 
-create:
-	$(SCRP)/$(CRT)/$(DS_CREATE_SCRIPT)
+.SILENT:
+b: build
+
+.SILENT:
+c: create
+
+.SILENT:
+ch: create-helper
+
+.SILENT:
+p: pack
+
+
+t: test
 
 $(APP)/$(AUX)/$(OBJ)/%.o: $(APP)/$(AUX)/$(SRC)/%.c $(APP)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(APP)/$(INCLUDE) -o $@
