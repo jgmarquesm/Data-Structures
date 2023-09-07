@@ -11,13 +11,13 @@ StaticQueue
 DynamicQueue
 Matrix
 UndirectedWeightedGraph
-)
+) #--DS
 
 HELPERS=(
 ExceptionHandler
 Node
 Vertex
-)
+) #--H
 
 function formatted_name() {
   # shellcheck disable=SC2001
