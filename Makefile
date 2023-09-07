@@ -150,11 +150,7 @@ ch: create-helper
 .SILENT:
 p: pack
 
-
 t: test
-
-ci-test:
-	./$(SCRIPTS)/$(TEST_SCRIPT)
 
 $(APP)/$(AUX)/$(OBJ)/%.o: $(APP)/$(AUX)/$(SRC)/%.c $(APP)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(APP)/$(INCLUDE) -o $@
