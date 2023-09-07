@@ -12,7 +12,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: listar dirs
-      run: cd resources/scripts/ && ls -l
+      run: cd resources/scripts/test/ && cat test_suite.sh
     - name: teste
-      run: make ci-test
-      shell: sh
+      run: ./resources/scripts/test/test_suite.sh
