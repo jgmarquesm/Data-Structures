@@ -26,7 +26,7 @@ function formatted_name() {
 }
 
 function run_HELPER_test_suite() {
-  cd ../../helpers/ || exit 1
+  cd ./resources/helpers/ || exit 1
   for helper in "${HELPERS[@]}"
   do
     formatted_helper=$(formatted_name "${helper}")
@@ -38,7 +38,7 @@ function run_HELPER_test_suite() {
 }
 
 function run_DS_test_suite() {
-  cd ../../main/ || exit 1
+  cd ./main/ || exit 1
   for ds in "${DS[@]}"
   do
     formatted_ds=$(formatted_name "${ds}")
