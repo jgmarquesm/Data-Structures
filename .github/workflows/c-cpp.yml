@@ -11,7 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - name: listar dirs
-      run: cd resources/scripts/test/ && cat test_suite.sh
     - name: teste
-      run: ./resources/scripts/test/test_suite.sh
+      run: ./resources/scripts/test/ci-test.sh
+      shell: bash
