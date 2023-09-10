@@ -51,19 +51,19 @@ int Array_sort_order(const Array *array);
  * @param array -> Array to check emptiness;
  * @return true if: Array is empty (size == 0);\n false if: Array not empty (size > 0).
  */
-bool Array_is_empty(const Array *array);
+bool Array_is_empty(void *array);
 /**
  *
  * @param array -> Array to check the fullness;
  * @return true if: Array is full (size == capacity);\n false if: Array is not full (size <= capacity).
  */
-bool Array_is_full(const Array *array);
+bool Array_is_full(void *array);
 /**
  *
  * @param array -> Array to check ordering;
  * @return true if: sort_order == +-1;\n false if sort_order == 0.
  */
-bool Array_is_sorted(const Array *array);
+bool Array_is_sorted(void *array);
 /**
  * When calling this function it will add the data in first position;
  * @param array -> Array to add data;
@@ -81,13 +81,13 @@ void Array_add_last(Array *array, void *data);
  * @param array -> Array to get first element;
  * @return The first element of Array.
  */
-void *Array_first_element(const Array *array);
+void *Array_first_element(Array *array);
 /**
  *
  * @param array -> Array to get last element;
  * @return The last element of Array.
  */
-void *Array_last_element(const Array *array);
+void *Array_last_element(Array *array);
 /**
  * When calling this function it will remove the first element of Array;
  * @param array -> Array to remove first element;
@@ -123,7 +123,7 @@ void Array_remove_all(Array *array, void *data, int (*type_compare_function)(voi
  * @param array -> Array to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Array_print(const Array *array, void (*type_print_function)(void * data));
+void Array_print(Array *array, void (*type_print_function)(void * data));
 /**
  * When calling this function it will insert data into index-th Array index
  * @param array -> Array add data
@@ -144,27 +144,27 @@ void Array_set(Array *array, void *data, const long index);
  * @param index -> index of data to be got
  * @return The data (void *) of index-th Array index
  */
-void *Array_get_at(const Array *array, const long index);
+void *Array_get_at(Array *array, const long index);
 /**
  *
  * @param array -> Array to be cloned
  * @return A clone of Array
  */
-Array *Array_clone(const Array *array);
+Array *Array_clone(Array *array);
 /**
  *
  * @param array1 -> First Array to be concatenated
  * @param array2 -> Second Array to be concatenated
  * @return A new Array with array1 on begin and then the array2
  */
-Array *Array_concat(const Array *array1, const Array *array2);
+Array *Array_concat(Array *array1, Array *array2);
 /**
  * @param array -> Array to be taken a sub-Array
  * @param first_index -> index tha will be the first index of the new array.
  * @param last_index -> index tha will be the last index of the new array.
  * @return A sub-Array of Array
  */
-Array *Array_sub(const Array *array, const long first_index, const long last_index);
+Array *Array_sub(Array *array, const long first_index, const long last_index);
 /**
  *
  * @param array -> Array to be reversed
@@ -178,7 +178,7 @@ Array *Array_reverse(Array *array);
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if Array contains the data, false otherwise
  */
-bool Array_contains(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_contains(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to count number os occurrences of data
@@ -186,7 +186,7 @@ bool Array_contains(const Array *array, void *data, int (*type_compare_function)
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The number of occurrences of data in the Array
  */
-long Array_count(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_count(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array1 -> First Array to check equality
@@ -194,7 +194,7 @@ long Array_count(const Array *array, void *data, int (*type_compare_function)(vo
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if array1 == array2;\n false if array1 != array2
  */
-bool Array_is_equals(const Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2));
+bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to find index of data
@@ -202,7 +202,7 @@ bool Array_is_equals(const Array *array1, Array *array2, int (*type_compare_func
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return First index of Data in Array, if does not exist it will return -1
  */
-long Array_index_of(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to find index of data
@@ -210,7 +210,7 @@ long Array_index_of(const Array *array, void *data, int (*type_compare_function)
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return Last index of Data in Array, if does not exist it will return -1
  */
-long Array_last_index_of(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the Array in ascending order
  * @param array -> Array to sort in ascending order
@@ -236,13 +236,13 @@ void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The smaller data in Array
  */
-void *Array_min(const Array *array, int (*type_compare_function)(void *data1, void *data2));
+void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to get the bigger data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The bigger data in Array
  */
-void *Array_max(const Array *array, int (*type_compare_function)(void *data1, void *data2));
+void *Array_max(Array *array, int (*type_compare_function)(void *data1, void *data2));
 
 #endif
