@@ -72,6 +72,16 @@ ExceptionResponse *ExceptionHandler_is_full(char *function, char *field, void *v
     return _er_create(throws, error_message);
 }
 
+ExceptionResponse *ExceptionHandler_is_out_of_bounds(char *function, char *field, long wanted_index, long max_index) {
+    bool throws = false;
+    char *error_message = "";
+    if (wanted_index < 0 || wanted_index > max_index) {
+        throws = true;
+        error_message = _build_error_message(function, field, " is Out Of Bounds.\n");
+    }
+    return _er_create(throws, error_message);
+}
+
 bool anyThrows(int argc, ExceptionResponse *er, ...) {
     if (er->throws) {
         fprintf(stderr, "%s", er->error_message);

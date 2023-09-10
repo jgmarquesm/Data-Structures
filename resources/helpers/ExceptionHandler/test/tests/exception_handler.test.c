@@ -14,9 +14,12 @@
 #define NULL_THROWS_MSG "\nERROR: on function 'std_function'.\nERROR MESSAGE: std_field is NULL.\n"
 #define EMPTY_THROWS_MSG "\nERROR: on function 'std_function'.\nERROR MESSAGE: std_field is empty.\n"
 #define FULL_THROWS_MSG "\nERROR: on function 'std_function'.\nERROR MESSAGE: std_field is full.\n"
+#define OUT_OF_BOUNDS_THROWS_MSG "\nERROR: on function 'std_function'.\nERROR MESSAGE: std_field is Out Of Bounds.\n"
 #define VALUE_NEGATIVE_1 -1
 #define VALUE_0 0
 #define VALUE_1 1
+#define MAX_INDEX 2
+#define INDEX_FIVE 5
 #define INCLUDES_ZERO true
 #define NOT_INCLUDES_ZERO false
 
@@ -124,6 +127,30 @@ void test_ExceptionHandler_is_full_2() {
     TEST_ASSERT_EQUAL(0, message_comparison);
 }
 
+void test_ExceptionHandler_is_out_of_bounds_1() {
+    TEST_MESSAGE("Case 1 --> Negative index:");
+    ExceptionResponse *er = ExceptionHandler_is_out_of_bounds(FUNCTION, FIELD, VALUE_NEGATIVE_1, MAX_INDEX);
+    int message_comparison = strcmp(OUT_OF_BOUNDS_THROWS_MSG, er->error_message);
+    TEST_ASSERT_EQUAL(THROWS, er->throws);
+    TEST_ASSERT_EQUAL(0, message_comparison);
+}
+
+void test_ExceptionHandler_is_out_of_bounds_2() {
+    TEST_MESSAGE("Case 2 --> Valid index:");
+    ExceptionResponse *er = ExceptionHandler_is_out_of_bounds(FUNCTION, FIELD, VALUE_1, MAX_INDEX);
+    int message_comparison = strcmp(NOT_THROWS_MSG, er->error_message);
+    TEST_ASSERT_EQUAL(NOT_THROWS, er->throws);
+    TEST_ASSERT_EQUAL(0, message_comparison);
+}
+
+void test_ExceptionHandler_is_out_of_bounds_3() {
+    TEST_MESSAGE("Case 3 --> Index higher than max index allowed:");
+    ExceptionResponse *er = ExceptionHandler_is_out_of_bounds(FUNCTION, FIELD, INDEX_FIVE, MAX_INDEX);
+    int message_comparison = strcmp(OUT_OF_BOUNDS_THROWS_MSG, er->error_message);
+    TEST_ASSERT_EQUAL(THROWS, er->throws);
+    TEST_ASSERT_EQUAL(0, message_comparison);
+}
+
 void test_anyThrows_1_ExceptionHandler_1() {
     TEST_MESSAGE("Case 1 --> argc = 1, { ExceptionHandler->throws = false }:");
     bool any_throws = anyThrows(1, ExceptionHandler_is_empty(FUNCTION, FIELD, NOT_NULL, MOCK_is_empty_or_is_full));
@@ -228,6 +255,9 @@ int main(){
     RUN_TEST(test_ExceptionHandler_is_empty_2);
     RUN_TEST(test_ExceptionHandler_is_full_1);
     RUN_TEST(test_ExceptionHandler_is_full_2);
+    RUN_TEST(test_ExceptionHandler_is_out_of_bounds_1);
+    RUN_TEST(test_ExceptionHandler_is_out_of_bounds_2);
+    RUN_TEST(test_ExceptionHandler_is_out_of_bounds_3);
     RUN_TEST(test_anyThrows_1_ExceptionHandler_1);
     RUN_TEST(test_anyThrows_1_ExceptionHandler_2);
     RUN_TEST(test_anyThrows_2_ExceptionHandlers_1);
