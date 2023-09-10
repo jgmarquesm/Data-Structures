@@ -1,4 +1,4 @@
-#include "undirected_weighted_graph.h"
+#include "../include/undirected_weighted_graph.h"
 #include <stdlib.h>
 #include <stdio.h>
 //#--ADD_TO_INCLUDE
@@ -36,6 +36,13 @@ void _fullness_checker(char *function, void *ADT_value, bool (*is_full_function)
     if (!is_full_function(ADT_value)) return;
     fprintf(stderr, "\nERROR: on function '%s'.\n", function);
     fprintf(stderr, "ERROR MESSAGE: %s is full.\n", ADT_name);
+    exit(EXIT_FAILURE);
+}
+
+void _out_of_range_checker(char *function, long index, long max_index) {
+    if (index >= 0 && index < max_index) return;
+    fprintf(stderr, "\nERROR: on function '%s'.\n", function);
+    fprintf(stderr, "ERROR MESSAGE: %ld is out of range.\n", index);
     exit(EXIT_FAILURE);
 }
 
@@ -262,6 +269,8 @@ void UWG_change_weight(UWG *uwg, void *exit_data, void *entry_data, float new_we
     _nullish_checker("UWG_change_weight", uwg->weight_matrix, "UWG.weight_matrix");
     _emptiness_checker("UWG_change_weight", uwg, UWG_is_empty, "UWG");
 
+    if (UWG_get_weight(uwg, exit_data, entry_data) == DEFAULT_INITIAL_WEIGHT) return;
+
     long exit_index = UWG_index_of(uwg, exit_data);
     _negative_number_checker("UWG_change_weight", "exit_index", exit_index, true);
 
@@ -276,9 +285,7 @@ void UWG_change_data(UWG *uwg, void *old_data, void *new_data) {
     _nullish_checker("UWG_insert_vertex", uwg->vertices, "UWG.vertices");
 
     Vertex *vertex = _vertex_find(uwg, old_data);
-    if (!vertex) {
-        return;
-    }
+    if (!vertex) return;
     vertex->data = new_data;
 }
 
@@ -302,6 +309,14 @@ float UWG_get_weight(UWG *uwg, void *exit_data, void *entry_data) {
     _negative_number_checker("UWG_get_weight", "entry_index", entry_index, true);
 
     return uwg->weight_matrix[exit_index][entry_index];
+}
+
+void *UWG_get_data(UWG *uwg, long index) {
+    _nullish_checker("UWG_get_data", uwg, "UWG");
+    _nullish_checker("UWG_get_data", uwg->vertices, "UWG.vertices");
+    _emptiness_checker("UWG_get_data", uwg, UWG_is_empty, "UWG");
+    _out_of_range_checker("UWG_get_data", index, uwg->size);
+    return uwg->vertices[index]->data;
 }
 
 long UWG_get_valency(UWG *uwg, void *data) {
@@ -345,8 +360,9 @@ void UWG_remove_vertex(UWG *uwg, void *data) {
     long index = _vertex_index(uwg, data);
     if (index < 0) return;
 
-    if (index != uwg->size-1) {
-        for (long i = 0; i < uwg->size; i++) {
+    long size = uwg->size;
+    if (index != size-1) {
+        for (long i = 0; i < size; i++) {
             if (uwg->adjacency_matrix[index][i] != DEFAULT_NULL_EDGE_VALUE) {
                 uwg->adjacency_matrix[index][i] = DEFAULT_NULL_EDGE_VALUE;
                 uwg->adjacency_matrix[i][index] = DEFAULT_NULL_EDGE_VALUE;
@@ -354,16 +370,20 @@ void UWG_remove_vertex(UWG *uwg, void *data) {
                 uwg->weight_matrix[i][index] = DEFAULT_INITIAL_WEIGHT;
                 uwg->vertices[i]->valency--;
             }
+            uwg->adjacency_matrix[i][size-1] = DEFAULT_NULL_EDGE_VALUE;
+            uwg->adjacency_matrix[size-1][i] = DEFAULT_NULL_EDGE_VALUE;
+            uwg->weight_matrix[i][size-1] = DEFAULT_INITIAL_WEIGHT;
+            uwg->weight_matrix[size-1][i] = DEFAULT_INITIAL_WEIGHT;
         }
-        for (long i = index; i < uwg->size + 1; i++) {
+        for (long i = index; i < size-1; i++) {
             uwg->vertices[i] = uwg->vertices[i + 1];
-            for (long j = index; j < uwg->size + 1; j++) {
+            for (long j = index; j < size-1; j++) {
                 uwg->adjacency_matrix[i][j] = uwg->adjacency_matrix[i + 1][j + 1];
                 uwg->weight_matrix[i][j] = uwg->weight_matrix[i + 1][j + 1];
             }
         }
     } else {
-        for (long i = 0; i < uwg->size; i++) {
+        for (long i = 0; i < size; i++) {
             if (uwg->adjacency_matrix[index][i] != DEFAULT_NULL_EDGE_VALUE) {
                 uwg->vertices[i]->valency--;
             }

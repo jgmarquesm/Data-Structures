@@ -1,13 +1,5 @@
 # Summary
 
-## TODOs
-
-- UWG - escrever seus testes
-
-- refact de todas as DS já criadas para usar os helpers
-
-- Atualizar o README.md
-
 1. [Data Structures](#data-structures)
    1. [Array](#array)
    2. [List](#list)

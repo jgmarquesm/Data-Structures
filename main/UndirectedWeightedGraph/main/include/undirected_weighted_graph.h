@@ -100,6 +100,13 @@ long UWG_get_size(UWG *uwg);
 float UWG_get_weight(UWG *uwg, void *exit_data, void *entry_data);
 /**
  *
+ * @param uwg -> Undirected Weighted Graph to get data from vertex on index.
+ * @param index -> index to get data from.
+ * @return Data from vertex at index.
+ */
+void *UWG_get_data(UWG *uwg, long index);
+/**
+ *
  * @param uwg -> Undirected Weighted Graph to get valency of the vertex.
  * @param data -> Vertex to get the valency.
  * @return Valency (Degree) of the vertex.
