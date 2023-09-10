@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "../include/exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #define UNSORTED 0
@@ -89,11 +90,11 @@ void _array_merge_sort(Array *array, long first_index, long last_index, int (*ty
 }
 
 Array *Array_create(long capacity, unsigned int size_of_type) {
-    if (capacity <= 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_create'.\n");
-        fprintf(stderr, "ERROR: capacity must be greater then 0. Current value: %ld.\n", capacity);
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_non_positive("Array_create", "Capacity", capacity, true)
+        )
+    ) return NULL;
     Array *array = (Array *) calloc(1, sizeof(Array));
     char *data = (char *) calloc(capacity, size_of_type);
     array->data = data;
@@ -105,6 +106,11 @@ Array *Array_create(long capacity, unsigned int size_of_type) {
 }
 
 void Array_clean(Array *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_clean", "Array", ((void *) array))
+        )
+    ) return;
     free(array->data);
     array->data = NULL;
     array->size = 0;
@@ -114,41 +120,77 @@ void Array_clean(Array *array) {
 
 void Array_delete(Array **array_ref) {
     Array *array = *array_ref;
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_delete", "Array", ((void *) array))
+        )
+    ) return;
     Array_clean(array);
     free(array);
     *array_ref= NULL;
 }
 
 long Array_capacity(const Array *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_capacity", "Array", ((void *) array))
+        )
+    ) return -1;
     return array->capacity;
 }
 
 long Array_size(const Array *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_size", "Array", ((void *) array))
+        )
+    ) return -1;
     return array->size;
 }
 
 int Array_sort_order(const Array *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_sort_order", "Array", ((void *) array))
+        )
+    ) return 0;
     return array->sort_order;
 }
 
-bool Array_is_empty(const Array *array) {
-    return array->size == 0;
+bool Array_is_empty(void *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_is_empty", "Array", array)
+        )
+    ) return true;
+    return ((Array *) array)->size == 0;
 }
 
-bool Array_is_full(const Array *array) {
-    return array->size == array->capacity;
+bool Array_is_full(void *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_is_full", "Array", array)
+        )
+    ) return false;
+    return ((Array *) array)->size == ((Array *) array)->capacity;
 }
 
-bool Array_is_sorted(const Array *array) {
-    return array->sort_order == ASC || array->sort_order == DESC;
+bool Array_is_sorted(void *array) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_is_sorted", "Array", ((void *) array))
+        )
+    ) return false;
+    return ((Array *) array)->sort_order == ASC || ((Array *) array)->sort_order == DESC;
 }
 
 void Array_add_first(Array *array, void *data) {
-    if (Array_is_full(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_add_first'.\n");
-        fprintf(stderr, "ERROR: Array is full.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_add_first", "Array", ((void *) array)),
+            ExceptionHandler_is_full("Array_add_first", "Array", ((void *) array), Array_is_full)
+        )
+    ) return;
     for (int i = array->size; i >= 0; i--) {
         void *index_dest_ptr = array->data + ((i + 1) * array->size_of_type);
         void *index_src_ptr = array->data + (i * array->size_of_type);
@@ -161,56 +203,45 @@ void Array_add_first(Array *array, void *data) {
 }
 
 void Array_add_last(Array *array, void *data) {
-    if (Array_is_full(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_add_last'.\n");
-        fprintf(stderr, "ERROR: Array is full.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_add_last", "Array", ((void *) array)),
+            ExceptionHandler_is_full("Array_add_last", "Array", ((void *) array), Array_is_full)
+        )
+    ) return;
     void *index_ptr = _get(array, array->size);
     memcpy(index_ptr, data, sizeof(array->size_of_type));
     array->sort_order = UNSORTED;
     array->size++;
 }
 
-void *Array_first_element(const Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_first_element'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_first_element'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+void *Array_first_element(Array *array) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_first_element", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_first_element", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return NULL;
     return Array_get_at(array, 0);
 }
 
-void *Array_last_element(const Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_last_element'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_last_element'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+void *Array_last_element(Array *array) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_last_element", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_last_element", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return NULL;
     return Array_get_at(array, array->size - 1);
 }
 
 void Array_remove_first(Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_first'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_first'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_remove_first", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_remove_first", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     for (int i = 1; i <= array->size; i++) {
         void *index_dest_ptr = _get(array, i - 1);
         void *index_src_ptr = _get(array, i);
@@ -220,35 +251,23 @@ void Array_remove_first(Array *array) {
 }
 
 void Array_remove_last(Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_last'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_last'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_remove_last", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_remove_last", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     array->size--;
 }
 
 void Array_remove_at(Array *array, const long index) {
-    if (index >= array->size || index < 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_at'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [0, %ld].\n", index, array->size - 1);
-        exit(EXIT_FAILURE);
-    }
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_at'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_remove_at'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_remove_at", "Array", ((void *) array)),
+            ExceptionHandler_is_out_of_bounds("Array_remove_at", "Index", index, array->size-1),
+            ExceptionHandler_is_empty("Array_remove_at", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     long range = array->size;
     for (int i = index; i <= range; i++) {
         void *index_dest_ptr = _get(array, i);
@@ -259,6 +278,13 @@ void Array_remove_at(Array *array, const long index) {
 }
 
 void Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_remove", "Array", ((void *) array)),
+            ExceptionHandler_is_null("Array_remove", "Data", data),
+            ExceptionHandler_is_empty("Array_remove", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     long range = array->size;
     for (int i = 0; i <= range; i++) {
         void *ith_data = _get(array, i);
@@ -270,6 +296,13 @@ void Array_remove(Array *array, void *data, int (*type_compare_function)(void *d
 }
 
 void Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_remove_all", "Array", ((void *) array)),
+            ExceptionHandler_is_null("Array_remove_all", "Data", data),
+            ExceptionHandler_is_empty("Array_remove_all", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     long range = array->size;
     int count = 0;
     for (int i = 0; i <= range; i++) {
@@ -283,7 +316,12 @@ void Array_remove_all(Array *array, void *data, int (*type_compare_function)(voi
     array->size -= count;
 }
 
-void Array_print(const Array *array, void (*type_print_function)(void * data)) {
+void Array_print(Array *array, void (*type_print_function)(void * data)) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_print", "Array", ((void *) array))
+        )
+    ) return;
     printf("[");
     for(long i = 0; i < array->size-1; i++) {
         void *data = Array_get_at(array, i);
@@ -295,21 +333,13 @@ void Array_print(const Array *array, void (*type_print_function)(void * data)) {
 }
 
 void Array_insert_at(Array *array, void *data, const long index) {
-    if (Array_is_full(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_insert_at'.\n");
-        fprintf(stderr, "ERROR: Array is full.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (index > array->size || index < 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_insert_at'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [0, %ld].\n", index, array->size);
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_insert_at'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_insert_at", "Array", ((void *) array)),
+            ExceptionHandler_is_out_of_bounds("Array_insert_at", "Index", index, array->size),
+            ExceptionHandler_is_full("Array_insert_at", "Array", ((void *) array), Array_is_full)
+        )
+    ) return;
     for (int i = array->size; i >= index; i--) {
         void *index_dest_ptr = array->data + ((i + 1) * array->size_of_type);
         void *index_src_ptr = array->data + (i * array->size_of_type);
@@ -322,51 +352,35 @@ void Array_insert_at(Array *array, void *data, const long index) {
 }
 
 void Array_set(Array *array, void *data, const long index) {
-    if (index > array->size || index < 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_set'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [0, %ld].\n", index, array->size);
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_set'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_set", "Array", ((void *) array)),
+            ExceptionHandler_is_out_of_bounds("Array_set", "Index", index, array->size)
+        )
+    ) return;
     void *ith_data = _get(array, index);
     memcpy(ith_data, data, array->size_of_type);
     array->sort_order = UNSORTED;
 }
 
-void *Array_get_at(const Array *array, const long index) {
-    if (index >= array->size || index < 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_get_at'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [0, %ld].\n", index, array->size - 1);
-        exit(EXIT_FAILURE);
-    }
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_get_at'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_get_at'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+void *Array_get_at(Array *array, const long index) {
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_get_at", "Array", ((void *) array)),
+            ExceptionHandler_is_out_of_bounds("Array_get_at", "Index", index, array->size-1),
+            ExceptionHandler_is_empty("Array_get_at", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return NULL;
     return _get(array, index);
 }
 
-Array *Array_clone(const Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_clone'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_clone'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+Array *Array_clone(Array *array) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_clone", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_clone", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return NULL;
     Array *clone = Array_create(array->capacity, array->size_of_type);
     for (int i = 0; i < array->size; i++) {
         void *data = Array_get_at(array, i);
@@ -376,17 +390,15 @@ Array *Array_clone(const Array *array) {
     return clone;
 }
 
-Array *Array_concat(const Array *array1, const Array *array2) {
-    if (Array_is_empty(array1) && Array_is_empty(array2)) {
-        fprintf(stderr, "\nERROR: on function 'Array_concat'.\n");
-        fprintf(stderr, "ERROR: Arrays are empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array1 == NULL || array2 == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_concat'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+Array *Array_concat(Array *array1, Array *array2) {
+    if (anyThrows(
+            4,
+            ExceptionHandler_is_null("Array_concat", "Array1", ((void *) array1)),
+            ExceptionHandler_is_null("Array_concat", "Array2", ((void *) array2)),
+            ExceptionHandler_is_empty("Array_concat", "Array1", ((void *) array1), Array_is_empty),
+            ExceptionHandler_is_empty("Array_concat", "Array2", ((void *) array2), Array_is_empty)
+        )
+    ) return NULL;
     long capacity = array1->capacity+array2->capacity;
     Array *concat = Array_create(capacity, array1->size_of_type);
     for (int i = 0; i < array1->size; i++) {
@@ -400,32 +412,15 @@ Array *Array_concat(const Array *array1, const Array *array2) {
     return concat;
 }
 
-Array *Array_sub(const Array *array, const long initial_index, const long final_index) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_sub'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_sub'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (initial_index >= final_index) {
-        fprintf(stderr, "\nERROR: on function 'Array_sub'.\n");
-        fprintf(stderr, "ERROR: initial_index_index greater or equal than final_index: %ld >= %ld.\n", initial_index, final_index);
-        exit(EXIT_FAILURE);
-    }
-    if (initial_index < 0) {
-        fprintf(stderr, "\nERROR: on function 'Array_sub'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [0, %ld].\n", initial_index, array->size - 2);
-        exit(EXIT_FAILURE);
-    }
-    if (final_index >= array->size) {
-        fprintf(stderr, "\nERROR: on function 'Array_sub'.\n");
-        fprintf(stderr, "ERROR MESSAGE: Invalid index: %ld. Try an index within [1, %ld].\n", final_index, array->size - 1);
-        exit(EXIT_FAILURE);
-    }
+Array *Array_sub(Array *array, const long initial_index, const long final_index) {
+    if (anyThrows(
+            4,
+            ExceptionHandler_is_null("Array_sub", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_sub", "Array", ((void *) array), Array_is_empty),
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Final index", final_index, array->size-1),
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Initial index", initial_index, final_index-1)
+        )
+    ) return NULL;
     long capacity = final_index - initial_index;
     Array *sub = Array_create(capacity, array->size_of_type);
     for (int i = initial_index; i < final_index; i++) {
@@ -437,16 +432,12 @@ Array *Array_sub(const Array *array, const long initial_index, const long final_
 }
 
 Array *Array_reverse(Array *array) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_reverse'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_reverse'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_reverse", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_reverse", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return NULL;
     Array *reverse = Array_create(array->capacity, array->size_of_type);
     for (int i = (array->size - 1); i >= 0; i--) {
         void *data = Array_get_at(array, i);
@@ -456,15 +447,13 @@ Array *Array_reverse(Array *array) {
     return reverse;
 }
 
-bool Array_contains(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_contains'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (Array_is_empty(array)) {
-        return false;
-    }
+bool Array_contains(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_contains", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_contains", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return false;
     for (int i = 0; i < array->size; i++) {
         void *ith_data = Array_get_at(array, i);
         if (type_compare_function(ith_data, data) == 0) {
@@ -474,15 +463,13 @@ bool Array_contains(const Array *array, void *data, int (*type_compare_function)
     return false;
 }
 
-long Array_count(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_count'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (Array_is_empty(array)) {
-        return 0;
-    }
+long Array_count(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_count", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_count", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return -1;
     long count = 0;
     for (int i = 0; i < array->size; i++) {
         void *ith_data = Array_get_at(array, i);
@@ -493,17 +480,15 @@ long Array_count(const Array *array, void *data, int (*type_compare_function)(vo
     return count;
 }
 
-bool Array_is_equals(const Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2)) {
-    if (array1 == NULL || array2 == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_equals'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (Array_is_empty(array1) || Array_is_empty(array2)) {
-        fprintf(stderr, "\nERROR: on function 'Array_equals'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
+bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            4,
+            ExceptionHandler_is_null("Array_is_equals", "Array1", ((void *) array1)),
+            ExceptionHandler_is_null("Array_is_equals", "Array2", ((void *) array2)),
+            ExceptionHandler_is_empty("Array_is_equals", "Array1", ((void *) array1), Array_is_empty),
+            ExceptionHandler_is_empty("Array_is_equals", "Array2", ((void *) array2), Array_is_empty)
+        )
+    ) return false;
     if (array1->size_of_type != array2->size_of_type) {
         return false;
     }
@@ -523,17 +508,13 @@ bool Array_is_equals(const Array *array1, Array *array2, int (*type_compare_func
     return true;
 }
 
-long Array_index_of(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_index_of'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_index_of'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+long Array_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_index_of", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_index_of", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return -1;
     for (int i = 0; i < array->size; i++) {
         void *ith_data = Array_get_at(array, i);
         if (type_compare_function(ith_data ,data) == 0) {
@@ -543,17 +524,13 @@ long Array_index_of(const Array *array, void *data, int (*type_compare_function)
     return -1;
 }
 
-long Array_last_index_of(const Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_index_of'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_index_of'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_last_index_of", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_last_index_of", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return -1;
     for (int i = (array->size - 1); i >= 0; i--) {
         void *ith_data = Array_get_at(array, i);
         if (type_compare_function(ith_data ,data) == 0) {
@@ -564,16 +541,12 @@ long Array_last_index_of(const Array *array, void *data, int (*type_compare_func
 }
 
 void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_sort_asc'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_sort_asc'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_sort_asc", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_sort_asc", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     if (array->sort_order == DESC) {
         Array *reverse = Array_reverse(array);
         array->data = reverse->data;
@@ -585,16 +558,12 @@ void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void
 }
 
 void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
-    if (Array_is_empty(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_sort_desc'.\n");
-        fprintf(stderr, "ERROR: Array is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_sort_desc'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Array_sort_desc", "Array", ((void *) array)),
+            ExceptionHandler_is_empty("Array_sort_desc", "Array", ((void *) array), Array_is_empty)
+        )
+    ) return;
     if (array->sort_order == ASC) {
         Array *reverse = Array_reverse(array);
         array->data = reverse->data;
@@ -606,21 +575,13 @@ void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, voi
 }
 
 void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (Array_is_full(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_sorted_insert'.\n");
-        fprintf(stderr, "ERROR: Array is full.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_sorted_insert'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
-    if (!Array_is_sorted(array)) {
-        fprintf(stderr, "\nERROR: on function 'Array_sorted_insert'.\n");
-        fprintf(stderr, "ERROR: Array must be sorted.\n");
-        exit(EXIT_FAILURE);
-    }
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Array_sorted_insert", "Array", ((void *) array)),
+            ExceptionHandler_is_full("Array_sorted_insert", "Array", ((void *) array), Array_is_full),
+            ExceptionHandler_is_not_sorted("Array_sorted_insert", "Array", ((void *) array), Array_is_sorted)
+        )
+    ) return;
 
     void *array_data = Array_get_at(array, array->size - 1);
     int sort_order = array->sort_order, compare = type_compare_function(data, array_data);
@@ -656,12 +617,12 @@ void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(
     }
 }
 
-void *Array_min(const Array *array, int (*type_compare_function)(void *data1, void *data2)) {
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_min'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_min", "Array", ((void *) array))
+        )
+    ) return 0;
 
     if (Array_is_sorted(array)) {
         if (array->sort_order == ASC) {
@@ -677,12 +638,12 @@ void *Array_min(const Array *array, int (*type_compare_function)(void *data1, vo
     return data;
 }
 
-void *Array_max(const Array *array, int (*type_compare_function)(void *data1, void *data2)) {
-    if (array == NULL) {
-        fprintf(stderr, "\nERROR: on function 'Array_max'.\n");
-        fprintf(stderr, "ERROR: Array is NULL.\n");
-        exit(EXIT_FAILURE);
-    }
+void *Array_max(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Array_max", "Array", ((void *) array))
+        )
+    ) return 0;
 
     if (Array_is_sorted(array)) {
         if (array->sort_order == ASC) {

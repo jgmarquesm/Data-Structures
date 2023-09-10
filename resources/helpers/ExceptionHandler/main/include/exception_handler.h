@@ -18,6 +18,8 @@ ExceptionResponse *ExceptionHandler_is_empty(char *function, char *field, void *
 
 ExceptionResponse *ExceptionHandler_is_full(char *function, char *field, void *value, bool (*is_full_function)(void *data));
 
+ExceptionResponse *ExceptionHandler_is_not_sorted(char *function, char *field, void *value, bool (*is_sorted_function)(void *data));
+
 ExceptionResponse *ExceptionHandler_is_out_of_bounds(char *function, char *field, long wanted_index, long max_index);
 
 bool anyThrows(int argc, ExceptionResponse *er, ...);
