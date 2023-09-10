@@ -35,7 +35,7 @@ ExceptionResponse *_er_create(bool throws, char *error_message) {
 ExceptionResponse *ExceptionHandler_is_non_positive(char *function, char *field, long value, bool includesZero) {
     bool throws = false;
     char *error_message = "";
-    if ((value <= 0 && !includesZero) || (value < 0 && includesZero)) {
+    if ((value == 0 && !includesZero) || value < 0) {
         throws = true;
         error_message = _build_error_message(function, field, " must be positive.\n");
     }
@@ -68,6 +68,16 @@ ExceptionResponse *ExceptionHandler_is_full(char *function, char *field, void *v
     if (is_full_function(value)) {
         throws = true;
         error_message = _build_error_message(function, field, " is full.\n");
+    }
+    return _er_create(throws, error_message);
+}
+
+ExceptionResponse *ExceptionHandler_is_not_sorted(char *function, char *field, void *value, bool (*is_sorted_function)(void *data)) {
+    bool throws = false;
+    char *error_message = "";
+    if (!is_sorted_function(value)) {
+        throws = true;
+        error_message = _build_error_message(function, field, " is not sorted.\n");
     }
     return _er_create(throws, error_message);
 }
