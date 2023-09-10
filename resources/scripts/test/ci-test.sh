@@ -1,7 +1,7 @@
 #!/bin/bash
 
 DS=(
-#Array
+Array
 SinglyLinkedList
 DoublyLinkedList
 CircularDoublyLinkedList
