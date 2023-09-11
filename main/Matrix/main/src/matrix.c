@@ -1,7 +1,8 @@
 #include "../include/matrix.h"
-#include "../include/array.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "../include/array.h"
+#include "../include/exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 typedef struct _matrix {

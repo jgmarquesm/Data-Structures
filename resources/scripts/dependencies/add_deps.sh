@@ -57,7 +57,7 @@ function _addNewBaseDS () {
   sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(DS_$index).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
   sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(DS_$index).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(DS_$index).h\n\#--ADD_TO_CLEAN#" Makefile
   sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${1}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-  echo "${1}" >> .info
+  echo "ds_${1}" >> .info
   echo "${GREEN}${1} successfully added.${NO_COLOR}"
 }
 
@@ -71,13 +71,13 @@ function _addNewHelper () {
   sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(HELPER_$index).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
   sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(HELPER_$index).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(HELPER_$index).h\n\#--ADD_TO_CLEAN#" Makefile
   sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${1}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-  echo "${1}" >> .info
+  echo "hp_${1}" >> .info
   echo "${GREEN}${1} successfully added.${NO_COLOR}"
 }
 
 function _addNewBaseDSDeps () {
   # shellcheck disable=SC2207
-  local newBaseDSDeps=( $(echo "${2}" | tr '\n' "\n") )
+  local newBaseDSDeps=( $(echo "${1}" | tr '\n' "\n") )
   local i=1
   for dependency in "${newBaseDSDeps[@]}"
   do
@@ -87,30 +87,45 @@ function _addNewBaseDSDeps () {
       continue
     fi
 
-    echo "${BLUE}Adding ${dependency}...${NO_COLOR}"
-    local infoContent=( "${(f)$(< ../"${dependency}"/.info)}" )
-    # shellcheck disable=SC2128
-    if [[ -n "${infoContent}" ]]
+    if [[ ${dependency:0:2} == "ds" ]]
     then
-      _addNewBaseDSDeps "${dependency}" "${infoContent}"
-    fi
+      echo "${BLUE}Adding $(echo "$dependency" | cut -c4-)...${NO_COLOR}"
+      local infoContent=( "${(f)$(< ../"$(echo "$dependency" | cut -c4-)"/.info)}" )
+      # shellcheck disable=SC2128
+      if [[ -n "${infoContent}" ]]
+      then
+        _addNewBaseDSDeps "$(echo "$dependency" | cut -c4-)" "${infoContent}"
+      fi
 
-    sed -i~ "s#^\#--ADD_FOLDER_NEW_DS#DS_FOLDER_DEP_${i} = ../${dependency}/\$(MAIN)\n\#--ADD_FOLDER_NEW_DS#" Makefile
-    sed -i~ "s#^\#--ADD_NEW_DS#DS_DEP_${i} = $(TitleCaseTo_snake_case "${dependency}")\n\#--ADD_NEW_DS#" Makefile
-    sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(DS_FOLDER_DEP_${i})/\$(SRC)/\$(DS_DEP_${i}).c \$(MAIN)/\$(SRC)/\n\tcp \$(DS_FOLDER_DEP_${i})/\$(INCLUDE)/\$(DS_DEP_${i}).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
-    sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_PACK#" Makefile
-    sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
-    sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(DS_DEP_${i}).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(DS_DEP_${i}).h\n\#--ADD_TO_CLEAN#" Makefile
-    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${dependency}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-    echo "${dependency}" >> .info
-    echo "${GREEN}${dependency} successfully added.${NO_COLOR}"
-    (( i++ ))
+      sed -i~ "s#^\#--ADD_FOLDER_NEW_DS#DS_FOLDER_DEP_${i} = ../${dependency}/\$(MAIN)\n\#--ADD_FOLDER_NEW_DS#" Makefile
+      sed -i~ "s#^\#--ADD_NEW_DS#DS_DEP_${i} = $(TitleCaseTo_snake_case "${dependency}")\n\#--ADD_NEW_DS#" Makefile
+      sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(DS_FOLDER_DEP_${i})/\$(SRC)/\$(DS_DEP_${i}).c \$(MAIN)/\$(SRC)/\n\tcp \$(DS_FOLDER_DEP_${i})/\$(INCLUDE)/\$(DS_DEP_${i}).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
+      sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_PACK#" Makefile
+      sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
+      sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(DS_DEP_${i}).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(DS_DEP_${i}).h\n\#--ADD_TO_CLEAN#" Makefile
+      sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${dependency}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
+      echo "${dependency}" >> .info
+      echo "${GREEN}${dependency} successfully added.${NO_COLOR}"
+      (( i++ ))
+    elif [[ ${dependency:0:2} == "hp" ]]
+    then
+      local infoContent=( "${(f)$(< ../../resources/helpers/"$(echo "$dependency" | cut -c4-)"/.info)}" )
+      # shellcheck disable=SC2128
+      if [[ -n "${infoContent}" ]]
+      then
+        _addNewHelperDeps "${infoContent}"
+      fi
+
+      _addNewHelper "$(echo "$dependency" | cut -c4-)"
+    else
+      echo "${BLUE}${dependency} ${YELLOW}does not match any pattern of dependency.${NO_COLOR}"
+    fi
   done
 }
 
 function _addNewHelperDeps () {
   # shellcheck disable=SC2207
-  local newHelperDeps=( $(echo "${2}" | tr '\n' "\n") )
+  local newHelperDeps=( $(echo "${1}" | tr '\n' "\n") )
   local i=1
   for dependency in "${newHelperDeps[@]}"
   do
@@ -125,7 +140,7 @@ function _addNewHelperDeps () {
     # shellcheck disable=SC2128
     if [[ -n "${infoContent}" ]]
     then
-      _addNewHelperDeps "${dependency}" "${infoContent}"
+      _addNewHelperDeps "${infoContent}"
     fi
 
     sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_DEP_${i} = ../../resources/helpers/${dependency}/\$(MAIN)\n\#--ADD_FOLDER_DEP_NEW_HELPER#" Makefile
@@ -135,7 +150,7 @@ function _addNewHelperDeps () {
     sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(HELPER_DEP_${i}).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
     sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(HELPER_DEP_${i}).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(HELPER_DEP_${i}).h\n\#--ADD_TO_CLEAN#" Makefile
     sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${dependency}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-    echo "${dependency}" >> .info
+    echo "hp_${dependency}" >> .info
     echo "${GREEN}${dependency} successfully added.${NO_COLOR}"
     (( i++ ))
   done
@@ -173,9 +188,9 @@ function AddNewDependencies() {
   # shellcheck disable=SC2128
   if [[ -n "${infoContent}" ]]; then
     if [[ "${2}" == "DS" ]]; then
-      _addNewBaseDSDeps "${1}" "${infoContent}"
+      _addNewBaseDSDeps "${infoContent}"
     elif [[ "${2}" == "H" ]]; then
-      _addNewHelperDeps "${1}" "${infoContent}"
+      _addNewHelperDeps "${infoContent}"
     fi
   fi
   sed -i~ "/^ *$/d" .info
