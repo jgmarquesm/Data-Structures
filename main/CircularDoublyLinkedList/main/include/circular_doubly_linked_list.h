@@ -32,13 +32,13 @@ void CircularLinkedList_destroy(CircularLinkedList **CLL_ref);
  * @param CLL -> The CircularLinkedList to verify if is empty
  * @return true if the CircularLinkedList is empty and false otherwise
  */
-bool CircularLinkedList_is_empty(const CircularLinkedList *CLL);
+bool CircularLinkedList_is_empty(void *CLL);
 /**
  *
  * @param CLL -> The LinkedLIst to verify if is sorted
  * @return true if the CircularLinkedList is sorted and false otherwise.
  */
-bool CircularLinkedList_is_sorted(const CircularLinkedList *CLL);
+bool CircularLinkedList_is_sorted(void *CLL);
 /**
  *
  * @param CLL -> The LinkedLIst to verify sort order

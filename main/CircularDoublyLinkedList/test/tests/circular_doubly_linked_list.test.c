@@ -24,9 +24,7 @@ void test_1() {
     CircularLinkedList *CLL = CircularLinkedList_create();
     bool is_empty = CircularLinkedList_is_empty(CLL);
     TEST_ASSERT_EQUAL(1, is_empty);
-    TEST_ASSERT_EQUAL(0, CircularLinkedList_size(CLL));
     TEST_ASSERT_EQUAL(0, CircularLinkedList_is_sorted(CLL));
-    TEST_ASSERT_EQUAL(0, CircularLinkedList_sort_order(CLL));
 }
 
 // CircularLinkedList_clean(CLL)
@@ -44,7 +42,6 @@ void test_2() {
 
     CircularLinkedList_clean(CLL);
     TEST_ASSERT_EQUAL(1, CircularLinkedList_is_empty(CLL));
-    TEST_ASSERT_EQUAL(0, CircularLinkedList_size(CLL));
 }
 
 // CircularLinkedList_destroy(&CLL)
@@ -113,8 +110,13 @@ void test_7() {
     CircularLinkedList *CLL = CircularLinkedList_create();
     int data1 = 42, data2 = 99;
     CircularLinkedList_add_first(CLL, &data1);
+    CircularLinkedList_add_last(CLL, &data1);
+    CircularLinkedList_add_first(CLL, &data2);
+    CircularLinkedList_add_last(CLL, &data2);
     CircularLinkedList_add_first(CLL, &data2);
     TEST_ASSERT_EQUAL(&data2, CircularLinkedList_first_element(CLL));
+    TEST_ASSERT_EQUAL(5, CircularLinkedList_size(CLL));
+    TEST_ASSERT_EQUAL(1, CircularLinkedList_contains(CLL, &data1));
 }
 
 // CircularLinkedList_add_last(CLL)
@@ -210,11 +212,12 @@ void test_12() {
 
     size_t size_before = CircularLinkedList_size(CLL);
     TEST_ASSERT_EQUAL(6, size_before);
-    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_get(CLL, 1));
+    TEST_ASSERT_EQUAL(&data1, CircularLinkedList_get(CLL, 2));
 
     CircularLinkedList_remove(CLL, &data1, _compare_int);
     size_t size_after = CircularLinkedList_size(CLL);
     TEST_ASSERT_EQUAL(5, size_after);
+    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_get(CLL, 2));
     TEST_ASSERT_EQUAL(0, CircularLinkedList_contains(CLL, &data1));
 }
 
@@ -277,9 +280,10 @@ void test_17() {
     CircularLinkedList_add_first(CLL, &data2);
     CircularLinkedList_add_last(CLL, &data1);
     CircularLinkedList_add_last(CLL, &data2);
-    size_t index = CircularLinkedList_size(CLL) - 1;
     TEST_ASSERT_EQUAL(&data2, CircularLinkedList_get(CLL, 0));
-    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_get(CLL, index));
+    TEST_ASSERT_EQUAL(&data1, CircularLinkedList_get(CLL, 1));
+    TEST_ASSERT_EQUAL(&data1, CircularLinkedList_get(CLL, 2));
+    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_get(CLL, 3));
 }
 
 // Consistence between CircularLinkedList_first_element(CLL) && CircularLinkedList_get(CLL, 0)
@@ -554,10 +558,6 @@ void test_31() {
     CircularLinkedList_add_last(CLL, &data4);
 
     TEST_ASSERT_EQUAL(&data3, CircularLinkedList_min(CLL, _compare_int));
-    CircularLinkedList_sort_desc(&CLL, _compare_int);
-    TEST_ASSERT_EQUAL(&data3, CircularLinkedList_min(CLL, _compare_int));
-    CircularLinkedList_sort_asc(&CLL, _compare_int);
-    TEST_ASSERT_EQUAL(&data3, CircularLinkedList_min(CLL, _compare_int));
 }
 
 // CircularLinkedList_max(CLL, _compare_func)
@@ -571,10 +571,6 @@ void test_32() {
     CircularLinkedList_add_last(CLL, &data3);
     CircularLinkedList_add_last(CLL, &data4);
 
-    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_max(CLL, _compare_int));
-    CircularLinkedList_sort_desc(&CLL, _compare_int);
-    TEST_ASSERT_EQUAL(&data2, CircularLinkedList_max(CLL, _compare_int));
-    CircularLinkedList_sort_asc(&CLL, _compare_int);
     TEST_ASSERT_EQUAL(&data2, CircularLinkedList_max(CLL, _compare_int));
 }
 

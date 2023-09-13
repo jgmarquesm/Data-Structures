@@ -9,7 +9,9 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
+HELPER_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
+HELPER_FOLDER_DEP_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
+#--ADD_FOLDER_DEP_NEW_HELPER
 #--ADD_FOLDER_NEW_DS
 
 # Names Definition
@@ -19,10 +21,12 @@ DS = circular_doubly_linked_list
 TEST_DS = circular_doubly_linked_list.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
+HELPER_0 = node
+HELPER_DEP_1 = exception_handler
 #--ADD_NEW_HELPER
 #--ADD_NEW_DS
 #DS0
-#H0
+#H1
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -34,13 +38,19 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(MAIN)/$(BIN)
 	mkdir $(TEST)/$(BIN)
 
---private-get_unity:
+--private-get_external_lib:
+	cp $(HELPER_FOLDER_0)/$(SRC)/$(HELPER_0).c $(MAIN)/$(SRC)/
+	cp $(HELPER_FOLDER_0)/$(INCLUDE)/$(HELPER_0).h $(MAIN)/$(INCLUDE)/
+	cp $(HELPER_FOLDER_DEP_1)/$(SRC)/$(HELPER_DEP_1).c $(MAIN)/$(SRC)/
+	cp $(HELPER_FOLDER_DEP_1)/$(INCLUDE)/$(HELPER_DEP_1).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
-pack: clean_all --private-create_folders --private-get_unity \
+pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(DS).o \
+	$(MAIN)/$(OBJ)/$(HELPER_0).o \
+	$(MAIN)/$(OBJ)/$(HELPER_DEP_1).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
@@ -49,11 +59,13 @@ compile_apps: $(MAIN)/$(BIN)/$(APP_NAME)
 compile_test: $(MAIN)/$(OBJ)/$(DS).o \
 	$(MAIN)/$(OBJ)/unity.o \
  	$(TEST)/$(BIN)/$(TEST_DS) \
+	$(MAIN)/$(OBJ)/$(HELPER_0).o \
+	$(MAIN)/$(OBJ)/$(HELPER_DEP_1).o \
 #--ADD_TO_COMPILE_TEST
 
 run_apps: pack compile_apps
 	$(MAIN)/$(BIN)/$(APP_NAME)
-	make clean_unity
+	make clean_external
 
 run_tests: clean_all pack compile_test
 	$(TEST)/$(BIN)/$(TEST_DS)
@@ -65,7 +77,7 @@ add_deps:
 get_deps:
 	$(DEPS)/get_deps.sh
 
-clean_all: clean_libs clean_apps clean_test clean_unity
+clean_all: clean_libs clean_apps clean_test clean_external
 
 clean_libs:
 	rm -rf $(MAIN)/$(OBJ) $(MAIN)/$(LIB)
@@ -76,7 +88,11 @@ clean_apps:
 clean_test:
 	rm -rf $(TEST)/$(BIN)
 
-clean_unity:
+clean_external:
+	rm -rf $(MAIN)/$(SRC)/$(HELPER_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_0).h
+	rm -rf $(MAIN)/$(SRC)/$(HELPER_DEP_1).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_DEP_1).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h

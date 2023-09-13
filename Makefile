@@ -138,6 +138,8 @@ pack: build
 
 test: --private-test
 
+check: --private-build_test
+
 .SILENT:
 b: build
 
