@@ -81,7 +81,7 @@ function _addNewBaseDSDeps () {
   local i=1
   for dependency in "${newBaseDSDeps[@]}"
   do
-    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "${dependency}")" == 'is' ]]
+    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "$(echo "$dependency" | cut -c4-)")" == 'is' ]]
     then
       echo "${YELLOW}SKIPPING: ${dependency}...${NO_COLOR}"
       continue
@@ -110,13 +110,12 @@ function _addNewBaseDSDeps () {
     elif [[ ${dependency:0:2} == "hp" ]]
     then
       local infoContent=( "${(f)$(< ../../resources/helpers/"$(echo "$dependency" | cut -c4-)"/.info)}" )
+      _addNewHelper "$(echo "$dependency" | cut -c4-)"
       # shellcheck disable=SC2128
       if [[ -n "${infoContent}" ]]
       then
         _addNewHelperDeps "${infoContent}"
       fi
-
-      _addNewHelper "$(echo "$dependency" | cut -c4-)"
     else
       echo "${BLUE}${dependency} ${YELLOW}does not match any pattern of dependency.${NO_COLOR}"
     fi
@@ -129,7 +128,7 @@ function _addNewHelperDeps () {
   local i=1
   for dependency in "${newHelperDeps[@]}"
   do
-    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "${dependency}")" == 'is' ]]
+    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "$(echo "$dependency" | cut -c4-)")" == 'is' ]]
     then
       echo "${YELLOW}SKIPPING: ${dependency}...${NO_COLOR}"
       continue
@@ -143,7 +142,7 @@ function _addNewHelperDeps () {
       _addNewHelperDeps "${infoContent}"
     fi
 
-    sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_DEP_${i} = ../../resources/helpers/${dependency}/\$(MAIN)\n\#--ADD_FOLDER_DEP_NEW_HELPER#" Makefile
+    sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_DEP_${i} = ../../resources/helpers/${dependency}/\$(MAIN)\n\#--ADD_FOLDER_NEW_HELPER#" Makefile
     sed -i~ "s#^\#--ADD_NEW_HELPER#HELPER_DEP_${i} = $(TitleCaseTo_snake_case "${dependency}")\n\#--ADD_NEW_HELPER#" Makefile
     sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(HELPER_FOLDER_DEP_${i})/\$(SRC)/\$(HELPER_DEP_${i}).c \$(MAIN)/\$(SRC)/\n\tcp \$(HELPER_FOLDER_DEP_${i})/\$(INCLUDE)/\$(HELPER_DEP_${i}).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
     sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(HELPER_DEP_${i}).o \\\\\n\#--ADD_TO_PACK#" Makefile
