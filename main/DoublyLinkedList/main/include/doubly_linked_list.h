@@ -32,13 +32,13 @@ void LinkedList_destroy(LinkedList **LL_ref);
  * @param LL -> The LinkedList to verify if is empty
  * @return true if the LinkedList is empty and false otherwise
  */
-bool LinkedList_is_empty(const LinkedList *LL);
+bool LinkedList_is_empty(void *LL);
 /**
  *
  * @param LL -> The LinkedLIst to verify if is sorted
  * @return true if the LinkedList is sorted and false otherwise.
  */
-bool LinkedList_is_sorted(const LinkedList *LL);
+bool LinkedList_is_sorted(void *LL);
 /**
  *
  * @param LL -> The LinkedLIst to verify sort order
