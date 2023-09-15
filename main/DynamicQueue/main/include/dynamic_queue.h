@@ -10,56 +10,56 @@
 * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
 * 3 - Type comparison function: To compare correctly data.
  */
-typedef struct _dynamic_stack Stack;
+typedef struct _dynamic_queue Queue;
 /**
  *
- * @return A new Stack
+ * @return A new Queue
  */
-Stack *Stack_create();
+Queue *Queue_create();
 /**
- * When calling this function it will clean all data from Stack
- * @param S -> The Stack to be clean
+ * When calling this function it will clean all data from Queue
+ * @param queue -> The Queue to be clean
  */
-void Stack_clean(Stack *S);
+void Queue_clean(Queue *queue);
 /**
- * When calling this function, it will clean all data from Stack and it will be deallocated
- * @param S_ref -> The pointer of the Stack to be deleted
+ * When calling this function, it will clean all data from Queue and it will be deallocated
+ * @param queue_ref -> The pointer of the Queue to be deleted
  */
-void Stack_destroy(Stack **S_ref);
-/**
- *
- * @param S -> Stack to check emptiness
- * @return true if: Stack is empty;\n false if: Array not empty.
- */
-bool Stack_is_empty(const Stack *S);
-/**
- * When calling this function it will add the data on top of Stack
- * @param S -> Stack to add data
- * @param data -> Data to be add in Stack
- */
-void Stack_enqueue(Stack *S, void *data);
+void Queue_destroy(Queue **queue_ref);
 /**
  *
- * @param S -> Stack to get data from top
- * @return The data (void *) on top of the Stack
+ * @param queue -> Queue to check emptiness
+ * @return true if: Queue is empty;\n false if: Array not empty.
  */
-void *Stack_peek(const Stack *S);
+bool Queue_is_empty(void *queue);
 /**
- * When calling this function it will remove data from top of the Stack;
- * @param S -> Stack to remove last element;
+ * When calling this function it will add the data at tail of the Queue
+ * @param queue -> Queue to add data
+ * @param data -> Data to be add in Queue
  */
-void Stack_dequeue(Stack *S);
+void Queue_enqueue(Queue *queue, void *data);
 /**
  *
- * @param S -> Stack to be printed
+ * @param queue -> Queue to get data from the head
+ * @return The data (void *) on head of the Queue
+ */
+void *Queue_peek(const Queue *queue);
+/**
+ * When calling this function it will remove data from head of the Queue;
+ * @param queue -> Queue to remove last element;
+ */
+void Queue_dequeue(Queue *queue);
+/**
+ *
+ * @param queue -> Queue to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Stack_print(const Stack *S, void (*type_print_function)(void * data));
+void Queue_print(const Queue *queue, void (*type_print_function)(void * data));
 /**
  *
- * @param S -> Stack to check size
- * @return Number of elements that are allocated in Stack.
+ * @param queue -> Queue to check size
+ * @return Number of elements that are allocated in Queue.
  */
-size_t Stack_size(const Stack *S);
+size_t Queue_size(const Queue *queue);
 
 #endif

@@ -31,7 +31,7 @@ void Stack_destroy(Stack **S_ref);
  * @param S -> Stack to check emptiness
  * @return true if: Stack is empty;\n false if: Array not empty.
  */
-bool Stack_is_empty(const Stack *S);
+bool Stack_is_empty(void *S);
 /**
  * When calling this function it will add the data on top of Stack
  * @param S -> Stack to add data

@@ -1,72 +1,104 @@
 #include "../include/dynamic_queue.h"
-#include "../include/doubly_linked_list.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include "../include/doubly_linked_list.h"
+#include "../include/node.h"
+#include "../include/exception_handler.h"
 //#--ADD_TO_INCLUDE
 
-typedef struct _dynamic_stack {
+typedef struct _dynamic_queue {
     LinkedList *data;
-} Stack;
+} Queue;
 
-Stack *Stack_create() {
-    Stack *S = (Stack *) calloc(1, sizeof(Stack));
+Queue *Queue_create() {
+    Queue *S = (Queue *) calloc(1, sizeof(Queue));
     S->data = LinkedList_create();
     return S;
 }
 
-void Stack_clean(Stack *S) {
-    LinkedList_clean(S->data);
+void Queue_clean(Queue *queue) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Queue_clean", "Queue", (void *) queue)
+        )
+    ) return;
+    LinkedList_clean(queue->data);
 }
 
-void Stack_destroy(Stack **S_ref) {
-    Stack *S = *S_ref;
-    LinkedList_destroy(&(S->data));
-    free(S);
-    *S_ref = NULL;
+void Queue_destroy(Queue **queue_ref) {
+    Queue *queue = *queue_ref;
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Queue_destroy", "Queue", (void *) queue)
+        )
+    ) return;
+    LinkedList_destroy(&(queue->data));
+    free(queue);
+    *queue_ref = NULL;
 }
 
-bool Stack_is_empty(const Stack *S) {
-    return LinkedList_is_empty(S->data);
+bool Queue_is_empty(void *queue) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Queue_is_empty", "Queue", (void *) queue)
+        )
+    ) return true;
+    return LinkedList_is_empty(((Queue *) queue)->data);
 }
 
-void Stack_enqueue(Stack *S, void *data) {
-    LinkedList_add_last(S->data, data);
+void Queue_enqueue(Queue *queue, void *data) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Queue_enqueue", "Queue", (void *) queue),
+            ExceptionHandler_is_null("Queue_enqueue", "Data", data)
+        )
+    ) return;
+    LinkedList_add_last(queue->data, data);
 }
 
-void *Stack_peek(const Stack *S) {
-    if (Stack_is_empty(S)) {
-        fprintf(stderr, "\nERROR: on function 'Stack_peek'.\n");
-        fprintf(stderr, "ERROR: Stack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    return LinkedList_get(S->data, 0);
+void *Queue_peek(const Queue *queue) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Queue_peek", "Queue", (void *) queue),
+            ExceptionHandler_is_empty("Queue_peek", "Queue", (void *) queue, Queue_is_empty)
+        )
+    ) return NULL;
+    return LinkedList_get(queue->data, 0);
 }
 
-void Stack_dequeue(Stack *S) {
-    if (Stack_is_empty(S)) {
-        fprintf(stderr, "\nERROR: on function 'Stack_pop'.\n");
-        fprintf(stderr, "ERROR: Stack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    LinkedList_remove_first(S->data);
+void Queue_dequeue(Queue *queue) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Queue_dequeue", "Queue", (void *) queue),
+            ExceptionHandler_is_empty("Queue_dequeue", "Queue", (void *) queue, Queue_is_empty)
+        )
+    ) return;
+    LinkedList_remove_first(queue->data);
 }
 
-void Stack_print(const Stack *S, void (*type_print_function)(void * data)) {
-    if (Stack_is_empty(S)){
-        fprintf(stderr, "\nERROR: on function 'Stack_print'.\n");
-        fprintf(stderr, "ERROR: Stack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
+void Queue_print(const Queue *queue, void (*type_print_function)(void * data)) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue),
+            ExceptionHandler_is_empty("Queue_print", "Queue", (void *) queue, Queue_is_empty)
+        )
+    ) return;
     printf("--(");
-    size_t size = LinkedList_size(S->data);
+    size_t size = LinkedList_size(queue->data);
     for(size_t i = 0; i < size - 1; i++) {
-        type_print_function(LinkedList_get(S->data, i));
+        type_print_function(LinkedList_get(queue->data, i));
         printf(" -> ");
     }
-    type_print_function(LinkedList_get(S->data, LinkedList_size(S->data) - 1));
+    type_print_function(LinkedList_get(queue->data, LinkedList_size(queue->data) - 1));
     puts(")--");
 }
 
-size_t Stack_size(const Stack *S) {
-    return LinkedList_size(S->data);
+size_t Queue_size(const Queue *queue) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Queue_size", "Queue", (void *) queue),
+            ExceptionHandler_is_empty("Queue_size", "Queue", (void *) queue, Queue_is_empty)
+        )
+    ) return 0;
+    return LinkedList_size(queue->data);
 }
