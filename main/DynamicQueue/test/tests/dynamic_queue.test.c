@@ -18,108 +18,108 @@ int _compare_int(void *data1, void *data2){
     return d2 - d1;
 }
 
-// Stack_create()
+// Queue_create()
 void test_1() {
-    TEST_MESSAGE("Test: Stack_create(): ");
-    Stack *S = Stack_create();
-    bool is_empty = Stack_is_empty(S);
+    TEST_MESSAGE("Test: Queue_create(): ");
+    Queue *queue = Queue_create();
+    bool is_empty = Queue_is_empty(queue);
     TEST_ASSERT_EQUAL(1, is_empty);
-    TEST_ASSERT_EQUAL(0, Stack_size(S));
+    TEST_ASSERT_EQUAL(0, Queue_size(queue));
 }
 
-// Stack_clean(S)
+// Queue_clean(S)
 void test_2() {
-    TEST_MESSAGE("Test: Stack_clean(S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_clean(S): ");
+    Queue *queue = Queue_create();
     int data1 = 42, data2 = 99;
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
 
-    Stack_clean(S);
-    TEST_ASSERT_EQUAL(1, Stack_is_empty(S));
-    TEST_ASSERT_EQUAL(0, Stack_size(S));
+    Queue_clean(queue);
+    TEST_ASSERT_EQUAL(1, Queue_is_empty(queue));
+    TEST_ASSERT_EQUAL(0, Queue_size(queue));
 }
 
-// Stack_destroy(&S)
+// Queue_destroy(&S)
 void test_3() {
-    TEST_MESSAGE("Test: Stack_destroy(&S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_destroy(&S): ");
+    Queue *queue = Queue_create();
     int data1 = 42, data2 = 99;
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data2);
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data2);
 
-    Stack_destroy(&S);
-    TEST_ASSERT_EQUAL(NULL, S);
+    Queue_destroy(&queue);
+    TEST_ASSERT_EQUAL(NULL, queue);
 }
 
-// Stack_is_empty(S)
+// Queue_is_empty(S)
 void test_4() {
-    TEST_MESSAGE("Test: Stack_is_empty(S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_is_empty(S): ");
+    Queue *queue = Queue_create();
     int data1 = 42, data2 = 99;
-    TEST_ASSERT_EQUAL(1, Stack_is_empty(S));
-    TEST_ASSERT_EQUAL(0, Stack_size(S));
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
-    TEST_ASSERT_EQUAL(0, Stack_is_empty(S));
-    TEST_ASSERT_EQUAL(2, Stack_size(S));
+    TEST_ASSERT_EQUAL(1, Queue_is_empty(queue));
+    TEST_ASSERT_EQUAL(0, Queue_size(queue));
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
+    TEST_ASSERT_EQUAL(0, Queue_is_empty(queue));
+    TEST_ASSERT_EQUAL(2, Queue_size(queue));
 }
 
-// Stack_enqueue(S, data)
+// Queue_enqueue(S, data)
 void test_5() {
-    TEST_MESSAGE("Test: Stack_enqueue(S, data): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_enqueue(S, data): ");
+    Queue *queue = Queue_create();
     int data1 = 42, data2 = 99;
-    Stack_enqueue(S, &data1);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(S)));
-    Stack_enqueue(S, &data2);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(S)));
+    Queue_enqueue(queue, &data1);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Queue_peek(queue)));
+    Queue_enqueue(queue, &data2);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Queue_peek(queue)));
 }
 
-// Stack_peek(S)
+// Queue_peek(S)
 void test_6() {
-    TEST_MESSAGE("Test: Stack_peek(S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_peek(S): ");
+    Queue *queue = Queue_create();
     int data1 = 42, data2 = 99, data3 = 43, data4 = 55;
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
-    Stack_enqueue(S, &data3);
-    Stack_enqueue(S, &data4);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(S)));
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
+    Queue_enqueue(queue, &data3);
+    Queue_enqueue(queue, &data4);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Queue_peek(queue)));
 }
 
-// Stack_dequeue(S)
+// Queue_dequeue(S)
 void test_7() {
-    TEST_MESSAGE("Test: Stack_dequeue(S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_dequeue(S): ");
+    Queue *queue = Queue_create();
     int data0 = 42, data1 = 99, data2 = 55;
-    Stack_enqueue(S, &data0);
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
+    Queue_enqueue(queue, &data0);
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
 
-    TEST_ASSERT_EQUAL(3, Stack_size(S));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data0), _convert_to_int(Stack_peek(S)));
+    TEST_ASSERT_EQUAL(3, Queue_size(queue));
+    TEST_ASSERT_EQUAL(_convert_to_int(&data0), _convert_to_int(Queue_peek(queue)));
 
-    Stack_dequeue(S);
-    TEST_ASSERT_EQUAL(2, Stack_size(S));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(S)));
+    Queue_dequeue(queue);
+    TEST_ASSERT_EQUAL(2, Queue_size(queue));
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Queue_peek(queue)));
 }
 
-// Stack_size(S)
+// Queue_size(S)
 void test_8() {
-    TEST_MESSAGE("Test: Stack_size(S): ");
-    Stack *S = Stack_create();
+    TEST_MESSAGE("Test: Queue_size(S): ");
+    Queue *queue = Queue_create();
     int data1 = 42;
     int data2 = 99;
-    Stack_enqueue(S, &data1);
-    Stack_enqueue(S, &data2);
-    TEST_ASSERT_EQUAL(2, Stack_size(S));
+    Queue_enqueue(queue, &data1);
+    Queue_enqueue(queue, &data2);
+    TEST_ASSERT_EQUAL(2, Queue_size(queue));
 }
 
 int main(){
