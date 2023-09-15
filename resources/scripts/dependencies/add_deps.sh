@@ -11,9 +11,15 @@ CYAN='\033[1;96m'
 WHITE='\033[1;97m'
 NO_COLOR='\033[0m'
 
+PUBLIC='pub'
+PROTECTED='ptd'
+PRIVATE='pvt'
+DS='ds'
+H='hp'
+
 function _get_this_DS() {
-  DS="$(echo set -- "$(pwd)" | grep -P 'main\/(?:.+)$' -o | cut -c6-)"
-  echo "$DS"
+  this="$(echo set -- "$(pwd)" | grep -P 'main\/(?:.+)$' -o | cut -c6-)"
+  echo "$this"
 }
 
 function TitleCaseTo_snake_case() {
@@ -37,6 +43,41 @@ function _is_already_there() {
   fi
 }
 
+function _add_dep_with_type_and_access_modifier() {
+  if [[ "${1}" == "$PUBLIC" ]]
+  then
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(TitleCaseTo_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".h
+  else
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
+  fi
+    echo "${1}_${2}_${3}" >> .info
+}
+
+function _add_dep_deps_with_type_and_access_modifier() {
+  if [[ "${1}" == "$PUBLIC" ]]
+  then
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(TitleCaseTo_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".h
+  elif [[ "${1}" == "$PROTECTED" ]]
+  then
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
+  fi
+  echo "${1}_${2}_${3}" >> .info
+}
+
+function _get_dep_modifier() {
+  echo "${${1}:0:3}"
+}
+
+function _get_dep_type() {
+    # shellcheck disable=SC2005
+    echo "$(echo "${1}" | cut -c5-6)"
+}
+
+function _get_dep() {
+    # shellcheck disable=SC2005
+    echo "$(echo "${1}" | cut -c8-)"
+}
+
 function _get_DSs_count() {
   adt_count="$(grep -c -P "^DS_[\d]+" Makefile)"
   echo "$adt_count"
@@ -56,8 +97,7 @@ function _addNewBaseDS () {
   sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(DS_$index).o \\\\\n\#--ADD_TO_PACK#" Makefile
   sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(DS_$index).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
   sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(DS_$index).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(DS_$index).h\n\#--ADD_TO_CLEAN#" Makefile
-  sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${1}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-  echo "ds_${1}" >> .info
+  _add_dep_with_type_and_access_modifier "${2}" "$DS" "${1}"
   echo "${GREEN}${1} successfully added.${NO_COLOR}"
 }
 
@@ -70,8 +110,7 @@ function _addNewHelper () {
   sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(HELPER_$index).o \\\\\n\#--ADD_TO_PACK#" Makefile
   sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(HELPER_$index).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
   sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(HELPER_$index).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(HELPER_$index).h\n\#--ADD_TO_CLEAN#" Makefile
-  sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${1}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-  echo "hp_${1}" >> .info
+  _add_dep_with_type_and_access_modifier "${2}" "$H" "${1}"
   echo "${GREEN}${1} successfully added.${NO_COLOR}"
 }
 
@@ -81,43 +120,55 @@ function _addNewBaseDSDeps () {
   local i=1
   for dependency in "${newBaseDSDeps[@]}"
   do
-    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "$(echo "$dependency" | cut -c4-)")" == 'is' ]]
+    DEP_MODIFIER=$(_get_dep_modifier "$dependency")
+    DEP_TYPE=$(_get_dep_type "$dependency")
+    DEP=$(_get_dep "$dependency")
+
+    if [[ "$(_is_this_DS "$DEP")" == 'is' || "$(_is_already_there "$DEP")" == 'is' ]]
     then
-      echo "${YELLOW}SKIPPING: ${dependency}...${NO_COLOR}"
+      echo "${YELLOW}SKIPPING: $DEP...${NO_COLOR}"
       continue
     fi
 
-    if [[ ${dependency:0:2} == "ds" ]]
+    echo "${BLUE}Adding $DEP...${NO_COLOR}"
+    if [[ $DEP_TYPE == "$DS" ]]
     then
-      echo "${BLUE}Adding $(echo "$dependency" | cut -c4-)...${NO_COLOR}"
-      local infoContent=( "${(f)$(< ../"$(echo "$dependency" | cut -c4-)"/.info)}" )
+      local infoContent=( "${(f)$(< ../"$DEP"/.info)}" )
       # shellcheck disable=SC2128
       if [[ -n "${infoContent}" ]]
       then
-        _addNewBaseDSDeps "$(echo "$dependency" | cut -c4-)" "${infoContent}"
+        _addNewBaseDSDeps "${infoContent}"
       fi
 
-      sed -i~ "s#^\#--ADD_FOLDER_NEW_DS#DS_FOLDER_DEP_${i} = ../${dependency}/\$(MAIN)\n\#--ADD_FOLDER_NEW_DS#" Makefile
-      sed -i~ "s#^\#--ADD_NEW_DS#DS_DEP_${i} = $(TitleCaseTo_snake_case "${dependency}")\n\#--ADD_NEW_DS#" Makefile
+      sed -i~ "s#^\#--ADD_FOLDER_NEW_DS#DS_FOLDER_DEP_${i} = ../$DEP/\$(MAIN)\n\#--ADD_FOLDER_NEW_DS#" Makefile
+      sed -i~ "s#^\#--ADD_NEW_DS#DS_DEP_${i} = $(TitleCaseTo_snake_case "$DEP")\n\#--ADD_NEW_DS#" Makefile
       sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(DS_FOLDER_DEP_${i})/\$(SRC)/\$(DS_DEP_${i}).c \$(MAIN)/\$(SRC)/\n\tcp \$(DS_FOLDER_DEP_${i})/\$(INCLUDE)/\$(DS_DEP_${i}).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
       sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_PACK#" Makefile
       sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(DS_DEP_${i}).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
       sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(DS_DEP_${i}).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(DS_DEP_${i}).h\n\#--ADD_TO_CLEAN#" Makefile
-      sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${dependency}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-      echo "${dependency}" >> .info
-      echo "${GREEN}${dependency} successfully added.${NO_COLOR}"
+      _add_dep_deps_with_type_and_access_modifier "$DEP_MODIFIER" "$DS" "$DEP"
+      echo "${GREEN}$DEP successfully added.${NO_COLOR}"
       (( i++ ))
-    elif [[ ${dependency:0:2} == "hp" ]]
+    elif [[ $DEP_TYPE == "$H" ]]
     then
-      local infoContent=( "${(f)$(< ../../resources/helpers/"$(echo "$dependency" | cut -c4-)"/.info)}" )
-      _addNewHelper "$(echo "$dependency" | cut -c4-)"
+      index=$(_get_Helpers_count)
+      sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_$index = ../../resources/helpers/$DEP/\$(MAIN)\n\#--ADD_FOLDER_NEW_HELPER#" Makefile
+      sed -i~ "s#^\#--ADD_NEW_HELPER#HELPER_$index = $(TitleCaseTo_snake_case "$DEP")\n\#--ADD_NEW_HELPER#" Makefile
+      sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(HELPER_FOLDER_$index)/\$(SRC)/\$(HELPER_$index).c \$(MAIN)/\$(SRC)/\n\tcp \$(HELPER_FOLDER_$index)/\$(INCLUDE)/\$(HELPER_$index).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
+      sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(HELPER_$index).o \\\\\n\#--ADD_TO_PACK#" Makefile
+      sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(HELPER_$index).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
+      sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(HELPER_$index).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(HELPER_$index).h\n\#--ADD_TO_CLEAN#" Makefile
+      _add_dep_deps_with_type_and_access_modifier "$DEP_MODIFIER" "$H" "$DEP"
+      local infoContent=( "${(f)$(< ../../resources/helpers/"$DEP"/.info)}" )
       # shellcheck disable=SC2128
       if [[ -n "${infoContent}" ]]
       then
         _addNewHelperDeps "${infoContent}"
       fi
+
+      echo "${GREEN}$DEP successfully added.${NO_COLOR}"
     else
-      echo "${BLUE}${dependency} ${YELLOW}does not match any pattern of dependency.${NO_COLOR}"
+      echo "${BLUE}$DEP ${YELLOW}does not match any pattern of dependency.${NO_COLOR}"
     fi
   done
 }
@@ -128,29 +179,31 @@ function _addNewHelperDeps () {
   local i=1
   for dependency in "${newHelperDeps[@]}"
   do
-    if [[ "$(_is_this_DS "${dependency}")" == 'is' || "$(_is_already_there "$(echo "$dependency" | cut -c4-)")" == 'is' ]]
+    DEP_MODIFIER=$(_get_dep_modifier "$dependency")
+    DEP=$(_get_dep "$dependency")
+
+    if [[ "$(_is_this_DS "$DEP")" == 'is' || "$(_is_already_there "$DEP")" == 'is' ]]
     then
-      echo "${YELLOW}SKIPPING: ${dependency}...${NO_COLOR}"
+      echo "${YELLOW}SKIPPING: $DEP...${NO_COLOR}"
       continue
     fi
 
-    echo "${BLUE}Adding ${dependency}...${NO_COLOR}"
-    local infoContent=( "${(f)$(< ../../resources/helpers/"${dependency}"/.info)}" )
+    echo "${BLUE}Adding $DEP...${NO_COLOR}"
+    local infoContent=( "${(f)$(< ../../resources/helpers/"$DEP"/.info)}" )
     # shellcheck disable=SC2128
     if [[ -n "${infoContent}" ]]
     then
       _addNewHelperDeps "${infoContent}"
     fi
 
-    sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_DEP_${i} = ../../resources/helpers/${dependency}/\$(MAIN)\n\#--ADD_FOLDER_NEW_HELPER#" Makefile
-    sed -i~ "s#^\#--ADD_NEW_HELPER#HELPER_DEP_${i} = $(TitleCaseTo_snake_case "${dependency}")\n\#--ADD_NEW_HELPER#" Makefile
+    sed -i~ "s#^\#--ADD_FOLDER_NEW_HELPER#HELPER_FOLDER_DEP_${i} = ../../resources/helpers/$DEP/\$(MAIN)\n\#--ADD_FOLDER_NEW_HELPER#" Makefile
+    sed -i~ "s#^\#--ADD_NEW_HELPER#HELPER_DEP_${i} = $(TitleCaseTo_snake_case "$DEP")\n\#--ADD_NEW_HELPER#" Makefile
     sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(HELPER_FOLDER_DEP_${i})/\$(SRC)/\$(HELPER_DEP_${i}).c \$(MAIN)/\$(SRC)/\n\tcp \$(HELPER_FOLDER_DEP_${i})/\$(INCLUDE)/\$(HELPER_DEP_${i}).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
     sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(HELPER_DEP_${i}).o \\\\\n\#--ADD_TO_PACK#" Makefile
     sed -i~ "s#^\#--ADD_TO_COMPILE_TEST#\t\$(MAIN)/\$(OBJ)/\$(HELPER_DEP_${i}).o \\\\\n\#--ADD_TO_COMPILE_TEST#" Makefile
     sed -i~ "s#^\#--ADD_TO_CLEAN#\trm -rf \$(MAIN)/\$(SRC)/\$(HELPER_DEP_${i}).c\n\trm -rf \$(MAIN)/\$(INCLUDE)/\$(HELPER_DEP_${i}).h\n\#--ADD_TO_CLEAN#" Makefile
-    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(TitleCaseTo_snake_case "${dependency}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(TitleCaseTo_snake_case "$(_get_this_DS)")".c
-    echo "hp_${dependency}" >> .info
-    echo "${GREEN}${dependency} successfully added.${NO_COLOR}"
+    _add_dep_deps_with_type_and_access_modifier "$DEP_MODIFIER" "$H" "$DEP"
+    echo "${GREEN}$DEP successfully added.${NO_COLOR}"
     (( i++ ))
   done
 }
@@ -177,18 +230,18 @@ function UpdateExtLibsLabel() {
 }
 
 function AddNewDependencies() {
-  if [[ "${2}" == "DS" ]]; then
-    local infoContent=( "${(f)$(< ../"${1}"/.info)}" )
-    _addNewBaseDS "${1}"
-  elif [[ "${2}" == "H" ]]; then
-    local infoContent=( "${(f)$(< ../../resources/helpers/"${1}"/.info)}" )
-    _addNewHelper "${1}"
+  if [[ "${2}" == "$DS" ]]; then
+    local infoContent=( "${(f)$(< ../"${3}"/.info)}" )
+    _addNewBaseDS "${3}" "${1}"
+  elif [[ "${2}" == "$H" ]]; then
+    local infoContent=( "${(f)$(< ../../resources/helpers/"${3}"/.info)}" )
+    _addNewHelper "${3}" "${1}"
   fi
   # shellcheck disable=SC2128
   if [[ -n "${infoContent}" ]]; then
-    if [[ "${2}" == "DS" ]]; then
+    if [[ "${2}" == "$DS" ]]; then
       _addNewBaseDSDeps "${infoContent}"
-    elif [[ "${2}" == "H" ]]; then
+    elif [[ "${2}" == "$H" ]]; then
       _addNewHelperDeps "${infoContent}"
     fi
   fi
@@ -200,11 +253,31 @@ function EvalIndex() {
   sed -i~ "s#^\#H[0-9]\+#\#H$(( $(_get_Helpers_count) ))#" Makefile
 }
 
+function SetDepAccessModifier() {
+  read -r MODIFIER_SELECTION
+  case ${MODIFIER_SELECTION} in
+      1 ) echo $PUBLIC;;
+      2 ) echo $PROTECTED;;
+      3 ) echo $PRIVATE;;
+      * )
+        echo "${YELLOW}Invalid selection: ${RED}${MODIFIER_SELECTION}.${NO_COLOR}"
+        exit 1
+  esac
+}
+
+function CallTasks() {
+  CheckIfCanAdd "${3}"
+  UpdateExtLibsLabel
+  AddNewDependencies "${1}" "${2}" "${3}"
+  EvalIndex
+}
+
 clear
 
 echo "${CYAN}Do you wanna add a Data Structure or a Helper?${NO_COLOR}
 ${PURPLE}1 )${WHITE} Data Structure
-${PURPLE}2 )${WHITE} Helper"
+${PURPLE}2 )${WHITE} Helper
+${NO_COLOR}"
 read -r DS_OR_HELPER
 
 case ${DS_OR_HELPER} in
@@ -225,26 +298,22 @@ ${NO_COLOR}" #--DS
     read -r SELECTION
 
     case ${SELECTION} in
-        1 ) NEW_DS_FOLDER="Array";;
-        2 ) NEW_DS_FOLDER="SinglyLinkedList";;
-        3 ) NEW_DS_FOLDER="DoublyLinkedList";;
-        4 ) NEW_DS_FOLDER="CircularDoublyLinkedList";;
-        5 ) NEW_DS_FOLDER="StaticStack";;
-        6 ) NEW_DS_FOLDER="DynamicStack";;
-        7 ) NEW_DS_FOLDER="StaticQueue";;
-        8 ) NEW_DS_FOLDER="DynamicQueue";;
-        9 ) NEW_DS_FOLDER="Matrix";;
-        10 ) NEW_DS_FOLDER="UndirectedWeightedGraph";;
+        1 ) FOLDER="Array";;
+        2 ) FOLDER="SinglyLinkedList";;
+        3 ) FOLDER="DoublyLinkedList";;
+        4 ) FOLDER="CircularDoublyLinkedList";;
+        5 ) FOLDER="StaticStack";;
+        6 ) FOLDER="DynamicStack";;
+        7 ) FOLDER="StaticQueue";;
+        8 ) FOLDER="DynamicQueue";;
+        9 ) FOLDER="Matrix";;
+        10 ) FOLDER="UndirectedWeightedGraph";;
 #--ADD_NEW_OPT
         * )
           echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
           exit 1
         ;;
     esac
-    CheckIfCanAdd "$NEW_DS_FOLDER"
-    UpdateExtLibsLabel
-    AddNewDependencies "$NEW_DS_FOLDER" "DS"
-    EvalIndex
     ;;
   2 )
     echo "${CYAN}Select new dependency to add:${WHITE}
@@ -256,24 +325,34 @@ ${NO_COLOR}" #--H
       read -r SELECTION
 
       case ${SELECTION} in
-          1 ) NEW_HELPER_FOLDER="ExceptionHandler";;
-          2 ) NEW_HELPER_FOLDER="Node";;
-          3 ) NEW_HELPER_FOLDER="Vertex";;
+          1 ) FOLDER="ExceptionHandler";;
+          2 ) FOLDER="Node";;
+          3 ) FOLDER="Vertex";;
 #--ADD_NEW_HELPER_OPT
           * )
             echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
             exit 1
           ;;
       esac
-      CheckIfCanAdd "$NEW_HELPER_FOLDER"
-      UpdateExtLibsLabel
-      AddNewDependencies "$NEW_HELPER_FOLDER" "H"
-      EvalIndex
     ;;
   * )
     echo "${YELLOW}Invalid selection: ${RED}${DS_OR_HELPER}.${NO_COLOR}"
     exit 1
     ;;
 esac
+
+echo "${CYAN}What is the access modifier for this dependency?${WHITE}
+${PURPLE}1 )${WHITE} Public
+${PURPLE}2 )${WHITE} Protected
+${PURPLE}3 )${WHITE} Private
+${NO_COLOR}"
+MODIFIER=$(SetDepAccessModifier)
+TYPE=$DS
+if [[ ${DS_OR_HELPER} == "2" ]]
+then
+  TYPE=$H
+fi
+
+CallTasks "$MODIFIER" "$TYPE" "$FOLDER"
 
 echo "${GREEN}Finishing...${NO_COLOR}"
