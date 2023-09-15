@@ -79,7 +79,8 @@ void Queue_dequeue(Queue *queue) {
 void Queue_print(const Queue *queue, void (*type_print_function)(void * data)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue)
+            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue),
+            ExceptionHandler_is_empty("Queue_print", "Queue", (void *) queue, Queue_is_empty)
         )
     ) return;
     printf("--(");
