@@ -9,10 +9,10 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-HELPER_FOLDER_0 = ../../resources/helpers/ExceptionHandler/$(MAIN)
-#--ADD_FOLDER_NEW_HELPER
-DS_FOLDER_0 = ../Array/$(MAIN)
-#--ADD_FOLDER_NEW_DS
+hp_FOLDER_0 = ../../resources/helpers/ExceptionHandler/$(MAIN)
+#--ADD_FOLDER_NEW_hp
+ds_FOLDER_0 = ../Array/$(MAIN)
+#--ADD_FOLDER_NEW_ds
 
 # Names Definition
 APP_NAME = app_static_queue
@@ -21,12 +21,12 @@ DS = static_queue
 TEST_DS = static_queue.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-HELPER_0 = exception_handler
-#--ADD_NEW_HELPER
-DS_0 = array
-#--ADD_NEW_DS
-#DS1
-#H1
+hp_0 = exception_handler
+#--ADD_NEW_hp
+ds_0 = array
+#--ADD_NEW_ds
+#ds1
+#hp1
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -39,18 +39,18 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(TEST)/$(BIN)
 
 --private-get_external_lib:
-	cp $(DS_FOLDER_0)/$(SRC)/$(DS_0).c $(MAIN)/$(SRC)/
-	cp $(DS_FOLDER_0)/$(INCLUDE)/$(DS_0).h $(MAIN)/$(INCLUDE)/
-	cp $(HELPER_FOLDER_0)/$(SRC)/$(HELPER_0).c $(MAIN)/$(SRC)/
-	cp $(HELPER_FOLDER_0)/$(INCLUDE)/$(HELPER_0).h $(MAIN)/$(INCLUDE)/
+	cp $(ds_FOLDER_0)/$(SRC)/$(ds_0).c $(MAIN)/$(SRC)/
+	cp $(ds_FOLDER_0)/$(INCLUDE)/$(ds_0).h $(MAIN)/$(INCLUDE)/
+	cp $(hp_FOLDER_0)/$(SRC)/$(hp_0).c $(MAIN)/$(SRC)/
+	cp $(hp_FOLDER_0)/$(INCLUDE)/$(hp_0).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(DS).o \
-	$(MAIN)/$(OBJ)/$(DS_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_0).o \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
@@ -59,8 +59,8 @@ compile_apps: $(MAIN)/$(BIN)/$(APP_NAME)
 compile_test: $(MAIN)/$(OBJ)/$(DS).o \
 	$(MAIN)/$(OBJ)/unity.o \
  	$(TEST)/$(BIN)/$(TEST_DS) \
-	$(MAIN)/$(OBJ)/$(DS_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_0).o \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
 #--ADD_TO_COMPILE_TEST
 
 run_apps: pack compile_apps
@@ -89,10 +89,10 @@ clean_test:
 	rm -rf $(TEST)/$(BIN)
 
 clean_external:
-	rm -rf $(MAIN)/$(SRC)/$(DS_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(DS_0).h
-	rm -rf $(MAIN)/$(SRC)/$(HELPER_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_0).h
+	rm -rf $(MAIN)/$(SRC)/$(ds_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(ds_0).h
+	rm -rf $(MAIN)/$(SRC)/$(hp_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(hp_0).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h

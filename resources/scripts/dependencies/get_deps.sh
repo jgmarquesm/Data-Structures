@@ -25,7 +25,7 @@ function get_unity() {
   UNITY_PATH="$(grep -P "$UNITY_PATTERN" Makefile | cut -c9-)"
   echo "${BLUE}Getting header from ${PURPLE}Unity Test Framework${BLUE}...${NO_COLOR}"
   cp "${UNITY_PATH}/include/"*.h "${THIS_DIR}${HEADER_PATH}"
-  echo "${GREEN}Successfully got.${NO_COLOR}\n"
+  echo "${GREEN}Successfully got.${NO_COLOR}"
 }
 
 function get_deps() {
@@ -35,7 +35,7 @@ function get_deps() {
   do
     echo "${BLUE}Getting header from${PURPLE}$(formatted_dependency "${dependency}")${BLUE}...${NO_COLOR}"
     cp "${dependency}${HEADER_PATH}"*.h "${THIS_DIR}${HEADER_PATH}"
-    echo "${GREEN}Successfully got.${NO_COLOR}\n"
+    echo "${GREEN}Successfully got.${NO_COLOR}"
   done
   get_unity
 }

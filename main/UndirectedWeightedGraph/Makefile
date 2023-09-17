@@ -9,8 +9,8 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
-#--ADD_FOLDER_NEW_DS
+#--ADD_FOLDER_NEW_hp
+#--ADD_FOLDER_NEW_ds
 
 # Names Definition
 APP_NAME = app_undirected_weighted_graph
@@ -19,10 +19,10 @@ DS = undirected_weighted_graph
 TEST_DS = undirected_weighted_graph.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-#--ADD_NEW_HELPER
-#--ADD_NEW_DS
-#DS0
-#H0
+#--ADD_NEW_hp
+#--ADD_NEW_ds
+#ds0
+#hp0
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror

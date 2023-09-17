@@ -9,8 +9,8 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
-#--ADD_FOLDER_NEW_DS
+#--ADD_FOLDER_NEW_hp
+#--ADD_FOLDER_NEW_ds
 
 # Names Definition
 APP_NAME = app_singly_linked_list
@@ -19,10 +19,10 @@ DS = singly_linked_list
 TEST_DS = singly_linked_list.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-#--ADD_NEW_HELPER
-#--ADD_NEW_DS
-#DS0
-#H0
+#--ADD_NEW_hp
+#--ADD_NEW_ds
+#ds0
+#hp0
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
