@@ -1,5 +1,6 @@
 #ifndef DYNAMIC_STACK
 #define DYNAMIC_STACK
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>

@@ -1,5 +1,4 @@
 #include "../include/vertex.h"
-#include "../include/exception_handler.h"
 #include <stdlib.h>
 #include <stdbool.h>
 //#--ADD_TO_INCLUDE

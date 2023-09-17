@@ -11,8 +11,8 @@ SRC = src
 
 # Names Definition
 LIB_NAME = eh
-ADT = exception_handler
-TEST_ADT = exception_handler.test
+HELPER = exception_handler
+TEST_HELPER = exception_handler.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
 #--ADD_NEW_hp
@@ -33,21 +33,21 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_unity \
-	$(MAIN)/$(OBJ)/$(ADT).o \
+	$(MAIN)/$(OBJ)/$(HELPER).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
-compile_test: $(MAIN)/$(OBJ)/$(ADT).o \
+compile_test: $(MAIN)/$(OBJ)/$(HELPER).o \
 	$(MAIN)/$(OBJ)/unity.o \
-	$(TEST)/$(BIN)/$(TEST_ADT) \
+	$(TEST)/$(BIN)/$(TEST_HELPER) \
 #--ADD_TO_COMPILE_TEST
 
 run_tests: clean_all pack compile_test
-	$(TEST)/$(BIN)/$(TEST_ADT)
+	$(TEST)/$(BIN)/$(TEST_HELPER)
 	make clean_all
 
 add_deps:
-	$(DEPS)/add_deps.sh
+	$(DEPS)/add_deps_to_helper.sh
 
 get_deps:
 	$(DEPS)/get_deps.sh

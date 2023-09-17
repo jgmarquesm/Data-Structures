@@ -1,5 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 typedef struct _node Node;

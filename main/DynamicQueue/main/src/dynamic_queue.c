@@ -2,8 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/doubly_linked_list.h"
-#include "../include/node.h"
-#include "../include/exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 typedef struct _dynamic_queue {
