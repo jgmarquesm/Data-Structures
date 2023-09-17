@@ -35,7 +35,7 @@ function _is_this_DS() {
 }
 
 function _is_already_there() {
-  PATTERN="^(?:hp|ds)(?:|_DEP)_FOLDER_\d+ = ../(../resources/helpers/|)${1}/\\$\(MAIN\)$"
+  PATTERN="^(?:hp|ds)(?:|_DEP)_FOLDER_\d+(?:|_[\d]+) = ../(../resources/helpers/|)${1}/\\$\(MAIN\)$"
   IS_ADDED="$(grep -P "$PATTERN" Makefile)"
   if [[ $IS_ADDED ]]
   then
@@ -83,7 +83,7 @@ function _get_DSs_count() {
 }
 
 function _get_Helpers_count() {
-  count="$(grep -c -P "^hp_[\d]+" Makefile)"
+  count="$(grep -c -P "^hp_\d+" Makefile)"
   echo "$count"
 }
 
@@ -107,7 +107,7 @@ function _set_new_deps() {
     INDEX="$DEP_INDEX\_${3}"
   fi
 
-  sed -i~ "s#^\#--ADD_FOLDER_NEW_$TYPE#${1}_FOLDER_${3} = $FULL_PATH/${2}/\$(MAIN)\n\#--ADD_FOLDER_NEW_$TYPE#" Makefile
+  sed -i~ "s#^\#--ADD_FOLDER_NEW_$TYPE#${1}_FOLDER_$INDEX = $FULL_PATH/${2}/\$(MAIN)\n\#--ADD_FOLDER_NEW_$TYPE#" Makefile
   sed -i~ "s#^\#--ADD_NEW_$TYPE#${1}_$INDEX = $(_title_case_to_snake_case "${2}")\n\#--ADD_NEW_$TYPE#" Makefile
   sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(${1}_FOLDER_$INDEX)/\$(SRC)/\$(${1}_$INDEX).c \$(MAIN)/\$(SRC)/\n\tcp \$(${1}_FOLDER_$INDEX)/\$(INCLUDE)/\$(${1}_$INDEX).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
   sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(${1}_$INDEX).o \\\\\n\#--ADD_TO_PACK#" Makefile
@@ -268,7 +268,6 @@ function SetDepAccessModifier() {
 }
 
 function CallTasks() {
-  CheckIfCanAdd "${3}"
   UpdateExtLibsLabel
   AddNewDependencies "${1}" "${2}" "${3}"
   EvalIndex
@@ -300,16 +299,16 @@ ${NO_COLOR}" #--DS
     read -r SELECTION
 
     case ${SELECTION} in
-        1 ) FOLDER="Array";;
-        2 ) FOLDER="SinglyLinkedList";;
-        3 ) FOLDER="DoublyLinkedList";;
-        4 ) FOLDER="CircularDoublyLinkedList";;
-        5 ) FOLDER="StaticStack";;
-        6 ) FOLDER="DynamicStack";;
-        7 ) FOLDER="StaticQueue";;
-        8 ) FOLDER="DynamicQueue";;
-        9 ) FOLDER="Matrix";;
-        10 ) FOLDER="UndirectedWeightedGraph";;
+        1 ) DEPENDENCY="Array";;
+        2 ) DEPENDENCY="SinglyLinkedList";;
+        3 ) DEPENDENCY="DoublyLinkedList";;
+        4 ) DEPENDENCY="CircularDoublyLinkedList";;
+        5 ) DEPENDENCY="StaticStack";;
+        6 ) DEPENDENCY="DynamicStack";;
+        7 ) DEPENDENCY="StaticQueue";;
+        8 ) DEPENDENCY="DynamicQueue";;
+        9 ) DEPENDENCY="Matrix";;
+        10 ) DEPENDENCY="UndirectedWeightedGraph";;
 #--ADD_NEW_OPT
         * )
           echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
@@ -327,9 +326,9 @@ ${NO_COLOR}" #--H
       read -r SELECTION
 
       case ${SELECTION} in
-          1 ) FOLDER="ExceptionHandler";;
-          2 ) FOLDER="Node";;
-          3 ) FOLDER="Vertex";;
+          1 ) DEPENDENCY="ExceptionHandler";;
+          2 ) DEPENDENCY="Node";;
+          3 ) DEPENDENCY="Vertex";;
 #--ADD_NEW_HELPER_OPT
           * )
             echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
@@ -343,6 +342,8 @@ ${NO_COLOR}" #--H
     ;;
 esac
 
+CheckIfCanAdd "$DEPENDENCY"
+
 echo "${CYAN}What is the access modifier for this dependency?${WHITE}
 ${PURPLE}1 )${WHITE} Public
 ${PURPLE}2 )${WHITE} Protected
@@ -355,6 +356,6 @@ then
   TYPE=$H
 fi
 
-CallTasks "$MODIFIER" "$TYPE" "$FOLDER"
+CallTasks "$MODIFIER" "$TYPE" "$DEPENDENCY"
 
 echo "${GREEN}Finishing...${NO_COLOR}"

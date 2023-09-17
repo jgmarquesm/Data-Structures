@@ -11,27 +11,27 @@ CYAN='\033[1;96m'
 WHITE='\033[1;97m'
 NO_COLOR='\033[0m'
 
-function TitleCaseConverter() {
+function _title_case_converter() {
     sed 's/.*/\L&/; s/[a-z]*/\u&/g' <<<"${1}"
 }
 
-function TitleToPascalCase() {
+function _title_to_pascal_case() {
   sed 's/_-/ /g; s/ //g' <<<"${1}"
 }
 
-function TitleCaseTo_snake_case() {
+function _title_case_to_snake_case() {
  # shellcheck disable=SC2001
  sed 's/[A-Z]/_\l&/g' <<<"${1}" | cut -c2-
 }
 
 function _get_dir_name() {
-  TITLE_NAME="$(TitleCaseConverter "${1}")"
+  TITLE_NAME="$(_title_case_converter "${1}")"
   # shellcheck disable=SC2005
-  echo "$(TitleToPascalCase "$TITLE_NAME")"
+  echo "$(_title_to_pascal_case "$TITLE_NAME")"
 }
 
 function _get_lib_name() {
-  TITLE_NAME="$(TitleCaseConverter "${1}")"
+  TITLE_NAME="$(_title_case_converter "${1}")"
   # shellcheck disable=SC2001
   sed 's/\(.\)[^ ]* */\1/g' <<<"${TITLE_NAME}"
 }
@@ -39,7 +39,7 @@ function _get_lib_name() {
 function _get_lower_name() {
   DIR_NAME="$(_get_dir_name "${1}")"
   # shellcheck disable=SC2005
-  echo "$(TitleCaseTo_snake_case "$DIR_NAME")"
+  echo "$(_title_case_to_snake_case "$DIR_NAME")"
 }
 
 function _get_upper_name() {
@@ -73,6 +73,7 @@ function CreateDir() {
 function CreateHeader() {
 echo "#ifndef ${3}_H
 #define ${3}_H
+//#--ADD_TO_INCLUDE
 
 typedef struct _${2} ${1};
 
@@ -124,7 +125,7 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
+#--ADD_FOLDER_NEW_hp
 
 # Names Definition
 LIB_NAME = ${3}
@@ -132,8 +133,8 @@ HELPER = ${2}
 TEST_HELPER = ${2}.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
-#--ADD_NEW_HELPER
-#H0
+#--ADD_NEW_hp
+#hp0
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -200,21 +201,21 @@ function AddToTestScript() {
 }
 
 function SetNewHelper() {
-  index=$(_get_Helpers_count)
-  lower=$(_get_lower_name "${1}")
-  lib=$(_get_lib_name "${1}")
-  dir=$(_get_dir_name "${1}")
-  title=$(TitleCaseConverter "${1}")
-  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$index \)\${WHITE} $title\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps_to_helper.sh
-  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t$index \) NEW_HELPER_FOLDER=\"$dir\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps_to_helper.sh
-  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$index \)\${WHITE} $title\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t\t\t\t$index \) NEW_HELPER_FOLDER=\"$dir\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\(\#--NEW_HELPER_DIR\)#$lib = \$\(HELPERS\)\/$dir\n\#--NEW_HELPER_DIR#" Makefile
-  sed -i~ "s#^\(\#--ADD_NEW_HELPER\)#H$index = $lower\n\#--ADD_NEW_HELPER#" Makefile
-  sed -i~ "s#^\#H$index#\#H$(( index + 1 ))#" Makefile
-  sed -i~ "s#^\(\#--GET_SRC\)#\tcp \$\($lib\)\/\$\(HELPERS\)\/\$\(SRC\)\/\$\(H$index\).c \$\(APP\)\/\$\(AUX\)\/\$\(SRC\)\n\#--GET_SRC#" Makefile
-  sed -i~ "s#^\(\#--GET_H\)#\tcp \$\($lib\)\/\$\(HELPERS\)\/\$\(INCLUDE\)\/\$\(H$index\).h \$\(APP\)\/\$\(INCLUDE\)\n\#--GET_H#" Makefile
-  sed -i~ "s#^\(\#--ADD_TO_COMPILE\)#\t\$\(APP\)\/\$\(AUX\)\/\$\(OBJ\)\/\$\(H$index\).o \\\\\n\#--ADD_TO_COMPILE#" Makefile
+  INDEX=$(_get_Helpers_count)
+  LOWER=$(_get_lower_name "${1}")
+  LIB=$(_get_lib_name "${1}")
+  DIR=$(_get_dir_name "${1}")
+  TITLE=$(_title_case_converter "${1}")
+  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$INDEX \)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps_to_helper.sh
+  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps_to_helper.sh
+  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$INDEX \)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t\t\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\(\#--NEW_HELPER_DIR\)#$LIB = \$\(HELPERS\)\/$DIR\n\#--NEW_HELPER_DIR#" Makefile
+  sed -i~ "s#^\(\#--ADD_NEW_HELPER\)#H$INDEX = $LOWER\n\#--ADD_NEW_HELPER#" Makefile
+  sed -i~ "s#^\#H$INDEX#\#H$(( INDEX + 1 ))#" Makefile
+  sed -i~ "s#^\(\#--GET_SRC\)#\tcp \$\($LIB\)\/\$\(HELPERS\)\/\$\(SRC\)\/\$\(H$INDEX\).c \$\(APP\)\/\$\(AUX\)\/\$\(SRC\)\n\#--GET_SRC#" Makefile
+  sed -i~ "s#^\(\#--GET_H\)#\tcp \$\($LIB\)\/\$\(HELPERS\)\/\$\(INCLUDE\)\/\$\(H$INDEX\).h \$\(APP\)\/\$\(INCLUDE\)\n\#--GET_H#" Makefile
+  sed -i~ "s#^\(\#--ADD_TO_COMPILE\)#\t\$\(APP\)\/\$\(AUX\)\/\$\(OBJ\)\/\$\(H$INDEX\).o \\\\\n\#--ADD_TO_COMPILE#" Makefile
 }
 
 echo "${CYAN}Helper Name:${NO_COLOR}"

@@ -11,27 +11,27 @@ CYAN='\033[1;96m'
 WHITE='\033[1;97m'
 NO_COLOR='\033[0m'
 
-function TitleCaseConverter() {
+function _title_case_converter() {
     sed 's/.*/\L&/; s/[a-z]*/\u&/g' <<<"${1}"
 }
 
-function TitleToPascalCase() {
+function _title_to_pascal_case() {
   sed 's/_-/ /g; s/ //g' <<<"${1}"
 }
 
-function TitleCaseTo_snake_case() {
+function _title_case_to_snake_case() {
  # shellcheck disable=SC2001
  sed 's/[A-Z]/_\l&/g' <<<"${1}" | cut -c2-
 }
 
 function _get_dir_name() {
-  TITLE_NAME="$(TitleCaseConverter "${1}")"
+  TITLE_NAME="$(_title_case_converter "${1}")"
   # shellcheck disable=SC2005
-  echo "$(TitleToPascalCase "$TITLE_NAME")"
+  echo "$(_title_to_pascal_case "$TITLE_NAME")"
 }
 
 function _get_lib_name() {
-  TITLE_NAME="$(TitleCaseConverter "${1}")"
+  TITLE_NAME="$(_title_case_converter "${1}")"
   # shellcheck disable=SC2001
   sed 's/\(.\)[^ ]* */\1/g' <<<"${TITLE_NAME}"
 }
@@ -39,7 +39,7 @@ function _get_lib_name() {
 function _get_lower_name() {
   DIR_NAME="$(_get_dir_name "${1}")"
   # shellcheck disable=SC2005
-  echo "$(TitleCaseTo_snake_case "$DIR_NAME")"
+  echo "$(_title_case_to_snake_case "$DIR_NAME")"
 }
 
 function _get_upper_name() {
@@ -74,6 +74,7 @@ function CreateDir() {
 function CreateHeader() {
 echo "#ifndef ${3}_H
 #define ${3}_H
+//#--ADD_TO_INCLUDE
 
 typedef struct _${2} ${1};
 
@@ -140,8 +141,8 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
-#--ADD_FOLDER_NEW_DS
+#--ADD_FOLDER_NEW_hp
+#--ADD_FOLDER_NEW_ds
 
 # Names Definition
 APP_NAME = app_${2}
@@ -150,10 +151,10 @@ DS = ${2}
 TEST_DS = ${2}.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-#--ADD_NEW_HELPER
-#--ADD_NEW_DS
-#DS0
-#H0
+#--ADD_NEW_hp
+#--ADD_NEW_ds
+#ds0
+#hp0
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -231,19 +232,19 @@ function AddToTestScript() {
 }
 
 function SetNewDS() {
-  index=$(_get_DS_count)
-  lower=$(_get_lower_name "${1}")
-  lib=$(_get_lib_name "${1}")
-  dir=$(_get_dir_name "${1}")
-  title=$(TitleCaseConverter "${1}")
-  sed -i~ "s#^\(\${NO_COLOR}\" \#--DS\)#\${PURPLE}$index\)\${WHITE} $title\n\${NO_COLOR}\" \#--DS#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\#--ADD_NEW_OPT#\t\t\t\t$index \) NEW_DS_FOLDER=\"$dir\";;\n\#--ADD_NEW_OPT#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\(\#--NEW_DS_DIR\)#$lib = \$\(MAIN\)\/$dir\n\#--NEW_DS_DIR#" Makefile
-  sed -i~ "s#^\(\#--ADD_NEW_DS\)#ED$index = $lower\n\#--ADD_NEW_DS#" Makefile
-  sed -i~ "s#^\#DS$index#\#DS$(( index + 1 ))#" Makefile
-  sed -i~ "s#^\(\#--GET_SRC\)#\tcp \$\($lib\)\/\$\(MAIN\)\/\$\(SRC\)\/\$\(ED$index\).c \$\(APP\)\/\$\(AUX\)\/\$\(SRC\)\n\#--GET_SRC#" Makefile
-  sed -i~ "s#^\(\#--GET_H\)#\tcp \$\($lib\)\/\$\(MAIN\)\/\$\(INCLUDE\)\/\$\(ED$index\).h \$\(APP\)\/\$\(INCLUDE\)\n\#--GET_H#" Makefile
-  sed -i~ "s#^\(\#--ADD_TO_COMPILE\)#\t\$\(APP\)\/\$\(AUX\)\/\$\(OBJ\)\/\$\(ED$index\).o \\\\\n\#--ADD_TO_COMPILE#" Makefile
+  INDEX=$(_get_DS_count)
+  LOWER=$(_get_lower_name "${1}")
+  LIB=$(_get_lib_name "${1}")
+  DIR=$(_get_dir_name "${1}")
+  TITLE=$(_title_case_converter "${1}")
+  sed -i~ "s#^\(\${NO_COLOR}\" \#--DS\)#\${PURPLE}$INDEX\)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--DS#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\#--ADD_NEW_OPT#\t\t\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_OPT#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\(\#--NEW_DS_DIR\)#$LIB = \$\(MAIN\)\/$DIR\n\#--NEW_DS_DIR#" Makefile
+  sed -i~ "s#^\(\#--ADD_NEW_DS\)#ED$INDEX = $LOWER\n\#--ADD_NEW_DS#" Makefile
+  sed -i~ "s#^\#DS$INDEX#\#DS$(( INDEX + 1 ))#" Makefile
+  sed -i~ "s#^\(\#--GET_SRC\)#\tcp \$\($LIB\)\/\$\(MAIN\)\/\$\(SRC\)\/\$\(ED$INDEX\).c \$\(APP\)\/\$\(AUX\)\/\$\(SRC\)\n\#--GET_SRC#" Makefile
+  sed -i~ "s#^\(\#--GET_H\)#\tcp \$\($LIB\)\/\$\(MAIN\)\/\$\(INCLUDE\)\/\$\(ED$INDEX\).h \$\(APP\)\/\$\(INCLUDE\)\n\#--GET_H#" Makefile
+  sed -i~ "s#^\(\#--ADD_TO_COMPILE\)#\t\$\(APP\)\/\$\(AUX\)\/\$\(OBJ\)\/\$\(ED$INDEX\).o \\\\\n\#--ADD_TO_COMPILE#" Makefile
 }
 
 echo "${CYAN}Data Structure Name:${NO_COLOR}"
