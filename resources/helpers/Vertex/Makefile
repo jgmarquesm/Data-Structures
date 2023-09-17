@@ -7,8 +7,8 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-HELPER_FOLDER_0 = ../ExceptionHandler/$(MAIN)
-#--ADD_FOLDER_NEW_HELPER
+hp_FOLDER_0 = ../ExceptionHandler/$(MAIN)
+#--ADD_FOLDER_NEW_hp
 
 # Names Definition
 LIB_NAME = v
@@ -16,9 +16,9 @@ ADT = vertex
 TEST_ADT = vertex.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
-HELPER_0 = exception_handler
-#--ADD_NEW_HELPER
-#H1
+hp_0 = exception_handler
+#--ADD_NEW_hp
+#hp1
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -30,20 +30,20 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(TEST)/$(BIN)
 
 --private-get_external_lib:
-	cp $(HELPER_FOLDER_0)/$(SRC)/$(HELPER_0).c $(MAIN)/$(SRC)/
-	cp $(HELPER_FOLDER_0)/$(INCLUDE)/$(HELPER_0).h $(MAIN)/$(INCLUDE)/
+	cp $(hp_FOLDER_0)/$(SRC)/$(hp_0).c $(MAIN)/$(SRC)/
+	cp $(hp_FOLDER_0)/$(INCLUDE)/$(hp_0).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(ADT).o \
-	$(MAIN)/$(OBJ)/$(HELPER_0).o \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
 compile_test: $(MAIN)/$(OBJ)/$(ADT).o \
-  $(MAIN)/$(OBJ)/$(HELPER_0).o \
+  $(MAIN)/$(OBJ)/$(hp_0).o \
   $(MAIN)/$(OBJ)/unity.o \
   $(TEST)/$(BIN)/$(TEST_ADT) \
 #--ADD_TO_COMPILE_TEST
@@ -67,8 +67,8 @@ clean_test:
 	rm -rf $(TEST)/$(BIN)
 
 clean_external:
-	rm -rf $(MAIN)/$(SRC)/$(HELPER_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_0).h
+	rm -rf $(MAIN)/$(SRC)/$(hp_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(hp_0).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h

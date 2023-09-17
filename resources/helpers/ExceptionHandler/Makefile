@@ -7,7 +7,7 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-#--ADD_FOLDER_NEW_HELPER
+#--ADD_FOLDER_NEW_hp
 
 # Names Definition
 LIB_NAME = eh
@@ -15,8 +15,8 @@ ADT = exception_handler
 TEST_ADT = exception_handler.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
-#--ADD_NEW_HELPER
-#H0
+#--ADD_NEW_hp
+#hp0
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror

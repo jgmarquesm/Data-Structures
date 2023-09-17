@@ -9,11 +9,11 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-HELPER_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
-HELPER_FOLDER_DEP_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
-#--ADD_FOLDER_NEW_HELPER
-DS_FOLDER_0 = ../DoublyLinkedList/$(MAIN)
-#--ADD_FOLDER_NEW_DS
+hp_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
+hp_DEP_FOLDER_0_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
+#--ADD_FOLDER_NEW_hp
+ds_FOLDER_0 = ../DoublyLinkedList/$(MAIN)
+#--ADD_FOLDER_NEW_ds
 
 # Names Definition
 APP_NAME = app_dynamic_queue
@@ -22,12 +22,12 @@ DS = dynamic_queue
 TEST_DS = dynamic_queue.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-HELPER_0 = node
-HELPER_DEP_1 = exception_handler
-#--ADD_NEW_HELPER
-DS_0 = doubly_linked_list
-#--ADD_NEW_DS
-#DS1
+hp_0 = node
+hp_DEP_0_1 = exception_handler
+#--ADD_NEW_hp
+ds_0 = doubly_linked_list
+#--ADD_NEW_ds
+#ds1
 #H1
 
 # Compilation Flags
@@ -41,21 +41,21 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(TEST)/$(BIN)
 
 --private-get_external_lib:
-	cp $(DS_FOLDER_0)/$(SRC)/$(DS_0).c $(MAIN)/$(SRC)/
-	cp $(DS_FOLDER_0)/$(INCLUDE)/$(DS_0).h $(MAIN)/$(INCLUDE)/
-	cp $(HELPER_FOLDER_0)/$(SRC)/$(HELPER_0).c $(MAIN)/$(SRC)/
-	cp $(HELPER_FOLDER_0)/$(INCLUDE)/$(HELPER_0).h $(MAIN)/$(INCLUDE)/
-	cp $(HELPER_FOLDER_DEP_1)/$(SRC)/$(HELPER_DEP_1).c $(MAIN)/$(SRC)/
-	cp $(HELPER_FOLDER_DEP_1)/$(INCLUDE)/$(HELPER_DEP_1).h $(MAIN)/$(INCLUDE)/
+	cp $(ds_FOLDER_0)/$(SRC)/$(ds_0).c $(MAIN)/$(SRC)/
+	cp $(ds_FOLDER_0)/$(INCLUDE)/$(ds_0).h $(MAIN)/$(INCLUDE)/
+	cp $(hp_FOLDER_0)/$(SRC)/$(hp_0).c $(MAIN)/$(SRC)/
+	cp $(hp_FOLDER_0)/$(INCLUDE)/$(hp_0).h $(MAIN)/$(INCLUDE)/
+	cp $(hp_DEP_FOLDER_0_1)/$(SRC)/$(hp_DEP_0_1).c $(MAIN)/$(SRC)/
+	cp $(hp_DEP_FOLDER_0_1)/$(INCLUDE)/$(hp_DEP_0_1).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(DS).o \
-	$(MAIN)/$(OBJ)/$(DS_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_DEP_1).o \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
+	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
@@ -64,9 +64,9 @@ compile_apps: $(MAIN)/$(BIN)/$(APP_NAME)
 compile_test: $(MAIN)/$(OBJ)/$(DS).o \
 	$(MAIN)/$(OBJ)/unity.o \
  	$(TEST)/$(BIN)/$(TEST_DS) \
-	$(MAIN)/$(OBJ)/$(DS_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_0).o \
-	$(MAIN)/$(OBJ)/$(HELPER_DEP_1).o \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
+	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
 #--ADD_TO_COMPILE_TEST
 
 run_apps: pack compile_apps
@@ -95,12 +95,12 @@ clean_test:
 	rm -rf $(TEST)/$(BIN)
 
 clean_external:
-	rm -rf $(MAIN)/$(SRC)/$(DS_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(DS_0).h
-	rm -rf $(MAIN)/$(SRC)/$(HELPER_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_0).h
-	rm -rf $(MAIN)/$(SRC)/$(HELPER_DEP_1).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(HELPER_DEP_1).h
+	rm -rf $(MAIN)/$(SRC)/$(ds_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(ds_0).h
+	rm -rf $(MAIN)/$(SRC)/$(hp_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(hp_0).h
+	rm -rf $(MAIN)/$(SRC)/$(hp_DEP_0_1).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(hp_DEP_0_1).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h
