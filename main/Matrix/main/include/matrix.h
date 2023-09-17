@@ -1,5 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>

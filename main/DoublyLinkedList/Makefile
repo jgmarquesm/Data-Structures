@@ -11,7 +11,7 @@ OBJ = obj
 SRC = src
 hp_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
 hp_DEP_FOLDER_0_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
-#--ADD_FOLDER_DEP_NEW_hp
+#--ADD_FOLDER_NEW_hp
 #--ADD_FOLDER_NEW_ds
 
 # Names Definition

@@ -1,5 +1,6 @@
 #ifndef STATIC_STACK
 #define STATIC_STACK
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>

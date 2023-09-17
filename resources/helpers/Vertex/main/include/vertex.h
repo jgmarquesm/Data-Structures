@@ -1,5 +1,6 @@
 #ifndef VERTEX_H
 #define VERTEX_H
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 typedef struct _vertex Vertex;

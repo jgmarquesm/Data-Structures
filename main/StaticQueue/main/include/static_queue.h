@@ -1,5 +1,6 @@
 #ifndef STATIC_QUEUE
 #define STATIC_QUEUE
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>

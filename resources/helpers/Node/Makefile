@@ -12,8 +12,8 @@ hp_FOLDER_0 = ../ExceptionHandler/$(MAIN)
 
 # Names Definition
 LIB_NAME = n
-ADT = node
-TEST_ADT = node.test
+HELPER = node
+TEST_HELPER = node.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
 hp_0 = exception_handler
@@ -37,23 +37,23 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
-	$(MAIN)/$(OBJ)/$(ADT).o \
+	$(MAIN)/$(OBJ)/$(HELPER).o \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
-compile_test: $(MAIN)/$(OBJ)/$(ADT).o \
-  $(MAIN)/$(OBJ)/$(hp_0).o \
+compile_test: $(MAIN)/$(OBJ)/$(HELPER).o \
   $(MAIN)/$(OBJ)/unity.o \
-  $(TEST)/$(BIN)/$(TEST_ADT) \
+  $(TEST)/$(BIN)/$(TEST_HELPER) \
+	$(MAIN)/$(OBJ)/$(hp_0).o \
 #--ADD_TO_COMPILE_TEST
 
 run_tests: clean_all pack compile_test
-	$(TEST)/$(BIN)/$(TEST_ADT)
+	$(TEST)/$(BIN)/$(TEST_HELPER)
 	make clean_all
 
 add_deps:
-	$(DEPS)/add_deps.sh
+	$(DEPS)/add_deps_to_helper.sh
 
 get_deps:
 	$(DEPS)/get_deps.sh

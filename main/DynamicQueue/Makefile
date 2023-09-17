@@ -28,7 +28,7 @@ hp_DEP_0_1 = exception_handler
 ds_0 = doubly_linked_list
 #--ADD_NEW_ds
 #ds1
-#H1
+#hp1
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
