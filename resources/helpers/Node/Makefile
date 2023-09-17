@@ -43,6 +43,7 @@ pack: clean_all --private-create_folders --private-get_external_lib \
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
 compile_test: $(MAIN)/$(OBJ)/$(HELPER).o \
+  $(MAIN)/$(OBJ)/$(hp_0).o \
   $(MAIN)/$(OBJ)/unity.o \
   $(TEST)/$(BIN)/$(TEST_HELPER) \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
