@@ -35,13 +35,13 @@ void StaticStack_destroy(StaticStack **SS_ref);
  * @param SS -> Stack to check emptiness
  * @return true if: StaticStack is empty;\n false if: Array not empty.
  */
-bool StaticStack_is_empty(const StaticStack *SS);
+bool StaticStack_is_empty(void *SS);
 /**
  *
  * @param SS -> Stack to check fullness
  * @return true if: StaticStack is full;\n false if: Array not full.
  */
-bool StaticStack_is_full(const StaticStack *SS);
+bool StaticStack_is_full(void *SS);
 /**
  * When calling this function it will add the data on top of StaticStack
  * @param SS -> StaticStack to add data
