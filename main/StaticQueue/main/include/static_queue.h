@@ -35,13 +35,13 @@ void StaticQueue_destroy(StaticQueue **SQ_ref);
  * @param SQ -> Queue to check emptiness
  * @return true if: Static Queue is empty;\n false if: Static Queue not empty.
  */
-bool StaticQueue_is_empty(const StaticQueue *SQ);
+bool StaticQueue_is_empty(void *SQ);
 /**
  *
  * @param SQ -> Queue to check fullness
  * @return true if: Static Queue is full;\n false if: Queue not full.
  */
-bool StaticQueue_is_full(const StaticQueue *SQ);
+bool StaticQueue_is_full(void *SQ);
 /**
  * When calling this function it will add the data on tail of Static Queue
  * @param SQ -> Static Queue to add data
