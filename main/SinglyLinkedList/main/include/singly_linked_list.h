@@ -1,5 +1,6 @@
 #ifndef SINGLY_LINKED_LIST_H
 #define SINGLY_LINKED_LIST_H
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
@@ -33,13 +34,13 @@ void SinglyLinkedList_destroy(SinglyLinkedList **SLL_ref);
  * @param SLL -> The SinglyLinkedList to verify if is empty
  * @return true if the SinglyLinkedList is empty and false otherwise
  */
-bool SinglyLinkedList_is_empty(const SinglyLinkedList *SLL);
+bool SinglyLinkedList_is_empty(void *SLL);
 /**
  *
  * @param SLL -> The SinglyLinkedLIst to verify if is sorted
  * @return true if the SinglyLinkedList is sorted and false otherwise.
  */
-bool SinglyLinkedList_is_sorted(const SinglyLinkedList *SLL);
+bool SinglyLinkedList_is_sorted(void *SLL);
 /**
  *
  * @param SLL -> The SinglyLinkedLIst to verify sort order
