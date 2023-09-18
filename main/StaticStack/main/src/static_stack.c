@@ -9,76 +9,110 @@ typedef struct _static_stack {
 } StaticStack;
 
 StaticStack *StaticStack_create(const long capacity, unsigned int size_of_type) {
-    StaticStack *SS = (StaticStack *) calloc(1, sizeof(StaticStack));
-    SS->data = Array_create(capacity, size_of_type);
-    return SS;
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_non_positive("StaticStack_create", "Capacity", capacity, true)
+        )
+    ) return NULL;
+    StaticStack *staticStack = (StaticStack *) calloc(1, sizeof(StaticStack));
+    staticStack->data = Array_create(capacity, size_of_type);
+    return staticStack;
 }
 
-void StaticStack_clean(StaticStack *SS) {
-    Array_clean(SS->data);
+void StaticStack_clean(StaticStack *staticStack) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticStack_clean", "Static Stack", (void *) staticStack)
+        )
+    ) return;
+    Array_clean(staticStack->data);
 }
 
-void StaticStack_destroy(StaticStack **SS_ref) {
-    StaticStack *SS = *SS_ref;
-    Array_delete(&(SS->data));
-    free(SS);
-    *SS_ref = NULL;
+void StaticStack_destroy(StaticStack **staticStack_ref) {
+    StaticStack *staticStack = *staticStack_ref;
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticStack_destroy", "Static Stack", (void *) staticStack)
+        )
+    ) return;
+    Array_delete(&(staticStack->data));
+    free(staticStack);
+    *staticStack_ref = NULL;
 }
 
-bool StaticStack_is_empty(const StaticStack *SS) {
-    return Array_is_empty(SS->data);
+bool StaticStack_is_empty(void *staticStack) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticStack_is_empty", "Static Stack", (void *) staticStack)
+        )
+    ) return true;
+    return Array_is_empty(((StaticStack *) staticStack)->data);
 }
 
-bool StaticStack_is_full(const StaticStack *SS) {
-    return Array_is_full(SS->data);
+bool StaticStack_is_full(void *staticStack) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticStack_is_full", "Static Stack", (void *) staticStack)
+        )
+    ) return false;
+    return Array_is_full(((StaticStack *) staticStack)->data);
 }
 
-void StaticStack_push(StaticStack *SS, void *data) {
-    if (StaticStack_is_full(SS)) {
-        fprintf(stderr, "\nERROR: on function 'StaticStack_push'.\n");
-        fprintf(stderr, "ERROR: StaticStack is full.\n");
-        exit(EXIT_FAILURE);
-    }
-
-    Array_add_last(SS->data, data);
+void StaticStack_push(StaticStack *staticStack, void *data) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("StaticStack_push", "Static Stack", (void *) staticStack),
+            ExceptionHandler_is_null("StaticStack_push", "Data", data)
+        )
+    ) return;
+    Array_add_last(staticStack->data, data);
 }
 
-void *StaticStack_peek(const StaticStack *SS) {
-    if (StaticStack_is_empty(SS)) {
-        fprintf(stderr, "\nERROR: on function 'StaticStack_peek'.\n");
-        fprintf(stderr, "ERROR: StaticStack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    long top = Array_size(SS->data) - 1;
-    return Array_get_at(SS->data, top);
+void *StaticStack_peek(const StaticStack *staticStack) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("StaticStack_peek", "Static Stack", (void *) staticStack),
+            ExceptionHandler_is_empty("StaticStack_peek", "Data", (void *) staticStack, StaticStack_is_empty)
+        )
+    ) return NULL;
+    long top = Array_size(staticStack->data) - 1;
+    return Array_get_at(staticStack->data, top);
 }
 
-void StaticStack_pop(StaticStack *SS) {
-    if (StaticStack_is_empty(SS)) {
-        fprintf(stderr, "\nERROR: on function 'StaticStack_pop'.\n");
-        fprintf(stderr, "ERROR: StaticStack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    Array_remove_last(SS->data);
+void StaticStack_pop(StaticStack *staticStack) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("StaticStack_pop", "Static Stack", (void *) staticStack),
+            ExceptionHandler_is_empty("StaticStack_pop", "Data", (void *) staticStack, StaticStack_is_empty)
+        )
+    ) return;
+    Array_remove_last(staticStack->data);
 }
 
-void StaticStack_print(const StaticStack *SS, void (*type_print_function)(void * data)) {
-    if (StaticStack_is_empty(SS)){
-        fprintf(stderr, "\nERROR: on function 'StaticStack_print'.\n");
-        fprintf(stderr, "ERROR: StaticStack is empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    printf("\nCapacity: %ld. Top: %ld.\n", Array_capacity(SS->data), Array_size(SS->data) - 1);
+void StaticStack_print(const StaticStack *staticStack, void (*type_print_function)(void * data)) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("StaticStack_print", "Static Stack", (void *) staticStack),
+            ExceptionHandler_is_empty("StaticStack_print", "Data", (void *) staticStack, StaticStack_is_empty)
+        )
+    ) return;
+    printf("\nCapacity: %ld. Top: %ld.\n", Array_capacity(staticStack->data), Array_size(staticStack->data) - 1);
     printf("-:[");
-    long size = Array_size(SS->data);
+    long size = Array_size(staticStack->data);
     for(long i = 0; i < size - 1; i++) {
-        type_print_function(Array_get_at(SS->data, i));
+        type_print_function(Array_get_at(staticStack->data, i));
         printf(", ");
     }
-    type_print_function(Array_get_at(SS->data, Array_size(SS->data) - 1));
+    type_print_function(Array_get_at(staticStack->data, Array_size(staticStack->data) - 1));
     puts("]:-");
 }
 
-long StaticStack_size(const StaticStack *SS) {
-    return Array_size(SS->data);
+long StaticStack_size(const StaticStack *staticStack) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("StaticStack_size", "Static Stack", (void *) staticStack),
+            ExceptionHandler_is_empty("StaticStack_size", "Data", (void *) staticStack, StaticStack_is_empty)
+        )
+    ) return 0;
+    return Array_size(staticStack->data);
 }
