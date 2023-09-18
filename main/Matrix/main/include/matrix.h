@@ -5,6 +5,8 @@
 
 #include <stdbool.h>
 
+#define INITIAL_VALUE 0
+
 /**
  * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
  * 1 - Type printing function: To print data correctly.\n
@@ -35,13 +37,13 @@ long Matrix_size(const Matrix *matrix);
  * @param matrix -> Matrix to check emptiness;
  * @return  true if: Matrix is empty (size == 0);\n false if: Matrix not empty (size > 0).
  */
-bool Matrix_is_empty(const Matrix *matrix);
+bool Matrix_is_empty(void *matrix);
 /**
  *
  * @param matrix -> Matrix to check fullness;
  * @return true if: Matrix is full (size == rows*cols);\n false if: Matrix is not full (size <= rows*cols>).
  */
-bool Matrix_is_full(const Matrix *matrix);
+bool Matrix_is_full(void *matrix);
 /**
  *
  * @param rows -> number of rows to be allocated
