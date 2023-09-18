@@ -22,54 +22,54 @@ typedef struct _static_queue StaticQueue;
 StaticQueue *StaticQueue_create(const long capacity, unsigned int size_of_type);
 /**
  * When calling this function it will clean all data from Queue
- * @param SQ -> The Queue to be clean
+ * @param staticQueue -> The Queue to be clean
  */
-void StaticQueue_clean(StaticQueue *SQ);
+void StaticQueue_clean(StaticQueue *staticQueue);
 /**
  * When calling this function, it will clean all data from Static Queue and it will be deallocated
- * @param SQ_ref -> The pointer of the Static Queue to be deleted
+ * @param staticQueue_ref -> The pointer of the Static Queue to be deleted
  */
-void StaticQueue_destroy(StaticQueue **SQ_ref);
+void StaticQueue_destroy(StaticQueue **staticQueue_ref);
 /**
  *
- * @param SQ -> Queue to check emptiness
+ * @param staticQueue -> Queue to check emptiness
  * @return true if: Static Queue is empty;\n false if: Static Queue not empty.
  */
-bool StaticQueue_is_empty(void *SQ);
+bool StaticQueue_is_empty(void *staticQueue);
 /**
  *
- * @param SQ -> Queue to check fullness
+ * @param staticQueue -> Queue to check fullness
  * @return true if: Static Queue is full;\n false if: Queue not full.
  */
-bool StaticQueue_is_full(void *SQ);
+bool StaticQueue_is_full(void *staticQueue);
 /**
  * When calling this function it will add the data on tail of Static Queue
- * @param SQ -> Static Queue to add data
+ * @param staticQueue -> Static Queue to add data
  * @param data -> Data to be add in Static Queue
  */
-void StaticQueue_enqueue(StaticQueue *SQ, void *data);
+void StaticQueue_enqueue(StaticQueue *staticQueue, void *data);
 /**
  *
- * @param SQ -> Static Queue to get data from head
+ * @param staticQueue -> Static Queue to get data from head
  * @return The data (void *) on top of the Static Queue
  */
-void *StaticQueue_peek(const StaticQueue *SQ);
+void *StaticQueue_peek(const StaticQueue *staticQueue);
 /**
  * When calling this function it will remove data from head of the Static Queue;
- * @param SQ -> Static Queue to remove last element;
+ * @param staticQueue -> Static Queue to remove last element;
  */
-void StaticQueue_dequeue(StaticQueue *SQ);
+void StaticQueue_dequeue(StaticQueue *staticQueue);
 /**
  *
- * @param SQ -> Static Queue to be printed
+ * @param staticQueue -> Static Queue to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void StaticQueue_print(const StaticQueue *SQ, void (*type_print_function)(void * data));
+void StaticQueue_print(const StaticQueue *staticQueue, void (*type_print_function)(void * data));
 /**
  *
- * @param SQ -> Static Queue to check size
+ * @param staticQueue -> Static Queue to check size
  * @return Number of elements that are allocated in Static Queue.
  */
-long StaticQueue_size(const StaticQueue *SQ);
+long StaticQueue_size(const StaticQueue *staticQueue);
 
 #endif
