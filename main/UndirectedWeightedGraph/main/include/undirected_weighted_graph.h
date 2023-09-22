@@ -1,5 +1,6 @@
 #ifndef UNDIRECTED_WEIGHTED_GRAPH_H
 #define UNDIRECTED_WEIGHTED_GRAPH_H
+#include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
@@ -21,12 +22,12 @@ UWG *UWG_create(const long max_of_vertices);
  * It's like a shortcut to: destroy and create a new Undirected Weighted Graph with same capacity of vertices.
  * @param uwg -> Undirected Weighted Graph to be cleaned.
  */
-void UWG_clean(UWG *uwg);
+bool UWG_clean(UWG *uwg);
 /**
  * When calling this function, it will free all data that was allocated to store the Undirected Weighted Graph.
  * @param uwg_ref  -> Undirected Weighted Graph reference to be destroyed.
  */
-void UWG_destroy(UWG **uwg_ref);
+bool UWG_destroy(UWG **uwg_ref);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get index of Data passed in.
@@ -51,7 +52,7 @@ bool UWG_is_full(void *uwg);
  * @param uwg -> Undirected Weighted Graph to add data.
  * @param data -> Data to be added in the Undirected Weighted Graph.
  */
-void UWG_insert_vertex(UWG *uwg, void *data);
+bool UWG_insert_vertex(UWG *uwg, void *data);
 /**
  * When calling this function it will add a edge between two vertices with the passed weight.
  * If there is already a edge between the two vertices, it do nothing just return.
@@ -61,7 +62,7 @@ void UWG_insert_vertex(UWG *uwg, void *data);
  * @param entry_data
  * @param weight -> Weight of edge.
  */
-void UWG_insert_edge(UWG *uwg, void *exit_data, void *entry_data, float weight);
+bool UWG_insert_edge(UWG *uwg, void *exit_data, void *entry_data, float weight);
 /**
  * When calling this function it will change teh weight of the edge between two vertices.
  * Like this is a Undirected Weighted Graph, there is no preference to entry an exit vertices.
@@ -70,14 +71,14 @@ void UWG_insert_edge(UWG *uwg, void *exit_data, void *entry_data, float weight);
  * @param entry_data
  * @param new_weight -> New Weight of edge.
  */
-void UWG_change_weight(UWG *uwg, void *exit_data, void *entry_data, float new_weight);
+bool UWG_change_weight(UWG *uwg, void *exit_data, void *entry_data, float new_weight);
 /**
  * When calling this function, it will change the data of a vertex in the Undirected Weighted Graph.
  * @param uwg -> Undirected Weighted Graph to change the data of a vertex.
  * @param old_data -> Old vertex data.
  * @param new_data -> New data of the vertex.
  */
-void UWG_change_data(UWG *uwg, void *old_data, void *new_data);
+bool UWG_change_data(UWG *uwg, void *old_data, void *new_data);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get capacity.
@@ -120,13 +121,13 @@ long UWG_get_valency(UWG *uwg, void *data);
  * @param exit_data
  * @param entry_data
  */
-void UWG_remove_edge(UWG *uwg, void *exit_data, void *entry_data);
+bool UWG_remove_edge(UWG *uwg, void *exit_data, void *entry_data);
 /**
  * When calling this function, it will remove the vertex of Undirected Weighted Graph.
  * @param uwg -> Undirected Weighted Graph to remove the vertex.
  * @param data -> Vertex to be removed.
  */
-void UWG_remove_vertex(UWG *uwg, void *data);
+bool UWG_remove_vertex(UWG *uwg, void *data);
 /**
  * When calling this function, it will print Adjacency Matrix, Weight Matrix and Vertex Array of Undirected Weighted Graph.
  * @param uwg -> Undirected Weighted Graph to be printed.
