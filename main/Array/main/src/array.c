@@ -1,8 +1,8 @@
-#include "../include/array.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 //#--ADD_TO_INCLUDE
+#include "../include/array.h"
 
 #define UNSORTED 0
 #define ASC 1
@@ -91,7 +91,7 @@ void _array_merge_sort(Array *array, long first_index, long last_index, int (*ty
 Array *Array_create(long capacity, unsigned int size_of_type) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_non_positive("Array_create", "Capacity", capacity, true)
+            ExceptionHandler_is_non_positive("Array_create", "Capacity", capacity, true, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Array *array = (Array *) calloc(1, sizeof(Array));
@@ -107,7 +107,7 @@ Array *Array_create(long capacity, unsigned int size_of_type) {
 void Array_clean(Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_clean", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_clean", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     free(array->data);
@@ -121,7 +121,7 @@ void Array_delete(Array **array_ref) {
     Array *array = *array_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_delete", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_delete", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Array_clean(array);
@@ -132,7 +132,7 @@ void Array_delete(Array **array_ref) {
 long Array_capacity(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_capacity", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_capacity", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return array->capacity;
@@ -141,7 +141,7 @@ long Array_capacity(const Array *array) {
 long Array_size(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_size", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_size", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return array->size;
@@ -150,7 +150,7 @@ long Array_size(const Array *array) {
 int Array_sort_order(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_sort_order", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_sort_order", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return array->sort_order;
@@ -159,7 +159,7 @@ int Array_sort_order(const Array *array) {
 bool Array_is_empty(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_empty", "Array", array)
+            ExceptionHandler_is_null("Array_is_empty", "Array", array, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return ((Array *) array)->size == 0;
@@ -168,7 +168,7 @@ bool Array_is_empty(void *array) {
 bool Array_is_full(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_full", "Array", array)
+            ExceptionHandler_is_null("Array_is_full", "Array", array, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     return ((Array *) array)->size == ((Array *) array)->capacity;
@@ -177,7 +177,7 @@ bool Array_is_full(void *array) {
 bool Array_is_sorted(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_sorted", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_is_sorted", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     return ((Array *) array)->sort_order == ASC || ((Array *) array)->sort_order == DESC;
@@ -186,8 +186,8 @@ bool Array_is_sorted(void *array) {
 void Array_add_first(Array *array, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_add_first", "Array", ((void *) array)),
-            ExceptionHandler_is_full("Array_add_first", "Array", ((void *) array), Array_is_full)
+            ExceptionHandler_is_null("Array_add_first", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_full("Array_add_first", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     for (int i = array->size; i >= 0; i--) {
@@ -204,8 +204,8 @@ void Array_add_first(Array *array, void *data) {
 void Array_add_last(Array *array, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_add_last", "Array", ((void *) array)),
-            ExceptionHandler_is_full("Array_add_last", "Array", ((void *) array), Array_is_full)
+            ExceptionHandler_is_null("Array_add_last", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_full("Array_add_last", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     void *index_ptr = _get(array, array->size);
@@ -217,8 +217,8 @@ void Array_add_last(Array *array, void *data) {
 void *Array_first_element(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_first_element", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_first_element", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_first_element", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_first_element", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Array_get_at(array, 0);
@@ -227,8 +227,8 @@ void *Array_first_element(Array *array) {
 void *Array_last_element(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_last_element", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_last_element", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_last_element", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_last_element", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Array_get_at(array, array->size - 1);
@@ -237,8 +237,8 @@ void *Array_last_element(Array *array) {
 void Array_remove_first(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_remove_first", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_remove_first", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_remove_first", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_remove_first", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     for (int i = 1; i <= array->size; i++) {
@@ -252,8 +252,8 @@ void Array_remove_first(Array *array) {
 void Array_remove_last(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_remove_last", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_remove_last", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_remove_last", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_remove_last", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     array->size--;
@@ -262,9 +262,9 @@ void Array_remove_last(Array *array) {
 void Array_remove_at(Array *array, const long index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_remove_at", "Array", ((void *) array)),
-            ExceptionHandler_is_out_of_bounds("Array_remove_at", "Index", index, array->size-1),
-            ExceptionHandler_is_empty("Array_remove_at", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_remove_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_remove_at", "Index", index, array->size-1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_remove_at", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     long range = array->size;
@@ -279,9 +279,9 @@ void Array_remove_at(Array *array, const long index) {
 void Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_remove", "Array", ((void *) array)),
-            ExceptionHandler_is_null("Array_remove", "Data", data),
-            ExceptionHandler_is_empty("Array_remove", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_remove", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Array_remove", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_remove", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     long range = array->size;
@@ -297,9 +297,9 @@ void Array_remove(Array *array, void *data, int (*type_compare_function)(void *d
 void Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_remove_all", "Array", ((void *) array)),
-            ExceptionHandler_is_null("Array_remove_all", "Data", data),
-            ExceptionHandler_is_empty("Array_remove_all", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_remove_all", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Array_remove_all", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_remove_all", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     long range = array->size;
@@ -318,7 +318,7 @@ void Array_remove_all(Array *array, void *data, int (*type_compare_function)(voi
 void Array_print(Array *array, void (*type_print_function)(void * data)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_print", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_print", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     printf("[");
@@ -334,9 +334,9 @@ void Array_print(Array *array, void (*type_print_function)(void * data)) {
 void Array_insert_at(Array *array, void *data, const long index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_insert_at", "Array", ((void *) array)),
-            ExceptionHandler_is_out_of_bounds("Array_insert_at", "Index", index, array->size),
-            ExceptionHandler_is_full("Array_insert_at", "Array", ((void *) array), Array_is_full)
+            ExceptionHandler_is_null("Array_insert_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_insert_at", "Index", index, array->size, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_full("Array_insert_at", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     for (int i = array->size; i >= index; i--) {
@@ -353,8 +353,8 @@ void Array_insert_at(Array *array, void *data, const long index) {
 void Array_set(Array *array, void *data, const long index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_set", "Array", ((void *) array)),
-            ExceptionHandler_is_out_of_bounds("Array_set", "Index", index, array->size)
+            ExceptionHandler_is_null("Array_set", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_set", "Index", index, array->size, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     void *ith_data = _get(array, index);
@@ -365,9 +365,9 @@ void Array_set(Array *array, void *data, const long index) {
 void *Array_get_at(Array *array, const long index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_get_at", "Array", ((void *) array)),
-            ExceptionHandler_is_out_of_bounds("Array_get_at", "Index", index, array->size-1),
-            ExceptionHandler_is_empty("Array_get_at", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_get_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_get_at", "Index", index, array->size-1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_get_at", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return _get(array, index);
@@ -376,8 +376,8 @@ void *Array_get_at(Array *array, const long index) {
 Array *Array_clone(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_clone", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_clone", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_clone", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_clone", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Array *clone = Array_create(array->capacity, array->size_of_type);
@@ -392,10 +392,10 @@ Array *Array_clone(Array *array) {
 Array *Array_concat(Array *array1, Array *array2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("Array_concat", "Array1", ((void *) array1)),
-            ExceptionHandler_is_null("Array_concat", "Array2", ((void *) array2)),
-            ExceptionHandler_is_empty("Array_concat", "Array1", ((void *) array1), Array_is_empty),
-            ExceptionHandler_is_empty("Array_concat", "Array2", ((void *) array2), Array_is_empty)
+            ExceptionHandler_is_null("Array_concat", "Array1", (void *) array1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Array_concat", "Array2", (void *) array2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_concat", "Array1", (void *) array1, Array_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_concat", "Array2", (void *) array2, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     long capacity = array1->capacity+array2->capacity;
@@ -414,10 +414,10 @@ Array *Array_concat(Array *array1, Array *array2) {
 Array *Array_sub(Array *array, const long initial_index, const long final_index) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("Array_sub", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_sub", "Array", ((void *) array), Array_is_empty),
-            ExceptionHandler_is_out_of_bounds("Array_sub", "Final index", final_index, array->size-1),
-            ExceptionHandler_is_out_of_bounds("Array_sub", "Initial index", initial_index, final_index-1)
+            ExceptionHandler_is_null("Array_sub", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_sub", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Final index", final_index, array->size-1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Initial index", initial_index, final_index-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     long capacity = final_index - initial_index;
@@ -433,8 +433,8 @@ Array *Array_sub(Array *array, const long initial_index, const long final_index)
 Array *Array_reverse(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_reverse", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_reverse", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_reverse", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_reverse", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Array *reverse = Array_create(array->capacity, array->size_of_type);
@@ -449,8 +449,8 @@ Array *Array_reverse(Array *array) {
 bool Array_contains(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_contains", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_contains", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_contains", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_contains", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     for (int i = 0; i < array->size; i++) {
@@ -465,8 +465,8 @@ bool Array_contains(Array *array, void *data, int (*type_compare_function)(void 
 long Array_count(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_count", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_count", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_count", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_count", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     long count = 0;
@@ -482,10 +482,10 @@ long Array_count(Array *array, void *data, int (*type_compare_function)(void *da
 bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("Array_is_equals", "Array1", ((void *) array1)),
-            ExceptionHandler_is_null("Array_is_equals", "Array2", ((void *) array2)),
-            ExceptionHandler_is_empty("Array_is_equals", "Array1", ((void *) array1), Array_is_empty),
-            ExceptionHandler_is_empty("Array_is_equals", "Array2", ((void *) array2), Array_is_empty)
+            ExceptionHandler_is_null("Array_is_equals", "Array1", (void *) array1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Array_is_equals", "Array2", (void *) array2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_is_equals", "Array1", (void *) array1, Array_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_is_equals", "Array2", (void *) array2, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     if (array1->size_of_type != array2->size_of_type) {
@@ -510,8 +510,8 @@ bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(
 long Array_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_index_of", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_index_of", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_index_of", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_index_of", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     for (int i = 0; i < array->size; i++) {
@@ -526,8 +526,8 @@ long Array_index_of(Array *array, void *data, int (*type_compare_function)(void 
 long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_last_index_of", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_last_index_of", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_last_index_of", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_last_index_of", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     for (int i = (array->size - 1); i >= 0; i--) {
@@ -542,8 +542,8 @@ long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(
 void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_sort_asc", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_sort_asc", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_sort_asc", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_sort_asc", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     if (array->sort_order == DESC) {
@@ -559,8 +559,8 @@ void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void
 void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_sort_desc", "Array", ((void *) array)),
-            ExceptionHandler_is_empty("Array_sort_desc", "Array", ((void *) array), Array_is_empty)
+            ExceptionHandler_is_null("Array_sort_desc", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Array_sort_desc", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     if (array->sort_order == ASC) {
@@ -576,9 +576,9 @@ void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, voi
 void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_sorted_insert", "Array", ((void *) array)),
-            ExceptionHandler_is_full("Array_sorted_insert", "Array", ((void *) array), Array_is_full),
-            ExceptionHandler_is_not_sorted("Array_sorted_insert", "Array", ((void *) array), Array_is_sorted)
+            ExceptionHandler_is_null("Array_sorted_insert", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_full("Array_sorted_insert", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_not_sorted("Array_sorted_insert", "Array", (void *) array, Array_is_sorted, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -619,7 +619,7 @@ void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(
 void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_min", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_min", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
 
@@ -640,7 +640,7 @@ void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *da
 void *Array_max(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_max", "Array", ((void *) array))
+            ExceptionHandler_is_null("Array_max", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
 

@@ -1,8 +1,8 @@
-#include "../include/dynamic_queue.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/doubly_linked_list.h"
 //#--ADD_TO_INCLUDE
+#include "../include/dynamic_queue.h"
 
 typedef struct _dynamic_queue {
     LinkedList *data;
@@ -17,7 +17,7 @@ Queue *Queue_create() {
 void Queue_clean(Queue *queue) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_clean", "Queue", (void *) queue)
+            ExceptionHandler_is_null("Queue_clean", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_clean(queue->data);
@@ -27,7 +27,7 @@ void Queue_destroy(Queue **queue_ref) {
     Queue *queue = *queue_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_destroy", "Queue", (void *) queue)
+            ExceptionHandler_is_null("Queue_destroy", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_destroy(&(queue->data));
@@ -38,7 +38,7 @@ void Queue_destroy(Queue **queue_ref) {
 bool Queue_is_empty(void *queue) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_is_empty", "Queue", (void *) queue)
+            ExceptionHandler_is_null("Queue_is_empty", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return LinkedList_is_empty(((Queue *) queue)->data);
@@ -47,8 +47,8 @@ bool Queue_is_empty(void *queue) {
 void Queue_enqueue(Queue *queue, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_enqueue", "Queue", (void *) queue),
-            ExceptionHandler_is_null("Queue_enqueue", "Data", data)
+            ExceptionHandler_is_null("Queue_enqueue", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Queue_enqueue", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_add_last(queue->data, data);
@@ -57,8 +57,8 @@ void Queue_enqueue(Queue *queue, void *data) {
 void *Queue_peek(const Queue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_peek", "Queue", (void *) queue),
-            ExceptionHandler_is_empty("Queue_peek", "Queue", (void *) queue, Queue_is_empty)
+            ExceptionHandler_is_null("Queue_peek", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Queue_peek", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return LinkedList_get(queue->data, 0);
@@ -67,8 +67,8 @@ void *Queue_peek(const Queue *queue) {
 void Queue_dequeue(Queue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_dequeue", "Queue", (void *) queue),
-            ExceptionHandler_is_empty("Queue_dequeue", "Queue", (void *) queue, Queue_is_empty)
+            ExceptionHandler_is_null("Queue_dequeue", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Queue_dequeue", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_remove_first(queue->data);
@@ -77,8 +77,8 @@ void Queue_dequeue(Queue *queue) {
 void Queue_print(const Queue *queue, void (*type_print_function)(void * data)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue),
-            ExceptionHandler_is_empty("Queue_print", "Queue", (void *) queue, Queue_is_empty)
+            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Queue_print", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     printf("--(");
@@ -94,8 +94,8 @@ void Queue_print(const Queue *queue, void (*type_print_function)(void * data)) {
 size_t Queue_size(const Queue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_size", "Queue", (void *) queue),
-            ExceptionHandler_is_empty("Queue_size", "Queue", (void *) queue, Queue_is_empty)
+            ExceptionHandler_is_null("Queue_size", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Queue_size", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return LinkedList_size(queue->data);

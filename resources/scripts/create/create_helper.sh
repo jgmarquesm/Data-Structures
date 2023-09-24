@@ -81,8 +81,8 @@ typedef struct _${2} ${1};
 }
 
 function CreateSource() {
-echo "#include \"../include/${2}.h\"
-//#--ADD_TO_INCLUDE
+echo "//#--ADD_TO_INCLUDE
+#include \"../include/${2}.h\"
 
 //typedef struct _${2} {
 // define your DS here
@@ -196,7 +196,8 @@ echo "" > resources/helpers/"$1"/.info
 }
 
 function AddToTestScript() {
-  sed -i~ "s#^)#${1}\n)#" ./resources/scripts/test/helpers_test_suite.sh
+  sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/test_suite.sh
+  sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/build_test_suite.sh
   sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/ci-test.sh
 }
 
