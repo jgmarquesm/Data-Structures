@@ -3,6 +3,11 @@
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
+#ifdef SUPPRESS_PRINT_ERROR
+    #undef SUPPRESS_PRINT_ERROR
+#endif
+#define SUPPRESS_PRINT_ERROR true
+
 typedef struct _vertex Vertex;
 
 Vertex *Vertex_create(void *data);

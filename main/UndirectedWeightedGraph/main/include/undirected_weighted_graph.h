@@ -9,6 +9,11 @@
 #define DEFAULT_NULL_EDGE_VALUE 0
 #define DEFAULT_EDGE_VALUE 1
 
+#ifdef SUPPRESS_PRINT_ERROR
+    #undef SUPPRESS_PRINT_ERROR
+#endif
+#define SUPPRESS_PRINT_ERROR false
+
 typedef struct _undirected_weighted_graph UndirectedWeightedGraph, UWG;
 
 /**

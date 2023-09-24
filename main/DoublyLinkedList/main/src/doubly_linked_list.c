@@ -1,8 +1,8 @@
-#include "../include/doubly_linked_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/node.h"
 //#--ADD_TO_INCLUDE
+#include "../include/doubly_linked_list.h"
 
 #define UNSORTED 0
 #define ASC 1
@@ -99,7 +99,7 @@ LinkedList *LinkedList_create() {
 void LinkedList_clean(LinkedList *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_clean", "Linked List", ((void *) LL))
+            ExceptionHandler_is_null("LinkedList_clean", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -119,7 +119,7 @@ void LinkedList_destroy(LinkedList **LL_ref) {
     LinkedList *LL = *LL_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_destroy", "Linked List", ((void *) LL))
+            ExceptionHandler_is_null("LinkedList_destroy", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_clean(LL);
@@ -130,7 +130,7 @@ void LinkedList_destroy(LinkedList **LL_ref) {
 bool LinkedList_is_empty(void *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_is_empty", "Linked List", ((void *) LL))
+            ExceptionHandler_is_null("LinkedList_is_empty", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return ((LinkedList *) LL)->size == 0;
@@ -139,7 +139,7 @@ bool LinkedList_is_empty(void *LL) {
 bool LinkedList_is_sorted(void *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_is_sorted", "Linked List", ((void *) LL))
+            ExceptionHandler_is_null("LinkedList_is_sorted", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return ((LinkedList *) LL)->sort_order != UNSORTED;
@@ -148,8 +148,8 @@ bool LinkedList_is_sorted(void *LL) {
 int LinkedList_sort_order(const LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_order", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_sort_order", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_sort_order", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_sort_order", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return UNSORTED;
     return LL->sort_order;
@@ -158,8 +158,8 @@ int LinkedList_sort_order(const LinkedList *LL) {
 void LinkedList_print(const LinkedList *LL, void (*type_print_function)(void *data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_print", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_print", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_print", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_print", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -177,15 +177,14 @@ void LinkedList_print(const LinkedList *LL, void (*type_print_function)(void *da
 void LinkedList_add_first(LinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_add_first", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_null("LinkedList_add_first", "Data", data)
+            ExceptionHandler_is_null("LinkedList_add_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("LinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
     Node_set_next(node, LL->begin);
     if (LinkedList_is_empty(LL)) LL->end = node;
     else Node_set_prev(LL->begin, node);
-    printf("data: %d\n", *((int *) Node_get_data(LL->end)));
     LL->begin = node;
     LL->size++;
     LL->sort_order = UNSORTED;
@@ -194,8 +193,8 @@ void LinkedList_add_first(LinkedList *LL, void *data) {
 void LinkedList_add_last(LinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_add_last", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_null("LinkedList_add_last", "Data", data)
+            ExceptionHandler_is_null("LinkedList_add_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("LinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
@@ -210,8 +209,8 @@ void LinkedList_add_last(LinkedList *LL, void *data) {
 void *LinkedList_remove_first(LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_first", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_remove_first", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_remove_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_remove_first", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = LL->begin;
@@ -230,8 +229,8 @@ void *LinkedList_remove_first(LinkedList *LL) {
 void *LinkedList_remove_last(LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_last", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_remove_last", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_remove_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_remove_last", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = LL->end;
@@ -250,9 +249,9 @@ void *LinkedList_remove_last(LinkedList *LL) {
 void *LinkedList_remove_at(LinkedList *LL, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_remove_at", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_remove_at", "Linked List", ((void *) LL), LinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("LinkedList_remove_at", "Index", index, LL->size-1)
+            ExceptionHandler_is_null("LinkedList_remove_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_remove_at", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("LinkedList_remove_at", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (index == 0) {
@@ -277,8 +276,8 @@ void *LinkedList_remove_at(LinkedList *LL, const size_t index) {
 void LinkedList_remove(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_remove", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_remove", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_remove", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -310,8 +309,8 @@ void LinkedList_remove(LinkedList *LL, void *data, int (*type_compare_function)(
 void LinkedList_remove_all(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_all", " Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_remove_all", " Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_remove_all", " Linked List", ((void *) LL), SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_remove_all", " Linked List", ((void *) LL), LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -346,8 +345,8 @@ void LinkedList_remove_all(LinkedList *LL, void *data, int (*type_compare_functi
 size_t LinkedList_size(const LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_size", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_size", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_size", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_size", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return LL->size;
@@ -356,8 +355,8 @@ size_t LinkedList_size(const LinkedList *LL) {
 void *LinkedList_first_element(const LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_first_element", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_first_element", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_first_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_first_element", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(LL->begin);
@@ -366,8 +365,8 @@ void *LinkedList_first_element(const LinkedList *LL) {
 void *LinkedList_last_element(const LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_last_element", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_last_element", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_last_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_last_element", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(LL->end);
@@ -376,9 +375,9 @@ void *LinkedList_last_element(const LinkedList *LL) {
 void *LinkedList_get(const LinkedList *LL, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_get", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_get", "Linked List", ((void *) LL), LinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("LinkedList_get", "Index", index, LL->size-1)
+            ExceptionHandler_is_null("LinkedList_get", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_get", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("LinkedList_get", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = _get_node(LL, index);
@@ -388,8 +387,8 @@ void *LinkedList_get(const LinkedList *LL, const size_t index) {
 int LinkedList_count(const LinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_count", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_count", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_count", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_count", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     Node *node = LL->begin;
@@ -406,8 +405,8 @@ int LinkedList_count(const LinkedList *LL, void *data) {
 bool LinkedList_contains(const LinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_contains", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_contains", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_contains", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_contains", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     Node *node = LL->begin;
@@ -423,9 +422,9 @@ bool LinkedList_contains(const LinkedList *LL, void *data) {
 void LinkedList_insert_at(LinkedList *LL, void *data, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_insert_at", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_insert_at", "Linked List", ((void *) LL), LinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("LinkedList_insert_at", "Index", index, LL->size)
+            ExceptionHandler_is_null("LinkedList_insert_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_insert_at", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("LinkedList_insert_at", "Index", index, LL->size, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     if (index == 0) {
@@ -450,7 +449,7 @@ void LinkedList_insert_at(LinkedList *LL, void *data, const size_t index) {
 LinkedList *LinkedList_clone(const LinkedList *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_clone", "Linked List", ((void *) LL))
+            ExceptionHandler_is_null("LinkedList_clone", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     LinkedList *clone = LinkedList_create();
@@ -469,8 +468,8 @@ LinkedList *LinkedList_clone(const LinkedList *LL) {
 LinkedList *LinkedList_concat(LinkedList *LL1, LinkedList *LL2) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_concat", "Linked List 1", ((void *) LL1)),
-            ExceptionHandler_is_null("LinkedList_concat", "Linked List 2", ((void *) LL2))
+            ExceptionHandler_is_null("LinkedList_concat", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("LinkedList_concat", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (LinkedList_is_empty((void *) LL1)) {
@@ -491,8 +490,8 @@ LinkedList *LinkedList_concat(LinkedList *LL1, LinkedList *LL2) {
 LinkedList *LinkedList_reverse(LinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_reverse", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_reverse", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_reverse", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_reverse", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     LinkedList *LL_new = LinkedList_clone(LL);
@@ -513,10 +512,10 @@ LinkedList *LinkedList_reverse(LinkedList *LL) {
 bool LinkedList_is_equals_strict(const LinkedList *LL1, const LinkedList *LL2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 1", ((void *) LL1)),
-            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 2", ((void *) LL2)),
-            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 1", ((void *) LL1), LinkedList_is_empty),
-            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 2", ((void *) LL2), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 1", (void *) LL1, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 2", (void *) LL2, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || LL1->size != LL2->size
     ) return false;
     Node *node1 = LL1->begin;
@@ -534,10 +533,10 @@ bool LinkedList_is_equals_strict(const LinkedList *LL1, const LinkedList *LL2) {
 bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 1", ((void *) LL1)),
-            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 2", ((void *) LL2)),
-            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 1", ((void *) LL1), LinkedList_is_empty),
-            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 2", ((void *) LL2), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 1", (void *) LL1, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 2", (void *) LL2, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || LL1->size != LL2->size
     ) return false;
     Node *node1 = LL1->begin;
@@ -555,8 +554,8 @@ bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*ty
 void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_asc", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_sort_asc", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_sort_asc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_sort_asc", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     _dll_merge_sort(&LL->begin, type_compare_function, 1);
@@ -567,8 +566,8 @@ void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data
 void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_desc", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_sort_desc", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_sort_desc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_sort_desc", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     _dll_merge_sort(&LL->begin, type_compare_function, -1);
@@ -579,9 +578,9 @@ void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *dat
 void LinkedList_sorted_insert(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_sorted_insert", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_sorted_insert", "Linked List", ((void *) LL), LinkedList_is_empty),
-            ExceptionHandler_is_not_sorted("LinkedList_sorted_insert", "Linked List", (void*) LL, LinkedList_is_sorted)
+            ExceptionHandler_is_null("LinkedList_sorted_insert", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_sorted_insert", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_not_sorted("LinkedList_sorted_insert", "Linked List", (void*) LL, LinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin, *node_prev = NULL, *node_new = Node_create(data);
@@ -610,8 +609,8 @@ void LinkedList_sorted_insert(LinkedList *LL, void *data, int (*type_compare_fun
 void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_min", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_min", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_min", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_min", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
@@ -625,7 +624,6 @@ void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *da
 
     LinkedList *clone = LinkedList_clone(LL);
     LinkedList_sort_asc(clone, type_compare_function);
-    puts("IHA");
     void *data = Node_get_data(clone->begin);
     LinkedList_destroy(&clone);
     return data;
@@ -634,8 +632,8 @@ void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *da
 void *LinkedList_max(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_max", "Linked List", ((void *) LL)),
-            ExceptionHandler_is_empty("LinkedList_max", "Linked List", ((void *) LL), LinkedList_is_empty)
+            ExceptionHandler_is_null("LinkedList_max", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("LinkedList_max", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 

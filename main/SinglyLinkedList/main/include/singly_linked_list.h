@@ -6,6 +6,11 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef SUPPRESS_PRINT_ERROR
+    #undef SUPPRESS_PRINT_ERROR
+#endif
+#define SUPPRESS_PRINT_ERROR false
+
 /**
  * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
  * 1 - Type printing function: To print data correctly.\n

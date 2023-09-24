@@ -1,9 +1,8 @@
-#include "../include/dynamic_stack.h"
-#include "../include/doubly_linked_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/doubly_linked_list.h"
 //#--ADD_TO_INCLUDE
+#include "../include/dynamic_stack.h"
 
 typedef struct _dynamic_stack {
     LinkedList *data;
@@ -18,7 +17,7 @@ Stack *Stack_create() {
 void Stack_clean(Stack *stack) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_clean", "Stack", (void *) stack)
+            ExceptionHandler_is_null("Stack_clean", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_clean(stack->data);
@@ -28,7 +27,7 @@ void Stack_destroy(Stack **stack_ref) {
     Stack *stack = *stack_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_destroy", "Stack", (void *) stack)
+            ExceptionHandler_is_null("Stack_destroy", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_destroy(&(stack->data));
@@ -39,7 +38,7 @@ void Stack_destroy(Stack **stack_ref) {
 bool Stack_is_empty(void *stack) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_empty", "Stack", (void *) stack)
+            ExceptionHandler_is_null("Stack_empty", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return LinkedList_is_empty(((Stack *) stack)->data);
@@ -48,8 +47,8 @@ bool Stack_is_empty(void *stack) {
 void Stack_push(Stack *stack, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_push", "Stack", (void *) stack),
-            ExceptionHandler_is_null("Stack_push", "Data", data)
+            ExceptionHandler_is_null("Stack_push", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Stack_push", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_add_last(stack->data, data);
@@ -58,8 +57,8 @@ void Stack_push(Stack *stack, void *data) {
 void *Stack_peek(const Stack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_peek", "Stack", (void *) stack),
-            ExceptionHandler_is_empty("Stack_peek", "Stack", (void *) stack, Stack_is_empty)
+            ExceptionHandler_is_null("Stack_peek", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Stack_peek", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     long top = LinkedList_size(stack->data) - 1;
@@ -69,8 +68,8 @@ void *Stack_peek(const Stack *stack) {
 void Stack_pop(Stack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_pop", "Stack", (void *) stack),
-            ExceptionHandler_is_empty("Stack_pop", "Stack", (void *) stack, Stack_is_empty)
+            ExceptionHandler_is_null("Stack_pop", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Stack_pop", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     LinkedList_remove_last(stack->data);
@@ -79,8 +78,8 @@ void Stack_pop(Stack *stack) {
 void Stack_print(const Stack *stack, void (*type_print_function)(void * data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_print", "Stack", (void *) stack),
-            ExceptionHandler_is_empty("Stack_print", "Stack", (void *) stack, Stack_is_empty)
+            ExceptionHandler_is_null("Stack_print", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Stack_print", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     printf("-:[");
@@ -96,8 +95,8 @@ void Stack_print(const Stack *stack, void (*type_print_function)(void * data)) {
 size_t Stack_size(const Stack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_size", "Stack", (void *) stack),
-            ExceptionHandler_is_empty("Stack_size", "Stack", (void *) stack, Stack_is_empty)
+            ExceptionHandler_is_null("Stack_size", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("Stack_size", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return LinkedList_size(stack->data);

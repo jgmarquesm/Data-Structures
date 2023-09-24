@@ -1,7 +1,7 @@
-#include "../include/node.h"
 #include <stdlib.h>
 #include <stdio.h>
 //#--ADD_TO_INCLUDE
+#include "../include/node.h"
 
 typedef struct _node {
     void *data;
@@ -21,7 +21,7 @@ void Node_destroy(Node **node_ref) {
     Node *node = *node_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_destroy", "node", node)
+            ExceptionHandler_is_null("Node_destroy", "node", node, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return;
@@ -33,8 +33,8 @@ void Node_destroy(Node **node_ref) {
 Node *Node_get_next(Node* node) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Node_get_next", "node", node),
-            ExceptionHandler_is_null("Node_get_next", "node.next", node->next)
+            ExceptionHandler_is_null("Node_get_next", "node", node, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Node_get_next", "node.next", node->next, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return NULL;
@@ -45,7 +45,7 @@ Node *Node_get_next(Node* node) {
 void Node_set_next(Node *node, Node *next) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_next", "node", node)
+            ExceptionHandler_is_null("Node_set_next", "node", node, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return;
@@ -56,8 +56,8 @@ void Node_set_next(Node *node, Node *next) {
 Node *Node_get_prev(Node* node) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Node_get_prev", "node", node),
-            ExceptionHandler_is_null("Node_get_prev", "node.prev", node->prev)
+            ExceptionHandler_is_null("Node_get_prev", "node", node, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Node_get_prev", "node.prev", node->prev, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return NULL;
@@ -68,7 +68,7 @@ Node *Node_get_prev(Node* node) {
 void Node_set_prev(Node *node, Node *prev) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_prev", "node", node)
+            ExceptionHandler_is_null("Node_set_prev", "node", node, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return;
@@ -79,8 +79,8 @@ void Node_set_prev(Node *node, Node *prev) {
 void *Node_get_data(Node* node) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Node_get_data", "node", node),
-            ExceptionHandler_is_null("Node_get_data", "node.data", node->data)
+            ExceptionHandler_is_null("Node_get_data", "node", node, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Node_get_data", "node.data", node->data, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return NULL;
@@ -91,7 +91,7 @@ void *Node_get_data(Node* node) {
 void Node_set_data(Node *node, void *data) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_data", "node", node)
+            ExceptionHandler_is_null("Node_set_data", "node", node, SUPPRESS_PRINT_ERROR)
         )
     ) {
         return;

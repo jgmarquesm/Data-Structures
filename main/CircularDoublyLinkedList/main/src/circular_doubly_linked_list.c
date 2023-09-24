@@ -1,8 +1,8 @@
-#include "../include/circular_doubly_linked_list.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/node.h"
 //#--ADD_TO_INCLUDE
+#include "../include/circular_doubly_linked_list.h"
 
 #define UNSORTED 0
 #define ASC 1
@@ -155,7 +155,7 @@ CircularLinkedList *CircularLinkedList_create() {
 void CircularLinkedList_clean(CircularLinkedList *CLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_clean", "Circular Linked List", ((void *) CLL))
+            ExceptionHandler_is_null("CircularLinkedList_clean", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = CLL->begin;
@@ -175,7 +175,7 @@ void CircularLinkedList_destroy(CircularLinkedList **CLL_ref) {
     CircularLinkedList *CLL = *CLL_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_destroy", "Circular Linked List", ((void *) CLL))
+            ExceptionHandler_is_null("CircularLinkedList_destroy", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     CircularLinkedList_clean(CLL);
@@ -186,7 +186,7 @@ void CircularLinkedList_destroy(CircularLinkedList **CLL_ref) {
 bool CircularLinkedList_is_empty(void *CLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_is_empty", "Circular Linked List", ((void *) CLL))
+            ExceptionHandler_is_null("CircularLinkedList_is_empty", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
     return ((CircularLinkedList *) CLL)->size == 0;
@@ -195,7 +195,7 @@ bool CircularLinkedList_is_empty(void *CLL) {
 bool CircularLinkedList_is_sorted(void *CLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_is_sorted", "Circular Linked List", ((void *) CLL))
+            ExceptionHandler_is_null("CircularLinkedList_is_sorted", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     return ((CircularLinkedList *) CLL)->sort_order != UNSORTED;
@@ -204,8 +204,8 @@ bool CircularLinkedList_is_sorted(void *CLL) {
 int CircularLinkedList_sort_order(const CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_order", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_order", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_sort_order", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_sort_order", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return UNSORTED;
     return CLL->sort_order;
@@ -214,8 +214,8 @@ int CircularLinkedList_sort_order(const CircularLinkedList *CLL) {
 void CircularLinkedList_print(const CircularLinkedList *CLL, void (*type_print_function)(void *data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_print", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_print", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_print", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_print", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = CLL->begin;
@@ -231,8 +231,8 @@ void CircularLinkedList_print(const CircularLinkedList *CLL, void (*type_print_f
 void CircularLinkedList_add_first(CircularLinkedList *CLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_add_first", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_null("CircularLinkedList_add_first", "Data", data)
+            ExceptionHandler_is_null("CircularLinkedList_add_first", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularLinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
@@ -254,8 +254,8 @@ void CircularLinkedList_add_first(CircularLinkedList *CLL, void *data) {
 void CircularLinkedList_add_last(CircularLinkedList *CLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_add_last", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_null("CircularLinkedList_add_last", "Data", data)
+            ExceptionHandler_is_null("CircularLinkedList_add_last", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularLinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
@@ -317,8 +317,8 @@ void _cll_sorted_insert_desc(CircularLinkedList *CLL, void *data, int (*type_com
 void *CircularLinkedList_remove_first(CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_first", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_first", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_remove_first", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_remove_first", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = CLL->begin;
@@ -338,8 +338,8 @@ void *CircularLinkedList_remove_first(CircularLinkedList *CLL) {
 void *CircularLinkedList_remove_last(CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_last", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_last", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_remove_last", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_remove_last", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = CLL->end;
@@ -359,9 +359,9 @@ void *CircularLinkedList_remove_last(CircularLinkedList *CLL) {
 void *CircularLinkedList_remove_at(CircularLinkedList *CLL, size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("CircularLinkedList_remove_at", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_at", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_remove_at", "Index", index, CLL->size-1)
+            ExceptionHandler_is_null("CircularLinkedList_remove_at", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_remove_at", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("CircularLinkedList_remove_at", "Index", index, CLL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (index == 0) {
@@ -386,8 +386,8 @@ void *CircularLinkedList_remove_at(CircularLinkedList *CLL, size_t index) {
 void CircularLinkedList_remove(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_remove", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_remove", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_remove", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -422,8 +422,8 @@ void CircularLinkedList_remove(CircularLinkedList *CLL, void *data, int (*type_c
 void CircularLinkedList_remove_all(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_all", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_all", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_remove_all", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_remove_all", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -462,8 +462,8 @@ void CircularLinkedList_remove_all(CircularLinkedList *CLL, void *data, int (*ty
 size_t CircularLinkedList_size(const CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_size", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_size", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_size", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_size", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return CLL->size;
@@ -472,8 +472,8 @@ size_t CircularLinkedList_size(const CircularLinkedList *CLL) {
 void *CircularLinkedList_first_element(const CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_first_element", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_first_element", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_first_element", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_first_element", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(CLL->begin);
@@ -482,8 +482,8 @@ void *CircularLinkedList_first_element(const CircularLinkedList *CLL) {
 void *CircularLinkedList_last_element(const CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_last_element", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_last_element", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_last_element", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_last_element", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(CLL->end);
@@ -492,9 +492,9 @@ void *CircularLinkedList_last_element(const CircularLinkedList *CLL) {
 void *CircularLinkedList_get(const CircularLinkedList *CLL, size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("CircularLinkedList_get", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_get", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_get", "Index", index, CLL->size-1)
+            ExceptionHandler_is_null("CircularLinkedList_get", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_get", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("CircularLinkedList_get", "Index", index, CLL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = _get_node(CLL, index);
@@ -504,8 +504,8 @@ void *CircularLinkedList_get(const CircularLinkedList *CLL, size_t index) {
 int CircularLinkedList_count(const CircularLinkedList *CLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_count", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_count", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_count", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_count", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     int count = 0;
@@ -525,8 +525,8 @@ int CircularLinkedList_count(const CircularLinkedList *CLL, void *data) {
 bool CircularLinkedList_contains(const CircularLinkedList *CLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_contains", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_contains", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_contains", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_contains", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     if (Node_get_data(CLL->begin) == data) {
@@ -545,9 +545,9 @@ bool CircularLinkedList_contains(const CircularLinkedList *CLL, void *data) {
 void CircularLinkedList_insert_at(CircularLinkedList *CLL, void *data, size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("CircularLinkedList_insert_at", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_insert_at", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_insert_at", "Index", index, CLL->size)
+            ExceptionHandler_is_null("CircularLinkedList_insert_at", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_insert_at", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("CircularLinkedList_insert_at", "Index", index, CLL->size, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     if (index == 0) {
@@ -572,7 +572,7 @@ void CircularLinkedList_insert_at(CircularLinkedList *CLL, void *data, size_t in
 CircularLinkedList *CircularLinkedList_clone(const CircularLinkedList *CLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", ((void *) CLL))
+            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     CircularLinkedList *clone = CircularLinkedList_create();
@@ -591,8 +591,8 @@ CircularLinkedList *CircularLinkedList_clone(const CircularLinkedList *CLL) {
 CircularLinkedList *CircularLinkedList_concat(CircularLinkedList *CLL1, CircularLinkedList *CLL2) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 1", ((void *) CLL1)),
-            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 2", ((void *) CLL2))
+            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (CircularLinkedList_is_empty((void *) CLL1)) {
@@ -614,8 +614,8 @@ CircularLinkedList *CircularLinkedList_concat(CircularLinkedList *CLL1, Circular
 CircularLinkedList *CircularLinkedList_reverse(CircularLinkedList *CLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_clone", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     CircularLinkedList *CLL_new = CircularLinkedList_clone(CLL);
@@ -636,10 +636,10 @@ CircularLinkedList *CircularLinkedList_reverse(CircularLinkedList *CLL) {
 bool CircularLinkedList_is_equals_strict(const CircularLinkedList *CLL1, const CircularLinkedList *CLL2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 1", ((void *) CLL1)),
-            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 2", ((void *) CLL2)),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 1", ((void *) CLL1), CircularLinkedList_is_empty),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 2", ((void *) CLL2), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CLL1, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CLL2, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || CLL1->size != CLL2->size
     ) return false;
     Node *node1 = CLL1->begin;
@@ -657,10 +657,10 @@ bool CircularLinkedList_is_equals_strict(const CircularLinkedList *CLL1, const C
 bool CircularLinkedList_is_equals(const CircularLinkedList *CLL1, const CircularLinkedList *CLL2, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 1", ((void *) CLL1)),
-            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 2", ((void *) CLL2)),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 1", ((void *) CLL1), CircularLinkedList_is_empty),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 2", ((void *) CLL2), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 1", (void *) CLL1, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 2", (void *) CLL2, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || CLL1->size != CLL2->size
     ) return false;
     Node *node1 = CLL1->begin;
@@ -679,8 +679,8 @@ void CircularLinkedList_sort_asc(CircularLinkedList **CLL_ref, int (*type_compar
     CircularLinkedList *CLL = *CLL_ref;
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_asc", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_asc", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_sort_asc", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_sort_asc", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -702,8 +702,8 @@ void CircularLinkedList_sort_desc(CircularLinkedList **CLL_ref, int (*type_compa
     CircularLinkedList *CLL = *CLL_ref;
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_desc", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_desc", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_sort_desc", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_sort_desc", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -724,9 +724,9 @@ void CircularLinkedList_sort_desc(CircularLinkedList **CLL_ref, int (*type_compa
 void CircularLinkedList_sorted_insert(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("CircularLinkedList_sorted_insert", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_sorted_insert", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty),
-            ExceptionHandler_is_not_sorted("CircularLinkedList_sorted_insert", "Circular Linked List", (void*) CLL, CircularLinkedList_is_sorted)
+            ExceptionHandler_is_null("CircularLinkedList_sorted_insert", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_sorted_insert", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_not_sorted("CircularLinkedList_sorted_insert", "Circular Linked List", (void*) CLL, CircularLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
         )
     ) return;
 
@@ -740,8 +740,8 @@ void CircularLinkedList_sorted_insert(CircularLinkedList *CLL, void *data, int (
 void *CircularLinkedList_min(const CircularLinkedList *CLL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_min", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_min", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_min", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_min", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
@@ -763,8 +763,8 @@ void *CircularLinkedList_min(const CircularLinkedList *CLL, int (*type_compare_f
 void *CircularLinkedList_max(const CircularLinkedList *CLL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_max", "Circular Linked List", ((void *) CLL)),
-            ExceptionHandler_is_empty("CircularLinkedList_max", "Circular Linked List", ((void *) CLL), CircularLinkedList_is_empty)
+            ExceptionHandler_is_null("CircularLinkedList_max", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularLinkedList_max", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
