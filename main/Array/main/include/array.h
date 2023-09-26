@@ -29,12 +29,12 @@ Array *Array_create(long capacity, unsigned int size_of_type);
  * When calling this function it will clean all data from Array;
  * @param array -> The array to be clean;
  */
-void Array_clean(Array *array);
+bool Array_clean(Array *array);
 /**
  * When calling this function, it will clean all data from Array and it will be deallocated;
  * @param array_ref -> The pointer of the Array to be deleted;
  */
-void Array_delete(Array **array_ref);
+bool Array_delete(Array **array_ref);
 /**
  *
  * @param array -> Array to get the capacity;
@@ -76,13 +76,13 @@ bool Array_is_sorted(void *array);
  * @param array -> Array to add data;
  * @param data -> Data to be add in Array;
  */
-void Array_add_first(Array *array, void *data);
+bool Array_add_first(Array *array, void *data);
 /**
  * When calling this function it will add the data in last position;
  * @param array -> Array to add data;
  * @param data -> Data to be add in Array;
  */
-void Array_add_last(Array *array, void *data);
+bool Array_add_last(Array *array, void *data);
 /**
  *
  * @param array -> Array to get first element;
@@ -99,32 +99,32 @@ void *Array_last_element(Array *array);
  * When calling this function it will remove the first element of Array;
  * @param array -> Array to remove first element;
  */
-void Array_remove_first(Array *array);
+bool Array_remove_first(Array *array);
 /**
  * When calling this function it will remove the last element of Array;
  * @param array -> Array to remove last element;
  */
-void Array_remove_last(Array *array);
+bool Array_remove_last(Array *array);
 /**
  * When calling this function it will remove the index-th element of Array;
  * @param array -> Array to remove index-th element;
  * @param index -> Index to remove data at
  */
-void Array_remove_at(Array *array, const long index);
+bool Array_remove_at(Array *array, const long index);
 /**
  * When calling this function it will remove the element in the Array
  * @param array -> Array to remove the element
  * @param data -> Element to be removed
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will remove all occurs of the element in the Array;
  * @param array -> Array to remove the element;
  * @param data -> Element to be removed;
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to be printed
@@ -137,14 +137,14 @@ void Array_print(Array *array, void (*type_print_function)(void * data));
  * @param data -> Data to be added
  * @param index -> Index to add data at
  */
-void Array_insert_at(Array *array, void *data, const long index);
+bool Array_insert_at(Array *array, void *data, const long index);
 /**
  * When calling this function it will update the data of index-th Array index
  * @param array -> Array update data
  * @param data -> Data to be set
  * @param index -> Index to update data at
  */
-void Array_set(Array *array, void *data, const long index);
+bool Array_set(Array *array, void *data, const long index);
 /**
  *
  * @param array -> Array to get data from index-th Array index
@@ -223,20 +223,20 @@ long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(
  * @param array -> Array to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the Array in descending order
  * @param array -> Array to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will add data to Array following the order sort
  * @param array -> Array to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param array -> Array to get the smaller data

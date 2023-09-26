@@ -21,30 +21,6 @@ Matrix
 UndirectedWeightedGraph
 ) #--DS
 
-function _get_executed_tests() {
-  execs=0
-  while read -r line
-  do
-    e="$( echo "$line" | grep -o -P "^\d+," | rev | cut -c2- | rev )"
-    (( execs=execs+$(( e )) ))
-  done < ../resources/scripts/test/tests_result.txt
-  echo "$execs"
-}
-
-function _get_failed_tests() {
-  fail=0
-  while read -r line
-  do
-    f="$( echo "$line" | grep -o -P ",\d+$" | cut -c2-)"
-    (( fail=fail+$(( f )) ))
-  done < ../resources/scripts/test/tests_result.txt
-  echo "$fail"
-}
-
-function _parse_test_result() {
-  sed -i~ -E 's/(.+) Tests (.+) Failures/\1,\2/g' ../resources/scripts/test/tests_result.txt
-}
-
 function _title_case_to_snake_case() {
  # shellcheck disable=SC2001
  sed 's/[A-Z]/_\l&/g' <<<"${1}" | cut -c2-
@@ -91,10 +67,9 @@ function run_HELPERS_test_suite() {
     echo "Executing test for$formatted_helper..."
     cd ./"${helper}" || exit 1
     make run_tests -s || exit 1
-    make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../scripts/test/tests_result.txt
     cd ..
     end_for_helper=$(date +%s)
-    echo "${YELLOW}Test executed for$formatted_helper in $(( end_for_helper - start_for_helper ))s..."
+    echo "Test executed for$formatted_helper in $(( end_for_helper - start_for_helper ))s..."
   done
 }
 
@@ -107,10 +82,9 @@ function run_DS_test_suite() {
     echo "Executing test for$formatted_ds..."
     cd ./"${ds}" || exit 1
     make run_tests -s || exit 1
-    make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../resources/scripts/test/tests_result.txt
     cd ..
     end_for_ds=$(date +%s)
-    echo "${YELLOW}Test executed for$formatted_ds in $(( end_for_ds - start_for_ds ))s..."
+    echo "Test executed for$formatted_ds in $(( end_for_ds - start_for_ds ))s..."
   done
 }
 
@@ -119,13 +93,6 @@ set_suppress_print_error_on
 run_HELPERS_test_suite
 run_DS_test_suite
 set_suppress_print_error_off
-_parse_test_result
-executed=$(_get_executed_tests)
-failed=$(_get_failed_tests)
-passed=$(( $executed - $failed))
 
 end=$(date +%s)
-echo "${executed} Tests executed in $(( end - start ))s
-${passed} Pass
-${failed} Fail"
-rm -rf ../resources/scripts/test/tests_result.txt
+echo "Tests executed in $(( end - start ))s"
