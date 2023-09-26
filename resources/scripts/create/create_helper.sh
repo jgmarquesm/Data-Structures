@@ -197,7 +197,6 @@ echo "" > resources/helpers/"$1"/.info
 
 function AddToTestScript() {
   sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/test_suite.sh
-  sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/build_test_suite.sh
   sed -i~ "s#^) \#--H#${1}\n) \#--H#" ./resources/scripts/test/ci-test.sh
 }
 

@@ -227,7 +227,6 @@ echo "" > main/"${1}"/.info
 
 function AddToTestScript() {
   sed -i~ "s#^) \#--DS#${1}\n) \#--DS#" ./resources/scripts/test/test_suite.sh
-  sed -i~ "s#^) \#--DS#${1}\n) \#--DS#" ./resources/scripts/test/build_test_suite.sh
   sed -i~ "s#^) \#--DS#${1}\n) \#--DS#" ./resources/scripts/test/ci-test.sh
 }
 

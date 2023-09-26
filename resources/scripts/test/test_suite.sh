@@ -1,13 +1,23 @@
 #!/bin/zsh
 
-start=$(date +%s)
+DEBUG='off'
+BUILD='off'
 
-# shellcheck disable=SC2034
-GREY='\033[1;90m'
+for opt in "$@"; do
+    if [ "$opt" = "--debug" ] || [ "$opt" = "-d" ]; then
+      DEBUG='on'
+    elif [ "$opt" = "--build" ] || [ "$opt" = "-b" ]; then
+      BUILD='on'
+    fi
+done
+
+start=$(date +%s%N)
+
 RED='\033[1;91m'
 GREEN='\033[1;92m'
 YELLOW='\033[1;93m'
 BLUE='\033[1;94m'
+PURPLE='\033[1;95m'
 NO_COLOR='\033[0m'
 
 HELPERS=(
@@ -28,6 +38,11 @@ DynamicQueue
 Matrix
 UndirectedWeightedGraph
 ) #--DS
+
+function _delta_T_in_ms() {
+  delta_t=$(( ($1 - $2)/1000000 ))
+  echo "$delta_t"
+}
 
 function _get_executed_tests() {
   execs=0
@@ -91,18 +106,24 @@ function formatted_name() {
 }
 
 function run_HELPERS_test_suite() {
-  cd resources/helpers/ || exit 1
+  cd ./resources/helpers/ || exit 1
     for helper in "${HELPERS[@]}"
     do
-      start_for_helper=$(date +%s)
+      start_for_helper=$(date +%s%N)
       formatted_helper=$(formatted_name "${helper}")
       echo "${BLUE}Executing test for$formatted_helper...${NO_COLOR}"
       cd ./"${helper}" || exit 1
-      make run_tests -s
-      make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../scripts/test/tests_result.txt
+      if [[ $BUILD = "on" ]]; then
+        make run_tests -s || exit 1
+      else
+        if [[ $DEBUG = "on" ]]; then
+          make run_tests -s
+        fi
+        make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../scripts/test/tests_result.txt
+      fi
       cd ..
-      end_for_helper=$(date +%s)
-      echo "${YELLOW}Test executed for$formatted_helper in $(( end_for_helper - start_for_helper ))s...${NO_COLOR}"
+      end_for_helper=$(date +%s%N)
+      echo "${YELLOW}Test executed for$formatted_helper in $(_delta_T_in_ms "$end_for_helper" "$start_for_helper")ms...${NO_COLOR}"
     done
 }
 
@@ -110,30 +131,41 @@ function run_DS_test_suite() {
   cd ../../main/ || exit 1
   for ds in "${DS[@]}"
   do
-    start_for_ds=$(date +%s)
+    start_for_ds=$(date +%s%N)
     formatted_ds=$(formatted_name "${ds}")
     echo "${BLUE}Executing test for$formatted_ds...${NO_COLOR}"
     cd ./"${ds}" || exit 1
-    make run_tests -s
-    make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../resources/scripts/test/tests_result.txt
+    if [[ $BUILD = "on" ]]; then
+      make run_tests -s || exit 1
+    else
+      if [[ $DEBUG = "on" ]]; then
+        make run_tests -s
+      fi
+      make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../resources/scripts/test/tests_result.txt
+    fi
     cd ..
-    end_for_ds=$(date +%s)
-    echo "${YELLOW}Test executed for$formatted_ds in $(( end_for_ds - start_for_ds ))s...${NO_COLOR}"
+    end_for_ds=$(date +%s%N)
+    echo "${YELLOW}Test executed for$formatted_ds in $(_delta_T_in_ms "$end_for_ds" "$start_for_ds")ms...${NO_COLOR}"
   done
 }
 
+rm -rf ../resources/scripts/test/tests_result.txt
 clear
 set_suppress_print_error_on
 run_HELPERS_test_suite
 run_DS_test_suite
 set_suppress_print_error_off
-_parse_test_result
-executed=$(_get_executed_tests)
-failed=$(_get_failed_tests)
-passed=$(( $executed - $failed ))
 
-end=$(date +%s)
-echo "${BLUE}${executed} Tests executed in $(( end - start ))s ${NO_COLOR}
+end=$(date +%s%N)
+if [[ $BUILD = "on" ]]; then
+  echo "${PURPLE}Tests executed in $(_delta_T_in_ms "$end" "$start")ms ${NO_COLOR}"
+else
+  _parse_test_result
+  executed=$(_get_executed_tests)
+  failed=$(_get_failed_tests)
+  passed=$(( $executed - $failed ))
+  echo "${BLUE}${executed} Tests executed in $(_delta_T_in_ms "$end" "$start")ms ${NO_COLOR}
 ${GREEN}${passed} Pass${NO_COLOR}
 ${RED}${failed} Fail${NO_COLOR}"
-rm -rf ../resources/scripts/test/tests_result.txt
+  rm -rf ../resources/scripts/test/tests_result.txt
+fi

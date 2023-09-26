@@ -103,9 +103,13 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 --private-test: --private-clean_all
 	$(SCRIPTS)/$(TEST_SCRIPT)
 
---private-build_test: --private-clean_all
-	$(SCRIPTS)/$(BUILD_TEST_SCRIPT)
+--private-test-debug-mode: --private-clean_all
+	$(SCRIPTS)/$(TEST_SCRIPT) -d
 
+--private-test-build-mode: --private-clean_all
+	$(SCRIPTS)/$(TEST_SCRIPT) --build
+
+.SILENT:
 compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED2).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED3).o \
@@ -123,33 +127,38 @@ compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	ar -rcs $(APP)/$(LIB)/lib$(LIB_NAME).a $(APP)/$(AUX)/$(OBJ)/*.o
 	rm -rf $(APP)/$(AUX)
 
-build: --private-build_test --private-get_eds
+.SILENT:
+build: --private-test-build-mode --private-get_eds
 	make compile
 
+.SILENT:
 create:
 	$(SCRIPTS)/$(CREATE_DS_SCRIPT)
 
+.SILENT:
 create-helper:
 	$(SCRIPTS)/$(CREATE_HELPER_SCRIPT)
 
+.SILENT:
 pack: build
 	tar -zcvf lib$(LIB_NAME).tar.gz $(APP)
 	rm -rf $(APP)
 
+.SILENT:
 test: --private-test
 
-check: --private-build_test
+.SILENT:
+test-debug: --private-test-debug-mode
 
 .SILENT:
+check: --private-test-build-mode
+
 b: build
 
-.SILENT:
 c: create
 
-.SILENT:
 ch: create-helper
 
-.SILENT:
 p: pack
 
 t: test
