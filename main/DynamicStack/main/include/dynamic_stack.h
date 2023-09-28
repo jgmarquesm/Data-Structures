@@ -1,5 +1,5 @@
-#ifndef DYNAMIC_STACK
-#define DYNAMIC_STACK
+#ifndef DYNAMIC_STACK_H
+#define DYNAMIC_STACK_H
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
@@ -10,6 +10,9 @@
     #undef SUPPRESS_PRINT_ERROR
 #endif
 #define SUPPRESS_PRINT_ERROR false
+#define SIZE_OF_DYNAMIC_STACK_TYPE size_of_dynamic_stack_type
+
+extern const size_t size_of_dynamic_stack_type;
 
 /**
 * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
@@ -17,56 +20,56 @@
 * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
 * 3 - Type comparison function: To compare correctly data.
  */
-typedef struct _dynamic_stack Stack;
+typedef struct _dynamic_stack DynamicStack;
 /**
  *
- * @return A new Stack
+ * @return A new DynamicStack
  */
-Stack *Stack_create();
+DynamicStack *DynamicStack_create();
 /**
- * When calling this function it will clean all data from Stack
- * @param S -> The Stack to be clean
+ * When calling this function it will clean all data from DynamicStack
+ * @param S -> The DynamicStack to be clean
  */
-void Stack_clean(Stack *S);
+void DynamicStack_clean(DynamicStack *S);
 /**
- * When calling this function, it will clean all data from Stack and it will be deallocated
- * @param S_ref -> The pointer of the Stack to be deleted
+ * When calling this function, it will clean all data from DynamicStack and it will be deallocated
+ * @param S_ref -> The pointer of the DynamicStack to be deleted
  */
-void Stack_destroy(Stack **S_ref);
-/**
- *
- * @param S -> Stack to check emptiness
- * @return true if: Stack is empty;\n false if: Array not empty.
- */
-bool Stack_is_empty(void *S);
-/**
- * When calling this function it will add the data on top of Stack
- * @param S -> Stack to add data
- * @param data -> Data to be add in Stack
- */
-void Stack_push(Stack *S, void *data);
+void DynamicStack_destroy(DynamicStack **S_ref);
 /**
  *
- * @param S -> Stack to get data from top
- * @return The data (void *) on top of the Stack
+ * @param S -> DynamicStack to check emptiness
+ * @return true if: DynamicStack is empty;\n false if: Array not empty.
  */
-void *Stack_peek(const Stack *S);
+bool DynamicStack_is_empty(void *S);
 /**
- * When calling this function it will remove data from top of the Stack;
- * @param S -> Stack to remove last element;
+ * When calling this function it will add the data on top of DynamicStack
+ * @param S -> DynamicStack to add data
+ * @param data -> Data to be add in DynamicStack
  */
-void Stack_pop(Stack *S);
+void DynamicStack_push(DynamicStack *S, void *data);
 /**
  *
- * @param S -> Stack to be printed
+ * @param S -> DynamicStack to get data from top
+ * @return The data (void *) on top of the DynamicStack
+ */
+void *DynamicStack_peek(const DynamicStack *S);
+/**
+ * When calling this function it will remove data from top of the DynamicStack;
+ * @param S -> DynamicStack to remove last element;
+ */
+void DynamicStack_pop(DynamicStack *S);
+/**
+ *
+ * @param S -> DynamicStack to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Stack_print(const Stack *S, void (*type_print_function)(void * data));
+void DynamicStack_print(const DynamicStack *S, void (*type_print_function)(void * data));
 /**
  *
- * @param S -> Stack to check size
- * @return Number of elements that are allocated in Stack.
+ * @param S -> DynamicStack to check size
+ * @return Number of elements that are allocated in DynamicStack.
  */
-size_t Stack_size(const Stack *S);
+size_t DynamicStack_size(const DynamicStack *S);
 
 #endif

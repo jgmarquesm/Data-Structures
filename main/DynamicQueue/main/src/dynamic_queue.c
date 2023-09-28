@@ -5,98 +5,100 @@
 #include "../include/dynamic_queue.h"
 
 typedef struct _dynamic_queue {
-    LinkedList *data;
-} Queue;
+    DoublyLinkedList *data;
+} DynamicQueue;
 
-Queue *Queue_create() {
-    Queue *S = (Queue *) calloc(1, sizeof(Queue));
-    S->data = LinkedList_create();
+const size_t size_of_dynamic_queue_type = sizeof(DynamicQueue);
+
+DynamicQueue *DynamicQueue_create() {
+    DynamicQueue *S = (DynamicQueue *) calloc(1, sizeof(DynamicQueue));
+    S->data = DoublyLinkedList_create();
     return S;
 }
 
-void Queue_clean(Queue *queue) {
+void DynamicQueue_clean(DynamicQueue *queue) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_clean", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_clean", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_clean(queue->data);
+    DoublyLinkedList_clean(queue->data);
 }
 
-void Queue_destroy(Queue **queue_ref) {
-    Queue *queue = *queue_ref;
+void DynamicQueue_destroy(DynamicQueue **queue_ref) {
+    DynamicQueue *queue = *queue_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_destroy", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_destroy", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_destroy(&(queue->data));
+    DoublyLinkedList_destroy(&(queue->data));
     free(queue);
     *queue_ref = NULL;
 }
 
-bool Queue_is_empty(void *queue) {
+bool DynamicQueue_is_empty(void *queue) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_is_empty", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_is_empty", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
-    return LinkedList_is_empty(((Queue *) queue)->data);
+    return DoublyLinkedList_is_empty(((DynamicQueue *) queue)->data);
 }
 
-void Queue_enqueue(Queue *queue, void *data) {
+void DynamicQueue_enqueue(DynamicQueue *queue, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_enqueue", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Queue_enqueue", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_enqueue", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DynamicQueue_enqueue", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_add_last(queue->data, data);
+    DoublyLinkedList_add_last(queue->data, data);
 }
 
-void *Queue_peek(const Queue *queue) {
+void *DynamicQueue_peek(const DynamicQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_peek", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Queue_peek", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_peek", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicQueue_peek", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    return LinkedList_get(queue->data, 0);
+    return DoublyLinkedList_get(queue->data, 0);
 }
 
-void Queue_dequeue(Queue *queue) {
+void DynamicQueue_dequeue(DynamicQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_dequeue", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Queue_dequeue", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_dequeue", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicQueue_dequeue", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_remove_first(queue->data);
+    DoublyLinkedList_remove_first(queue->data);
 }
 
-void Queue_print(const Queue *queue, void (*type_print_function)(void * data)) {
+void DynamicQueue_print(const DynamicQueue *queue, void (*type_print_function)(void * data)) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Queue_print", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Queue_print", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_print", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicQueue_print", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     printf("--(");
-    size_t size = LinkedList_size(queue->data);
+    size_t size = DoublyLinkedList_size(queue->data);
     for(size_t i = 0; i < size - 1; i++) {
-        type_print_function(LinkedList_get(queue->data, i));
+        type_print_function(DoublyLinkedList_get(queue->data, i));
         printf(" -> ");
     }
-    type_print_function(LinkedList_get(queue->data, LinkedList_size(queue->data) - 1));
+    type_print_function(DoublyLinkedList_get(queue->data, DoublyLinkedList_size(queue->data) - 1));
     puts(")--");
 }
 
-size_t Queue_size(const Queue *queue) {
+size_t DynamicQueue_size(const DynamicQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Queue_size", "Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Queue_size", "Queue", (void *) queue, Queue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicQueue_size", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicQueue_size", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
-    return LinkedList_size(queue->data);
+    return DoublyLinkedList_size(queue->data);
 }

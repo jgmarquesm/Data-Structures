@@ -12,6 +12,8 @@ typedef struct _undirected_weighted_graph {
     float **weight_matrix;
 } UndirectedWeightedGraph, UWG;
 
+const size_t size_of_undirected_weighted_graph_type = sizeof(UndirectedWeightedGraph);
+
 long _vertex_index(UWG *uwg, void *data) {
     for (long i = 0; i < uwg->size; i++) {
         if (Vertex_get_data(uwg->vertices[i]) == data) {

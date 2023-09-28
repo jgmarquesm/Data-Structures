@@ -10,6 +10,9 @@
     #undef SUPPRESS_PRINT_ERROR
 #endif
 #define SUPPRESS_PRINT_ERROR false
+#define SIZE_OF_DOUBLY_LINKED_LIST_TYPE size_of_doubly_linked_list_type
+
+extern const size_t size_of_doubly_linked_list_type;
 
 /**
  * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
@@ -17,205 +20,205 @@
  * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
  * 3 - Type comparison function: To compare correctly data.
  */
-typedef struct _linked_list DoublyLinkedList, LinkedList;
+typedef struct _doubly_linked_list DoublyLinkedList;
 /**
  *
- * @return a new LinkedList (empty)
+ * @return a new DoublyLinkedList (empty)
  */
-LinkedList *LinkedList_create();
+DoublyLinkedList *DoublyLinkedList_create();
 /**
- * This function is responsible for clearing all data from a LinkedList. After calling this function, all data era
- * erased and the the LinkedList is empty.
- * @param LL -> The (Doubly))LinkedList to clean up
+ * This function is responsible for clearing all data from a DoublyLinkedList. After calling this function, all data era
+ * erased and the the DoublyLinkedList is empty.
+ * @param LL -> The (Doubly))DoublyLinkedList to clean up
  */
-void LinkedList_clean(LinkedList *LL);
+void DoublyLinkedList_clean(DoublyLinkedList *LL);
 /**
  * When calling this function it will clean up and free all nodes and free the DoublyLinkedList.
  * @param LL_ref -> The DoublyLinkedList reference
  */
-void LinkedList_destroy(LinkedList **LL_ref);
+void DoublyLinkedList_destroy(DoublyLinkedList **LL_ref);
 /**
  *
- * @param LL -> The LinkedList to verify if is empty
- * @return true if the LinkedList is empty and false otherwise
+ * @param LL -> The DoublyLinkedList to verify if is empty
+ * @return true if the DoublyLinkedList is empty and false otherwise
  */
-bool LinkedList_is_empty(void *LL);
+bool DoublyLinkedList_is_empty(void *LL);
 /**
  *
  * @param LL -> The LinkedLIst to verify if is sorted
- * @return true if the LinkedList is sorted and false otherwise.
+ * @return true if the DoublyLinkedList is sorted and false otherwise.
  */
-bool LinkedList_is_sorted(void *LL);
+bool DoublyLinkedList_is_sorted(void *LL);
 /**
  *
  * @param LL -> The LinkedLIst to verify sort order
  * @return -1 if descending sort;\n 0 if unsorted;\n 1 if ascending sort.
  */
-int LinkedList_sort_order(const LinkedList *LL);
+int DoublyLinkedList_sort_order(const DoublyLinkedList *LL);
 /**
  *
  * @param LL -> DoublyLinkedList to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void LinkedList_print(const LinkedList *LL, void (*type_print_function)(void *data));
+void DoublyLinkedList_print(const DoublyLinkedList *LL, void (*type_print_function)(void *data));
 /**
- * When calling this functions it will add data to the first LinkedList node.
- * @param LL -> LinkedList to add data
+ * When calling this functions it will add data to the first DoublyLinkedList node.
+ * @param LL -> DoublyLinkedList to add data
  * @param data -> data to be added.
  */
-void LinkedList_add_first(LinkedList *LL, void *data);
+void DoublyLinkedList_add_first(DoublyLinkedList *LL, void *data);
 /**
- * When calling this functions it will add data to the last LinkedList node.
- * @param LL -> LinkedList to add data
+ * When calling this functions it will add data to the last DoublyLinkedList node.
+ * @param LL -> DoublyLinkedList to add data
  * @param data -> data to be added.
  */
-void LinkedList_add_last(LinkedList *LL, void *data);
+void DoublyLinkedList_add_last(DoublyLinkedList *LL, void *data);
 /**
- * When calling this function it will remove first node of LinkedList.
- * @param LL -> LinkedList to remove data
- * @return The data of the removed node in the LinkedList.
+ * When calling this function it will remove first node of DoublyLinkedList.
+ * @param LL -> DoublyLinkedList to remove data
+ * @return The data of the removed node in the DoublyLinkedList.
  */
-void *LinkedList_remove_first(LinkedList *LL);
+void *DoublyLinkedList_remove_first(DoublyLinkedList *LL);
 /**
- * When calling this function it will remove last node of LinkedList.
- * @param LL -> LinkedList to remove data
- * @return The data of the removed node in the LinkedList.
+ * When calling this function it will remove last node of DoublyLinkedList.
+ * @param LL -> DoublyLinkedList to remove data
+ * @return The data of the removed node in the DoublyLinkedList.
  */
-void *LinkedList_remove_last(LinkedList *LL);
+void *DoublyLinkedList_remove_last(DoublyLinkedList *LL);
 /**
- * When calling this function it will remove index-th node of LinkedList.
- * @param LL -> LinkedList to remove data
+ * When calling this function it will remove index-th node of DoublyLinkedList.
+ * @param LL -> DoublyLinkedList to remove data
  * @param index -> Index to remove data at
- * @return The data of the removed node in the LinkedList.
+ * @return The data of the removed node in the DoublyLinkedList.
  */
-void *LinkedList_remove_at(LinkedList *LL, const size_t index);
+void *DoublyLinkedList_remove_at(DoublyLinkedList *LL, const size_t index);
 /**
- * When calling this function it will remove first occurrence of data in the LinkedList.
- * @param LL -> LinkedList to remove data
+ * When calling this function it will remove first occurrence of data in the DoublyLinkedList.
+ * @param LL -> DoublyLinkedList to remove data
  * @param data -> data to be removed
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void LinkedList_remove(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+void DoublyLinkedList_remove(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
- * When calling this function it will remove all occurrences of data in the LinkedList.
- * @param LL -> LinkedList to remove data
+ * When calling this function it will remove all occurrences of data in the DoublyLinkedList.
+ * @param LL -> DoublyLinkedList to remove data
  * @param data -> data to be removed
   * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void LinkedList_remove_all(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+void DoublyLinkedList_remove_all(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
- * @param LL -> LinkedList to check its size
- * @return Number of elements in the LinkedList
+ * @param LL -> DoublyLinkedList to check its size
+ * @return Number of elements in the DoublyLinkedList
  */
-size_t LinkedList_size(const LinkedList *LL);
+size_t DoublyLinkedList_size(const DoublyLinkedList *LL);
 /**
  *
- * @param LL -> LinkedList to get first element
- * @return The data (void *) of first LinkedList node
+ * @param LL -> DoublyLinkedList to get first element
+ * @return The data (void *) of first DoublyLinkedList node
  */
-void *LinkedList_first_element(const LinkedList *LL);
+void *DoublyLinkedList_first_element(const DoublyLinkedList *LL);
 /**
  *
- * @param LL -> LinkedList to get last element
- * @return The data (void *) of last LinkedList node
+ * @param LL -> DoublyLinkedList to get last element
+ * @return The data (void *) of last DoublyLinkedList node
  */
-void *LinkedList_last_element(const LinkedList *LL);
+void *DoublyLinkedList_last_element(const DoublyLinkedList *LL);
 /**
  *
- * @param LL -> LinkedList to get data from (index)th LinkedList node
+ * @param LL -> DoublyLinkedList to get data from (index)th DoublyLinkedList node
  * @param index -> index of data to be got
- * @return The data (void *) of (index)th LinkedList node
+ * @return The data (void *) of (index)th DoublyLinkedList node
  */
-void *LinkedList_get(const LinkedList *LL, const size_t index);
+void *DoublyLinkedList_get(const DoublyLinkedList *LL, const size_t index);
 /**
  *
- * @param LL -> LinkedList to count number os occurrences os data
+ * @param LL -> DoublyLinkedList to count number os occurrences os data
  * @param data -> Data that the number of occurrences will be returned
- * @return The number of occurrences of data in the LinkedList
+ * @return The number of occurrences of data in the DoublyLinkedList
  */
-int LinkedList_count(const LinkedList *LL, void *data);
+int DoublyLinkedList_count(const DoublyLinkedList *LL, void *data);
 /**
  *
- * @param LL -> LinkedList to check if data is contained
- * @param data -> Data that will be checked if it is contained in LinkedList
- * @return true if LinkedList contains the data, false otherwise
+ * @param LL -> DoublyLinkedList to check if data is contained
+ * @param data -> Data that will be checked if it is contained in DoublyLinkedList
+ * @return true if DoublyLinkedList contains the data, false otherwise
  */
-bool LinkedList_contains(const LinkedList *LL, void *data);
+bool DoublyLinkedList_contains(const DoublyLinkedList *LL, void *data);
 
 /**
- * When calling this function it will insert data into (index)th LinkedList node
- * @param LL -> LinkedList add data
+ * When calling this function it will insert data into (index)th DoublyLinkedList node
+ * @param LL -> DoublyLinkedList add data
  * @param data -> Data to be added
  * @param index -> Index to add data at
  */
-void LinkedList_insert_at(LinkedList *LL, void *data, const size_t index);
+void DoublyLinkedList_insert_at(DoublyLinkedList *LL, void *data, const size_t index);
 /**
  *
- * @param LL -> LinkedList to be cloned
- * @return A clone of LinkedList
+ * @param LL -> DoublyLinkedList to be cloned
+ * @return A clone of DoublyLinkedList
  */
-LinkedList *LinkedList_clone(const LinkedList *LL);
+DoublyLinkedList *DoublyLinkedList_clone(const DoublyLinkedList *LL);
 /**
  *
- * @param LL1 -> First LinkedList to be concatenated
- * @param LL2 -> Second LinkedList to be concatenated
- * @return A new LinkedList with LL1 on begin and then the LL2
+ * @param LL1 -> First DoublyLinkedList to be concatenated
+ * @param LL2 -> Second DoublyLinkedList to be concatenated
+ * @return A new DoublyLinkedList with LL1 on begin and then the LL2
  */
-LinkedList *LinkedList_concat(LinkedList *LL1, LinkedList *LL2);
+DoublyLinkedList *DoublyLinkedList_concat(DoublyLinkedList *LL1, DoublyLinkedList *LL2);
 /**
  *
- * @param LL -> LinkedList to be reversed
- * @return A new LinkedList with opposite order os original LinkedList
+ * @param LL -> DoublyLinkedList to be reversed
+ * @return A new DoublyLinkedList with opposite order os original DoublyLinkedList
  */
-LinkedList *LinkedList_reverse(LinkedList *LL);
+DoublyLinkedList *DoublyLinkedList_reverse(DoublyLinkedList *LL);
 /**
  *
- * @param LL1 -> First LinkedList to check equality
- * @param LL2 -> Second LinkedList to check equality
+ * @param LL1 -> First DoublyLinkedList to check equality
+ * @param LL2 -> Second DoublyLinkedList to check equality
  * @return true if LL1 === LL2;\n false if LL1 !== LL2
  */
-bool LinkedList_is_equals_strict(const LinkedList *LL1, const LinkedList *LL2);
+bool DoublyLinkedList_is_equals_strict(const DoublyLinkedList *LL1, const DoublyLinkedList *LL2);
 /**
  *
- * @param LL1 -> First LinkedList to check equality
- * @param LL2 -> Second LinkedList to check equality
+ * @param LL1 -> First DoublyLinkedList to check equality
+ * @param LL2 -> Second DoublyLinkedList to check equality
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return rue if LL1 == LL2;\n false if LL1 != LL2
  */
-bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*type_compare_function)(void *data1, void *data2));
+bool DoublyLinkedList_is_equals(const DoublyLinkedList *LL1, const DoublyLinkedList *LL2, int (*type_compare_function)(void *data1, void *data2));
 /**
- * When calling this function it will sort the LinkedList in ascending order
- * @param LL -> LinkedList to sort in ascending order
+ * When calling this function it will sort the DoublyLinkedList in ascending order
+ * @param LL -> DoublyLinkedList to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+void DoublyLinkedList_sort_asc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 /**
- * When calling this function it will sort the LinkedList in descending order
- * @param LL -> LinkedList to sort in descending order
+ * When calling this function it will sort the DoublyLinkedList in descending order
+ * @param LL -> DoublyLinkedList to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+void DoublyLinkedList_sort_desc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 /**
- * When calling this function it will add data to LinkedList following the order sort
- * @param LL -> LinkedList to add data
+ * When calling this function it will add data to DoublyLinkedList following the order sort
+ * @param LL -> DoublyLinkedList to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void LinkedList_sorted_insert(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+void DoublyLinkedList_sorted_insert(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
- * @param LL -> LinkedList to get the smaller data
+ * @param LL -> DoublyLinkedList to get the smaller data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return The smaller data in LinkedList
+ * @return The smaller data in DoublyLinkedList
  */
-void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+void *DoublyLinkedList_min(const DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
- * @param LL -> LinkedList to get the bigger data
+ * @param LL -> DoublyLinkedList to get the bigger data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return The bigger data in LinkedList
+ * @return The bigger data in DoublyLinkedList
  */
-void *LinkedList_max(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+void *DoublyLinkedList_max(const DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 
 #endif

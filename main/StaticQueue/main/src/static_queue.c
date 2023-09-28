@@ -8,6 +8,8 @@ typedef struct _static_queue {
     Array *data;
 } StaticQueue;
 
+const size_t size_of_static_queue_type = sizeof(StaticQueue);
+
 StaticQueue *StaticQueue_create(const long capacity, unsigned int size_of_type) {
     if (anyThrows(
             1,

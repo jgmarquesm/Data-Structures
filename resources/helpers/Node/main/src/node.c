@@ -9,6 +9,8 @@ typedef struct _node {
     struct _node *next;
 } Node;
 
+const size_t size_of_node_type = sizeof(Node);
+
 Node *Node_create(void *data) {
     Node *node = (Node *) calloc(1, sizeof(Node));
     node->data = data;
