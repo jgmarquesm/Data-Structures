@@ -16,6 +16,8 @@ typedef struct _array{
     int size_of_type;
 } Array;
 
+const size_t size_of_array_type = sizeof(Array);
+
 void *_get(const Array *array, const long index) {
     return array->data + (index * array->size_of_type);
 }
