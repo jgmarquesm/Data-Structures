@@ -15,6 +15,8 @@ typedef struct _singly_linked_list {
     int sort_order;
 } SinglyLinkedList;
 
+const size_t size_of_singly_linked_list_type = sizeof(SinglyLinkedList);
+
 void _sll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node *slow = node, *fast = Node_get_next(node);
 

@@ -7,6 +7,9 @@
     #undef SUPPRESS_PRINT_ERROR
 #endif
 #define SUPPRESS_PRINT_ERROR true
+#define SIZE_OF_NODE_TYPE size_of_node_type
+
+extern const size_t size_of_node_type;
 
 typedef struct _node Node;
 

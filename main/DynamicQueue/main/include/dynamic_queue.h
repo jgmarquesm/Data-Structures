@@ -1,5 +1,5 @@
-#ifndef DYNAMIC_STACK
-#define DYNAMIC_STACK
+#ifndef DYNAMIC_QUEUE_H
+#define DYNAMIC_QUEUE_H
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
@@ -9,7 +9,10 @@
 #ifdef SUPPRESS_PRINT_ERROR
     #undef SUPPRESS_PRINT_ERROR
 #endif
-#define SUPPRESS_PRINT_ERROR false
+#define SUPPRESS_PRINT_ERROR
+#define SIZE_OF_DYNAMIC_QUEUE_TYPE size_of_dynamic_queue_type
+
+extern const size_t size_of_dynamic_queue_type;
 
 /**
 * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
@@ -17,56 +20,56 @@
 * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
 * 3 - Type comparison function: To compare correctly data.
  */
-typedef struct _dynamic_queue Queue;
+typedef struct _dynamic_queue DynamicQueue;
 /**
  *
- * @return A new Queue
+ * @return A new DynamicQueue
  */
-Queue *Queue_create();
+DynamicQueue *DynamicQueue_create();
 /**
- * When calling this function it will clean all data from Queue
- * @param queue -> The Queue to be clean
+ * When calling this function it will clean all data from DynamicQueue
+ * @param queue -> The DynamicQueue to be clean
  */
-void Queue_clean(Queue *queue);
+void DynamicQueue_clean(DynamicQueue *queue);
 /**
- * When calling this function, it will clean all data from Queue and it will be deallocated
- * @param queue_ref -> The pointer of the Queue to be deleted
+ * When calling this function, it will clean all data from DynamicQueue and it will be deallocated
+ * @param queue_ref -> The pointer of the DynamicQueue to be deleted
  */
-void Queue_destroy(Queue **queue_ref);
-/**
- *
- * @param queue -> Queue to check emptiness
- * @return true if: Queue is empty;\n false if: Array not empty.
- */
-bool Queue_is_empty(void *queue);
-/**
- * When calling this function it will add the data at tail of the Queue
- * @param queue -> Queue to add data
- * @param data -> Data to be add in Queue
- */
-void Queue_enqueue(Queue *queue, void *data);
+void DynamicQueue_destroy(DynamicQueue **queue_ref);
 /**
  *
- * @param queue -> Queue to get data from the head
- * @return The data (void *) on head of the Queue
+ * @param queue -> DynamicQueue to check emptiness
+ * @return true if: DynamicQueue is empty;\n false if: Array not empty.
  */
-void *Queue_peek(const Queue *queue);
+bool DynamicQueue_is_empty(void *queue);
 /**
- * When calling this function it will remove data from head of the Queue;
- * @param queue -> Queue to remove last element;
+ * When calling this function it will add the data at tail of the DynamicQueue
+ * @param queue -> DynamicQueue to add data
+ * @param data -> Data to be add in DynamicQueue
  */
-void Queue_dequeue(Queue *queue);
+void DynamicQueue_enqueue(DynamicQueue *queue, void *data);
 /**
  *
- * @param queue -> Queue to be printed
+ * @param queue -> DynamicQueue to get data from the head
+ * @return The data (void *) on head of the DynamicQueue
+ */
+void *DynamicQueue_peek(const DynamicQueue *queue);
+/**
+ * When calling this function it will remove data from head of the DynamicQueue;
+ * @param queue -> DynamicQueue to remove last element;
+ */
+void DynamicQueue_dequeue(DynamicQueue *queue);
+/**
+ *
+ * @param queue -> DynamicQueue to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Queue_print(const Queue *queue, void (*type_print_function)(void * data));
+void DynamicQueue_print(const DynamicQueue *queue, void (*type_print_function)(void * data));
 /**
  *
- * @param queue -> Queue to check size
- * @return Number of elements that are allocated in Queue.
+ * @param queue -> DynamicQueue to check size
+ * @return Number of elements that are allocated in DynamicQueue.
  */
-size_t Queue_size(const Queue *queue);
+size_t DynamicQueue_size(const DynamicQueue *queue);
 
 #endif

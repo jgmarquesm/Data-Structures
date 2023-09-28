@@ -7,6 +7,9 @@
     #undef SUPPRESS_PRINT_ERROR
 #endif
 #define SUPPRESS_PRINT_ERROR true
+#define SIZE_OF_VERTEX_TYPE size_of_vertex_type
+
+extern const size_t size_of_vertex_type;
 
 typedef struct _vertex Vertex;
 

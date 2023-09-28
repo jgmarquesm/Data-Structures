@@ -8,12 +8,14 @@
 #define ASC 1
 #define DESC -1
 
-typedef struct _linked_list {
+typedef struct _doubly_linked_list {
     Node *begin;
     Node *end;
     size_t size;
     int sort_order;
-} LinkedList;
+} DoublyLinkedList;
+
+const size_t size_of_doubly_linked_list_type = sizeof(DoublyLinkedList);
 
 void _dll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node *slow = node, *fast = Node_get_next(node);
@@ -66,7 +68,7 @@ void _dll_merge_sort(Node **LL_begin_ref, int (*type_compare_function)(void *dat
     }
 
     if (order != ASC && order != DESC) {
-        fprintf(stderr, "\nERROR: on function 'LinkedList_sort_*'.\n");
+        fprintf(stderr, "\nERROR: on function 'DoublyLinkedList_sort_*'.\n");
         fprintf(stderr, "ERROR: Invalid sort order.\n");
         return;
     }
@@ -78,7 +80,7 @@ void _dll_merge_sort(Node **LL_begin_ref, int (*type_compare_function)(void *dat
     *LL_begin_ref = _dll_sorted_merge(left, right, type_compare_function, order);
 }
 
-Node *_get_node(const LinkedList *LL, const size_t index) {
+Node *_get_node(const DoublyLinkedList *LL, const size_t index) {
     Node *node = LL->begin;
     for (size_t i = 0; i != index; i++) {
         node = Node_get_next(node);
@@ -86,8 +88,8 @@ Node *_get_node(const LinkedList *LL, const size_t index) {
     return node;
 }
 
-LinkedList *LinkedList_create() {
-    LinkedList *LL = (LinkedList *) calloc(1, sizeof(LinkedList));
+DoublyLinkedList *DoublyLinkedList_create() {
+    DoublyLinkedList *LL = (DoublyLinkedList *) calloc(1, sizeof(DoublyLinkedList));
     LL->begin = NULL;
     LL->end = NULL;
     LL->size = 0;
@@ -96,10 +98,10 @@ LinkedList *LinkedList_create() {
     return LL;
 }
 
-void LinkedList_clean(LinkedList *LL) {
+void DoublyLinkedList_clean(DoublyLinkedList *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_clean", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_clean", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -115,51 +117,51 @@ void LinkedList_clean(LinkedList *LL) {
     LL->sort_order = UNSORTED;
 }
 
-void LinkedList_destroy(LinkedList **LL_ref) {
-    LinkedList *LL = *LL_ref;
+void DoublyLinkedList_destroy(DoublyLinkedList **LL_ref) {
+    DoublyLinkedList *LL = *LL_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_destroy", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_destroy", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_clean(LL);
+    DoublyLinkedList_clean(LL);
     free(LL);
     *LL_ref = NULL;
 }
 
-bool LinkedList_is_empty(void *LL) {
+bool DoublyLinkedList_is_empty(void *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_is_empty", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_is_empty", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
-    return ((LinkedList *) LL)->size == 0;
+    return ((DoublyLinkedList *) LL)->size == 0;
 }
 
-bool LinkedList_is_sorted(void *LL) {
+bool DoublyLinkedList_is_sorted(void *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_is_sorted", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_is_sorted", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
-    return ((LinkedList *) LL)->sort_order != UNSORTED;
+    return ((DoublyLinkedList *) LL)->sort_order != UNSORTED;
 }
 
-int LinkedList_sort_order(const LinkedList *LL) {
+int DoublyLinkedList_sort_order(const DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_order", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_sort_order", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_sort_order", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_sort_order", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return UNSORTED;
     return LL->sort_order;
 }
 
-void LinkedList_print(const LinkedList *LL, void (*type_print_function)(void *data)) {
+void DoublyLinkedList_print(const DoublyLinkedList *LL, void (*type_print_function)(void *data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_print", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_print", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_print", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_print", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -174,43 +176,43 @@ void LinkedList_print(const LinkedList *LL, void (*type_print_function)(void *da
     puts("NULL");
 }
 
-void LinkedList_add_first(LinkedList *LL, void *data) {
+void DoublyLinkedList_add_first(DoublyLinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_add_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("LinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_add_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
     Node_set_next(node, LL->begin);
-    if (LinkedList_is_empty(LL)) LL->end = node;
+    if (DoublyLinkedList_is_empty(LL)) LL->end = node;
     else Node_set_prev(LL->begin, node);
     LL->begin = node;
     LL->size++;
     LL->sort_order = UNSORTED;
 }
 
-void LinkedList_add_last(LinkedList *LL, void *data) {
+void DoublyLinkedList_add_last(DoublyLinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_add_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("LinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_add_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = Node_create(data);
     Node_set_prev(node, LL->end);
-    if (LinkedList_is_empty(LL)) LL->begin = node;
+    if (DoublyLinkedList_is_empty(LL)) LL->begin = node;
     else Node_set_next(LL->end, node);
     LL->end = node;
     LL->size++;
     LL->sort_order = UNSORTED;
 }
 
-void *LinkedList_remove_first(LinkedList *LL) {
+void *DoublyLinkedList_remove_first(DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_remove_first", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_remove_first", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_remove_first", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = LL->begin;
@@ -226,11 +228,11 @@ void *LinkedList_remove_first(LinkedList *LL) {
     return data;
 }
 
-void *LinkedList_remove_last(LinkedList *LL) {
+void *DoublyLinkedList_remove_last(DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_remove_last", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_remove_last", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_remove_last", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = LL->end;
@@ -246,19 +248,19 @@ void *LinkedList_remove_last(LinkedList *LL) {
     return data;
 }
 
-void *LinkedList_remove_at(LinkedList *LL, const size_t index) {
+void *DoublyLinkedList_remove_at(DoublyLinkedList *LL, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_remove_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_remove_at", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("LinkedList_remove_at", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_remove_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_remove_at", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("DoublyLinkedList_remove_at", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (index == 0) {
-        return LinkedList_remove_first(LL);
+        return DoublyLinkedList_remove_first(LL);
     }
     if (index == LL->size) {
-        return LinkedList_remove_last(LL);
+        return DoublyLinkedList_remove_last(LL);
     }
     Node *node = LL->begin;
     void *data;
@@ -273,11 +275,11 @@ void *LinkedList_remove_at(LinkedList *LL, const size_t index) {
     return data;
 }
 
-void LinkedList_remove(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+void DoublyLinkedList_remove(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_remove", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_remove", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_remove", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -306,11 +308,11 @@ void LinkedList_remove(LinkedList *LL, void *data, int (*type_compare_function)(
     }
 }
 
-void LinkedList_remove_all(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+void DoublyLinkedList_remove_all(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_remove_all", " Linked List", ((void *) LL), SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_remove_all", " Linked List", ((void *) LL), LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_remove_all", " Linked List", ((void *) LL), SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_remove_all", " Linked List", ((void *) LL), DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin;
@@ -342,53 +344,53 @@ void LinkedList_remove_all(LinkedList *LL, void *data, int (*type_compare_functi
     }
 }
 
-size_t LinkedList_size(const LinkedList *LL) {
+size_t DoublyLinkedList_size(const DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_size", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_size", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_size", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_size", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     return LL->size;
 }
 
-void *LinkedList_first_element(const LinkedList *LL) {
+void *DoublyLinkedList_first_element(const DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_first_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_first_element", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_first_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_first_element", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(LL->begin);
 }
 
-void *LinkedList_last_element(const LinkedList *LL) {
+void *DoublyLinkedList_last_element(const DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_last_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_last_element", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_last_element", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_last_element", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Node_get_data(LL->end);
 }
 
-void *LinkedList_get(const LinkedList *LL, const size_t index) {
+void *DoublyLinkedList_get(const DoublyLinkedList *LL, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_get", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_get", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("LinkedList_get", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_get", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_get", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("DoublyLinkedList_get", "Index", index, LL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     Node *node = _get_node(LL, index);
     return Node_get_data(node);
 }
 
-int LinkedList_count(const LinkedList *LL, void *data) {
+int DoublyLinkedList_count(const DoublyLinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_count", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_count", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_count", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_count", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     Node *node = LL->begin;
@@ -402,11 +404,11 @@ int LinkedList_count(const LinkedList *LL, void *data) {
     return count;
 }
 
-bool LinkedList_contains(const LinkedList *LL, void *data) {
+bool DoublyLinkedList_contains(const DoublyLinkedList *LL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_contains", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_contains", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_contains", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_contains", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     Node *node = LL->begin;
@@ -419,18 +421,18 @@ bool LinkedList_contains(const LinkedList *LL, void *data) {
     return false;
 }
 
-void LinkedList_insert_at(LinkedList *LL, void *data, const size_t index) {
+void DoublyLinkedList_insert_at(DoublyLinkedList *LL, void *data, const size_t index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_insert_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_insert_at", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("LinkedList_insert_at", "Index", index, LL->size, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_insert_at", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_insert_at", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("DoublyLinkedList_insert_at", "Index", index, LL->size, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     if (index == 0) {
-            LinkedList_add_first(LL, data);
+            DoublyLinkedList_add_first(LL, data);
     } else if (index == LL->size) {
-        LinkedList_add_last(LL, data);
+        DoublyLinkedList_add_last(LL, data);
     } else {
         Node *node_new = Node_create(data);
         Node *node = LL->begin;
@@ -446,18 +448,18 @@ void LinkedList_insert_at(LinkedList *LL, void *data, const size_t index) {
     }
 }
 
-LinkedList *LinkedList_clone(const LinkedList *LL) {
+DoublyLinkedList *DoublyLinkedList_clone(const DoublyLinkedList *LL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("LinkedList_clone", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_clone", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    LinkedList *clone = LinkedList_create();
+    DoublyLinkedList *clone = DoublyLinkedList_create();
     Node *node = Node_get_next(LL->begin);
-    LinkedList_add_first(clone, Node_get_data(LL->begin));
+    DoublyLinkedList_add_first(clone, Node_get_data(LL->begin));
     int count = 1;
     while (node != NULL) {
-        LinkedList_insert_at(clone, Node_get_data(node), count);
+        DoublyLinkedList_insert_at(clone, Node_get_data(node), count);
         count++;
         node = Node_get_next(node);
     }
@@ -465,36 +467,36 @@ LinkedList *LinkedList_clone(const LinkedList *LL) {
     return clone;
 }
 
-LinkedList *LinkedList_concat(LinkedList *LL1, LinkedList *LL2) {
+DoublyLinkedList *DoublyLinkedList_concat(DoublyLinkedList *LL1, DoublyLinkedList *LL2) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_concat", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("LinkedList_concat", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_concat", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_concat", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    if (LinkedList_is_empty((void *) LL1)) {
-        return LinkedList_clone(LL2);
-    } else if (LinkedList_is_empty((void *) LL2)) {
-        return LinkedList_clone(LL1);
+    if (DoublyLinkedList_is_empty((void *) LL1)) {
+        return DoublyLinkedList_clone(LL2);
+    } else if (DoublyLinkedList_is_empty((void *) LL2)) {
+        return DoublyLinkedList_clone(LL1);
     }
-    LinkedList *LL_new = LinkedList_clone(LL1);
+    DoublyLinkedList *LL_new = DoublyLinkedList_clone(LL1);
     Node *node = LL2->begin;
     while (node != NULL) {
-        LinkedList_add_last(LL_new, Node_get_data(node));
+        DoublyLinkedList_add_last(LL_new, Node_get_data(node));
         node = Node_get_next(node);
     }
     LL_new->sort_order = UNSORTED;
     return LL_new;
 }
 
-LinkedList *LinkedList_reverse(LinkedList *LL) {
+DoublyLinkedList *DoublyLinkedList_reverse(DoublyLinkedList *LL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_reverse", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_reverse", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_reverse", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_reverse", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    LinkedList *LL_new = LinkedList_clone(LL);
+    DoublyLinkedList *LL_new = DoublyLinkedList_clone(LL);
     Node *node = LL_new->begin;
     LL_new->end = LL_new->begin;
     Node *node_prev = NULL, *node_next = NULL;
@@ -509,13 +511,13 @@ LinkedList *LinkedList_reverse(LinkedList *LL) {
     return LL_new;
 }
 
-bool LinkedList_is_equals_strict(const LinkedList *LL1, const LinkedList *LL2) {
+bool DoublyLinkedList_is_equals_strict(const DoublyLinkedList *LL1, const DoublyLinkedList *LL2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("LinkedList_is_equals_strict", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 1", (void *) LL1, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_is_equals_strict", "Linked List 2", (void *) LL2, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_is_equals_strict", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_is_equals_strict", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_is_equals_strict", "Linked List 1", (void *) LL1, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_is_equals_strict", "Linked List 2", (void *) LL2, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || LL1->size != LL2->size
     ) return false;
     Node *node1 = LL1->begin;
@@ -530,13 +532,13 @@ bool LinkedList_is_equals_strict(const LinkedList *LL1, const LinkedList *LL2) {
     return LL1->sort_order == LL2->sort_order;
 }
 
-bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*type_compare_function)(void *data1, void *data2)) {
+bool DoublyLinkedList_is_equals(const DoublyLinkedList *LL1, const DoublyLinkedList *LL2, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("LinkedList_is_equals", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 1", (void *) LL1, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_is_equals", "Linked List 2", (void *) LL2, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_is_equals", "Linked List 1", (void *) LL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_is_equals", "Linked List 2", (void *) LL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_is_equals", "Linked List 1", (void *) LL1, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_is_equals", "Linked List 2", (void *) LL2, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         ) || LL1->size != LL2->size
     ) return false;
     Node *node1 = LL1->begin;
@@ -551,11 +553,11 @@ bool LinkedList_is_equals(const LinkedList *LL1, const LinkedList *LL2, int (*ty
     return LL1->sort_order == LL2->sort_order;
 }
 
-void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
+void DoublyLinkedList_sort_asc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_asc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_sort_asc", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_sort_asc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_sort_asc", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     _dll_merge_sort(&LL->begin, type_compare_function, 1);
@@ -563,11 +565,11 @@ void LinkedList_sort_asc(LinkedList *LL, int (*type_compare_function)(void *data
     LL->end = _get_node(LL, LL->size-1);
 }
 
-void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
+void DoublyLinkedList_sort_desc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_sort_desc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_sort_desc", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_sort_desc", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_sort_desc", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     _dll_merge_sort(&LL->begin, type_compare_function, -1);
@@ -575,12 +577,12 @@ void LinkedList_sort_desc(LinkedList *LL, int (*type_compare_function)(void *dat
     LL->end = _get_node(LL, LL->size-1);
 }
 
-void LinkedList_sorted_insert(LinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+void DoublyLinkedList_sorted_insert(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("LinkedList_sorted_insert", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_sorted_insert", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_not_sorted("LinkedList_sorted_insert", "Linked List", (void*) LL, LinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_sorted_insert", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_sorted_insert", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_not_sorted("DoublyLinkedList_sorted_insert", "Linked List", (void*) LL, DoublyLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     Node *node = LL->begin, *node_prev = NULL, *node_new = Node_create(data);
@@ -606,15 +608,15 @@ void LinkedList_sorted_insert(LinkedList *LL, void *data, int (*type_compare_fun
     LL->size++;
 }
 
-void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
+void *DoublyLinkedList_min(const DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_min", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_min", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_min", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_min", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
-    if (LinkedList_is_sorted((void *) LL)) {
+    if (DoublyLinkedList_is_sorted((void *) LL)) {
         if (LL->sort_order == ASC) {
             return Node_get_data(LL->begin);
         } else {
@@ -622,22 +624,22 @@ void *LinkedList_min(const LinkedList *LL, int (*type_compare_function)(void *da
         }
     }
 
-    LinkedList *clone = LinkedList_clone(LL);
-    LinkedList_sort_asc(clone, type_compare_function);
+    DoublyLinkedList *clone = DoublyLinkedList_clone(LL);
+    DoublyLinkedList_sort_asc(clone, type_compare_function);
     void *data = Node_get_data(clone->begin);
-    LinkedList_destroy(&clone);
+    DoublyLinkedList_destroy(&clone);
     return data;
 }
 
-void *LinkedList_max(const LinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
+void *DoublyLinkedList_max(const DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("LinkedList_max", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("LinkedList_max", "Linked List", (void *) LL, LinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DoublyLinkedList_max", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DoublyLinkedList_max", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
-    if (LinkedList_is_sorted((void *) LL)) {
+    if (DoublyLinkedList_is_sorted((void *) LL)) {
         if (LL->sort_order == ASC) {
             return Node_get_data(LL->end);
         } else {
@@ -645,9 +647,9 @@ void *LinkedList_max(const LinkedList *LL, int (*type_compare_function)(void *da
         }
     }
 
-    LinkedList *clone = LinkedList_clone(LL);
-    LinkedList_sort_desc(clone, type_compare_function);
+    DoublyLinkedList *clone = DoublyLinkedList_clone(LL);
+    DoublyLinkedList_sort_desc(clone, type_compare_function);
     void *data = Node_get_data(clone->begin);
-    LinkedList_destroy(&clone);
+    DoublyLinkedList_destroy(&clone);
     return data;
 }

@@ -12,6 +12,8 @@ typedef struct _matrix {
     unsigned int size_of_type;
 } Matrix;
 
+const size_t size_of_matrix_type = sizeof(Matrix);
+
 Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_type, void *default_data) {
     if (anyThrows(
             3,
