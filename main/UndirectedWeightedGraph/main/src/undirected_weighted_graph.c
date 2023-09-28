@@ -1,18 +1,28 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "../include/vertex.h"
+#include "../include/matrix.h"
 //#--ADD_TO_INCLUDE
 #include "../include/undirected_weighted_graph.h"
+
+void _print_adjacency(void *value) {
+    printf("%d", *((int *) value));
+}
+
+void _print_weight(void *value) {
+    printf("%.2f", *((float *) value));
+}
 
 typedef struct _undirected_weighted_graph {
     long capacity;
     long size;
     Vertex* *vertices;
-    int **adjacency_matrix;
-    float **weight_matrix;
-} UndirectedWeightedGraph, UWG;
+    Matrix *adjacency_matrix;
+    Matrix *weight_matrix;
+} UndirectedWeightedGraph;
 
-long _vertex_index(UWG *uwg, void *data) {
+
+long _vertex_index(UndirectedWeightedGraph *uwg, void *data) {
     for (long i = 0; i < uwg->size; i++) {
         if (Vertex_get_data(uwg->vertices[i]) == data) {
             return i;
@@ -21,11 +31,11 @@ long _vertex_index(UWG *uwg, void *data) {
     return -1;
 }
 
-Vertex *_vertex_get_at(UWG *uwg, long index) {
+Vertex *_vertex_get_at(UndirectedWeightedGraph *uwg, long index) {
     return uwg->vertices[index];
 }
 
-Vertex *_vertex_find(UWG *uwg, void *data) {
+Vertex *_vertex_find(UndirectedWeightedGraph *uwg, void *data) {
     long index = _vertex_index(uwg, data);
     if (index != -1) {
         return _vertex_get_at(uwg, index);
@@ -33,61 +43,31 @@ Vertex *_vertex_find(UWG *uwg, void *data) {
     return NULL;
 }
 
-int **_initial_adjacency_matrix(long max_of_vertices) {
-    int **adjacency_matrix = (int **) calloc(max_of_vertices, sizeof(int *));
-    for (long i = 0; i < max_of_vertices; i++) {
-        adjacency_matrix[i] = (int *) calloc(max_of_vertices, sizeof(int));
-        for (long j = 0; j < max_of_vertices; j++) {
-            adjacency_matrix[i][j] = DEFAULT_NULL_EDGE_VALUE;
-        }
-    }
+Matrix *_initial_adjacency_matrix(long max_of_vertices) {
+    int default_null_edge = DEFAULT_NULL_EDGE_VALUE;
+    Matrix *adjacency_matrix = Matrix_create(max_of_vertices, max_of_vertices, sizeof(int), &default_null_edge);
     return adjacency_matrix;
 }
 
-float **_initial_weight_matrix(long max_of_vertices) {
-    float **weight_matrix = (float **) calloc(max_of_vertices, sizeof(float *));
-    for (long i = 0; i < max_of_vertices; i++) {
-        weight_matrix[i] = (float *) calloc(max_of_vertices, sizeof(float));
-        for (long j = 0; j < max_of_vertices; j++) {
-            weight_matrix[i][j] = DEFAULT_INITIAL_WEIGHT;
-        }
-    }
+Matrix *_initial_weight_matrix(long max_of_vertices) {
+    float default_initial_weight = DEFAULT_INITIAL_WEIGHT;
+    Matrix *weight_matrix = Matrix_create(max_of_vertices, max_of_vertices, sizeof(int), &default_initial_weight);
     return weight_matrix;
 }
 
-void _print_adjacency_matrix(UWG *uwg) {
+void _print_adjacency_matrix(UndirectedWeightedGraph *uwg) {
     puts("Adjacency Matrix:");
-    puts("[");
-    for (long i = 0; i < uwg->size; i++) {
-        printf("[");
-        for(long j = 0; j < uwg->size-1; j++) {
-            printf("%d", uwg->adjacency_matrix[i][j]);
-            printf(", ");
-        }
-        printf("%d", uwg->adjacency_matrix[i][uwg->size-1]);
-        puts("],");
-    }
-    puts("]");
+    Matrix_print(uwg->adjacency_matrix, _print_adjacency);
 }
 
-void _print_weight_matrix(UWG *uwg) {
+void _print_weight_matrix(UndirectedWeightedGraph *uwg) {
     puts("Weight Matrix:");
-    puts("[");
-    for (long i = 0; i < uwg->size; i++) {
-        printf("[");
-        for(long j = 0; j < uwg->size-1; j++) {
-            printf("%.2f", uwg->weight_matrix[i][j]);
-            printf(", ");
-        }
-        printf("%.2f", uwg->weight_matrix[i][uwg->size-1]);
-        puts("],");
-    }
-    puts("]");
+    Matrix_print(uwg->weight_matrix, _print_weight);
 }
 
-void _print_vertices(UWG *uwg, void (*type_print_function)(void *data)) {
+void _print_vertices(UndirectedWeightedGraph *uwg, void (*type_print_function)(void *data)) {
     printf("Vertices:\n[");
-    if (UWG_is_empty(uwg)) {
+    if (UndirectedWeightedGraph_is_empty(uwg)) {
         puts("]");
     } else {
         for(long i = 0; i < uwg->size-1; i++) {
@@ -99,58 +79,57 @@ void _print_vertices(UWG *uwg, void (*type_print_function)(void *data)) {
     }
 }
 
-bool _already_has_an_edge(UWG *uwg, long exit_index, long entry_index) {
-   return uwg->adjacency_matrix[exit_index][entry_index] != DEFAULT_NULL_EDGE_VALUE;
+bool _already_has_an_edge(UndirectedWeightedGraph *uwg, long exit_index, long entry_index) {
+   return *((int *) Matrix_get_at(uwg->adjacency_matrix, exit_index, entry_index)) != DEFAULT_NULL_EDGE_VALUE;
 }
 
-void _set_value_to_matrices(UWG *uwg, long exit_index, long entry_index, float weight, int edge_value) {
+void _set_value_to_matrices(UndirectedWeightedGraph *uwg, long exit_index, long entry_index, float weight, int edge_value) {
     if (exit_index == entry_index) {
-        uwg->weight_matrix[entry_index][exit_index] = weight;
-        uwg->adjacency_matrix[exit_index][entry_index] = 2 * edge_value;
+        int edge = 2 * edge_value;
+        Matrix_set_at(uwg->weight_matrix, entry_index, exit_index, &weight);
+        Matrix_set_at(uwg->adjacency_matrix, exit_index, entry_index, &edge);
     } else {
-        uwg->weight_matrix[exit_index][entry_index] = weight;
-        uwg->weight_matrix[entry_index][exit_index] = weight;
-        uwg->adjacency_matrix[exit_index][entry_index] = edge_value;
-        uwg->adjacency_matrix[entry_index][exit_index] = edge_value;
+        Matrix_set_at(uwg->weight_matrix, exit_index, entry_index, &weight);
+        Matrix_set_at(uwg->weight_matrix, entry_index, exit_index, &weight);
+        Matrix_set_at(uwg->adjacency_matrix, exit_index, entry_index, &edge_value);
+        Matrix_set_at(uwg->adjacency_matrix, entry_index, exit_index, &edge_value);
     }
 }
 
-UWG *UWG_create(const long max_of_vertices) {
+UndirectedWeightedGraph *UndirectedWeightedGraph_create(const long max_of_vertices) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_non_positive("UWG_create", "Max of vertices", max_of_vertices, false, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_create", "Max of vertices", max_of_vertices, false, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
-    UWG *uwg = (UWG *) calloc(1, sizeof(UWG));
+    UndirectedWeightedGraph *uwg = (UndirectedWeightedGraph *) calloc(1, sizeof(UndirectedWeightedGraph));
     uwg->capacity = max_of_vertices;
     uwg->size = 0;
 
     Vertex **vertices = (Vertex **) calloc(max_of_vertices, sizeof(Vertex*));
     uwg->vertices = vertices;
 
-    int **adjacency_matrix = _initial_adjacency_matrix(max_of_vertices);
+    Matrix *adjacency_matrix = _initial_adjacency_matrix(max_of_vertices);
     uwg->adjacency_matrix = adjacency_matrix;
 
-    float **weight_matrix = _initial_weight_matrix(max_of_vertices);
+    Matrix *weight_matrix = _initial_weight_matrix(max_of_vertices);
     uwg->weight_matrix = weight_matrix;
 
     return uwg;
 }
 
-bool UWG_clean(UWG *uwg) {
+bool UndirectedWeightedGraph_clean(UndirectedWeightedGraph *uwg) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     for (long i = 0; i < uwg->capacity; i++) {
         free(uwg->vertices[i]);
-        free(uwg->adjacency_matrix[i]);
-        free(uwg->weight_matrix[i]);
     }
-    free(uwg->adjacency_matrix);
-    free(uwg->weight_matrix);
+    Matrix_clean(uwg->adjacency_matrix);
+    Matrix_clean(uwg->weight_matrix);
 
     uwg->size = 0;
     uwg->adjacency_matrix = _initial_adjacency_matrix(uwg->capacity);
@@ -158,71 +137,65 @@ bool UWG_clean(UWG *uwg) {
     return true;
 }
 
-bool UWG_destroy(UWG **uwg_ref) {
-    UWG *uwg = *uwg_ref;
+bool UndirectedWeightedGraph_destroy(UndirectedWeightedGraph **uwg_ref) {
+    UndirectedWeightedGraph *uwg = *uwg_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    for (long i = 0; i < uwg->capacity; i++) {
-        free(uwg->adjacency_matrix[i]);
-        free(uwg->weight_matrix[i]);
-    }
     free(uwg->vertices);
     uwg->vertices = NULL;
-    free(uwg->adjacency_matrix);
-    uwg->adjacency_matrix = NULL;
-    free(uwg->weight_matrix);
-    uwg->weight_matrix = NULL;
+    Matrix_delete(&(uwg->adjacency_matrix));
+    Matrix_delete(&(uwg->weight_matrix));
     free(uwg);
     *uwg_ref = NULL;
     return true;
 }
 
-long UWG_index_of(UWG *uwg, void *data) {
+long UndirectedWeightedGraph_index_of(UndirectedWeightedGraph *uwg, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("UWG_index_of", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_index_of", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_index_of", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_index_of", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_index_of", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_index_of", "Data", data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_index_of", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_index_of", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return _vertex_index(uwg, data);
 }
 
-bool UWG_is_empty(void *uwg) {
+bool UndirectedWeightedGraph_is_empty(void *uwg) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_is_empty", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_is_empty", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
-    return ((UWG *) uwg)->size == 0;
+    return ((UndirectedWeightedGraph *) uwg)->size == 0;
 }
 
-bool UWG_is_full(void *uwg) {
+bool UndirectedWeightedGraph_is_full(void *uwg) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_is_full", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_is_full", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    return ((UWG *) uwg)->size == ((UWG *) uwg)->capacity;
+    return ((UndirectedWeightedGraph *) uwg)->size == ((UndirectedWeightedGraph *) uwg)->capacity;
 }
 
-bool UWG_insert_vertex(UWG *uwg, void *data) {
+bool UndirectedWeightedGraph_insert_vertex(UndirectedWeightedGraph *uwg, void *data) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_insert_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_insert_vertex", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_full("UWG_insert_vertex", "Undirected Weighted Graph", (void *) uwg, UWG_is_full, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_vertex", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_full("UndirectedWeightedGraph_insert_vertex", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_full, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_insert_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
     if (_vertex_find(uwg, data)) return false;
@@ -231,26 +204,26 @@ bool UWG_insert_vertex(UWG *uwg, void *data) {
     return true;
 }
 
-bool UWG_insert_edge(UWG *uwg, void *exit_data, void *entry_data, float weight) {
+bool UndirectedWeightedGraph_insert_edge(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data, float weight) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_insert_edge", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_insert_edge", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_insert_edge", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_insert_edge", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_edge", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_insert_edge", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_edge", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_edge", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_insert_edge", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_insert_edge", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
-    long exit_index = UWG_index_of(uwg, exit_data);
-    long entry_index = UWG_index_of(uwg, entry_data);
+    long exit_index = UndirectedWeightedGraph_index_of(uwg, exit_data);
+    long entry_index = UndirectedWeightedGraph_index_of(uwg, entry_data);
     if (anyThrows(
             2,
-            ExceptionHandler_is_non_positive("UWG_insert_edge", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("UWG_insert_edge", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_insert_edge", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_insert_edge", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
         ) || _already_has_an_edge(uwg, exit_index, entry_index)
     ) return false;
 
@@ -260,44 +233,44 @@ bool UWG_insert_edge(UWG *uwg, void *exit_data, void *entry_data, float weight) 
     return true;
 }
 
-bool UWG_change_weight(UWG *uwg, void *exit_data, void *entry_data, float new_weight) {
+bool UndirectedWeightedGraph_change_weight(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data, float new_weight) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_change_weight", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_change_weight", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_change_weight", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_change_weight", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_weight", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_change_weight", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_weight", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_weight", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_change_weight", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_weight", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
-    long exit_index = UWG_index_of(uwg, exit_data);
-    long entry_index = UWG_index_of(uwg, entry_data);
+    long exit_index = UndirectedWeightedGraph_index_of(uwg, exit_data);
+    long entry_index = UndirectedWeightedGraph_index_of(uwg, entry_data);
     if (anyThrows(
             2,
-            ExceptionHandler_is_non_positive("UWG_change_weight", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("UWG_change_weight", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
-        ) || UWG_get_weight(uwg, exit_data, entry_data) == DEFAULT_INITIAL_WEIGHT
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_change_weight", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_change_weight", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
+        ) || UndirectedWeightedGraph_get_weight(uwg, exit_data, entry_data) == DEFAULT_INITIAL_WEIGHT
     ) return false;
 
-    uwg->weight_matrix[exit_index][entry_index] = new_weight;
+    Matrix_set_at(uwg->weight_matrix, exit_index, entry_index, &new_weight);
     return true;
 }
 
-bool UWG_change_data(UWG *uwg, void *old_data, void *new_data) {
+bool UndirectedWeightedGraph_change_data(UndirectedWeightedGraph *uwg, void *old_data, void *new_data) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_change_data", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_change_data", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_change_data", "Exit Data", old_data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_change_data", "Entry Data", new_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_data", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_change_data", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_data", "Exit Data", old_data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_data", "Entry Data", new_data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_change_data", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_change_data", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
@@ -307,75 +280,75 @@ bool UWG_change_data(UWG *uwg, void *old_data, void *new_data) {
     return true;
 }
 
-long UWG_get_capacity(UWG *uwg) {
+long UndirectedWeightedGraph_get_capacity(UndirectedWeightedGraph *uwg) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_get_capacity", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_capacity", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return uwg->capacity;
 }
 
-long UWG_get_size(UWG *uwg) {
+long UndirectedWeightedGraph_get_size(UndirectedWeightedGraph *uwg) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_get_size", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_size", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return uwg->size;
 }
 
-float UWG_get_weight(UWG *uwg, void *exit_data, void *entry_data) {
+float UndirectedWeightedGraph_get_weight(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_get_weight", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_get_weight", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_get_weight", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_get_weight", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_weight", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_get_weight", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_weight", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_weight", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_get_weight", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_weight", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
 
-    long exit_index = UWG_index_of(uwg, exit_data);
-    long entry_index = UWG_index_of(uwg, entry_data);
+    long exit_index = UndirectedWeightedGraph_index_of(uwg, exit_data);
+    long entry_index = UndirectedWeightedGraph_index_of(uwg, entry_data);
     if (anyThrows(
             2,
-            ExceptionHandler_is_non_positive("UWG_get_weight", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("UWG_get_weight", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_get_weight", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_get_weight", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
 
-    return uwg->weight_matrix[exit_index][entry_index];
+    return *((float *) Matrix_get_at(uwg->weight_matrix, exit_index, entry_index));
 }
 
-void *UWG_get_data(UWG *uwg, long index) {
+void *UndirectedWeightedGraph_get_data(UndirectedWeightedGraph *uwg, long index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("UWG_get_data", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_get_data", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_data", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_get_data", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             2,
-            ExceptionHandler_is_null("UWG_get_data", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("UWG_get_data", "Undirected Weighted Graph", index, uwg->size, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_data", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_out_of_bounds("UndirectedWeightedGraph_get_data", "Undirected Weighted Graph", index, uwg->size, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     return Vertex_get_data(uwg->vertices[index]);
 }
 
-long UWG_get_valency(UWG *uwg, void *data) {
+long UndirectedWeightedGraph_get_valency(UndirectedWeightedGraph *uwg, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("UWG_get_valency", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_get_valency", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_get_valency", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_valency", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_get_valency", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_valency", "Data", data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("UWG_get_valency", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_get_valency", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
 
@@ -384,28 +357,28 @@ long UWG_get_valency(UWG *uwg, void *data) {
     return Vertex_get_valency(vertex);
 }
 
-bool UWG_remove_edge(UWG *uwg, void *exit_data, void *entry_data) {
+bool UndirectedWeightedGraph_remove_edge(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("UWG_remove_edge", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_remove_edge", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_edge", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_edge", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_remove_edge", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Exit Data", exit_data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Entry Data", entry_data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             3,
-            ExceptionHandler_is_null("UWG_remove_edge", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_edge", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_edge", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_edge", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
-    long exit_index = UWG_index_of(uwg, exit_data);
-    long entry_index = UWG_index_of(uwg, entry_data);
+    long exit_index = UndirectedWeightedGraph_index_of(uwg, exit_data);
+    long entry_index = UndirectedWeightedGraph_index_of(uwg, entry_data);
     if (anyThrows(
             2,
-            ExceptionHandler_is_non_positive("UWG_remove_edge", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("UWG_remove_edge", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_remove_edge", "Exit index", exit_index, true, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_non_positive("UndirectedWeightedGraph_remove_edge", "Entry index", entry_index, true, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
@@ -416,66 +389,71 @@ bool UWG_remove_edge(UWG *uwg, void *exit_data, void *entry_data) {
     return true;
 }
 
-bool UWG_remove_vertex(UWG *uwg, void *data) {
+bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("UWG_remove_vertex", "Undirected Weighted Graph", (void *) uwg, UWG_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph", (void *) uwg, UndirectedWeightedGraph_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Data", data, SUPPRESS_PRINT_ERROR)
         ) ||
         anyThrows(
             3,
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
 
     long index = _vertex_index(uwg, data);
     if (index < 0) return false;
+    int default_null_edge_value = DEFAULT_NULL_EDGE_VALUE;
+    float default_initial_weight = DEFAULT_INITIAL_WEIGHT;
 
     long size = uwg->size;
     if (index != size-1) {
         for (long i = 0; i < size; i++) {
-            if (uwg->adjacency_matrix[index][i] != DEFAULT_NULL_EDGE_VALUE) {
-                uwg->adjacency_matrix[index][i] = DEFAULT_NULL_EDGE_VALUE;
-                uwg->adjacency_matrix[i][index] = DEFAULT_NULL_EDGE_VALUE;
-                uwg->weight_matrix[index][i] = DEFAULT_INITIAL_WEIGHT;
-                uwg->weight_matrix[i][index] = DEFAULT_INITIAL_WEIGHT;
+            if (*((int *) Matrix_get_at(uwg->adjacency_matrix, index, i)) != default_null_edge_value) {
+                Matrix_set_at(uwg->adjacency_matrix, index, i, &default_null_edge_value);
+                Matrix_set_at(uwg->adjacency_matrix, i, index,  &default_null_edge_value);
+                Matrix_set_at(uwg->weight_matrix, index, i, &default_initial_weight);
+                Matrix_set_at(uwg->weight_matrix, i, index, &default_initial_weight);
                 Vertex_valency_down(uwg->vertices[i]);
             }
-            uwg->adjacency_matrix[i][size-1] = DEFAULT_NULL_EDGE_VALUE;
-            uwg->adjacency_matrix[size-1][i] = DEFAULT_NULL_EDGE_VALUE;
-            uwg->weight_matrix[i][size-1] = DEFAULT_INITIAL_WEIGHT;
-            uwg->weight_matrix[size-1][i] = DEFAULT_INITIAL_WEIGHT;
+            Matrix_set_at(uwg->adjacency_matrix, size-1, i, &default_null_edge_value);
+            Matrix_set_at(uwg->adjacency_matrix, i, size-1,  &default_null_edge_value);
+            Matrix_set_at(uwg->weight_matrix, size-1, i, &default_initial_weight);
+            Matrix_set_at(uwg->weight_matrix, i, size-1, &default_initial_weight);
         }
         for (long i = index; i < size-1; i++) {
             uwg->vertices[i] = uwg->vertices[i + 1];
             for (long j = index; j < size-1; j++) {
-                uwg->adjacency_matrix[i][j] = uwg->adjacency_matrix[i + 1][j + 1];
-                uwg->weight_matrix[i][j] = uwg->weight_matrix[i + 1][j + 1];
+                Matrix_set_at(uwg->adjacency_matrix, i, j, Matrix_get_at(uwg->adjacency_matrix, i + 1, j + 1));
+                Matrix_set_at(uwg->weight_matrix, i, j, Matrix_get_at(uwg->weight_matrix, i + 1, j + 1));
             }
         }
     } else {
         for (long i = 0; i < size; i++) {
-            if (uwg->adjacency_matrix[index][i] != DEFAULT_NULL_EDGE_VALUE) {
+            if (*((int *) Matrix_get_at(uwg->adjacency_matrix, index, i)) != default_null_edge_value) {
                 Vertex_valency_down(uwg->vertices[i]);
             }
         }
-        uwg->adjacency_matrix[index][index] = DEFAULT_NULL_EDGE_VALUE;
-        uwg->weight_matrix[index][index] = DEFAULT_INITIAL_WEIGHT;
+        Matrix_set_at(uwg->adjacency_matrix, index, index, &default_null_edge_value);
+        Matrix_set_at(uwg->weight_matrix, index, index, &default_initial_weight);
     }
     uwg->size--;
     return true;
 }
 
-void UWG_print_full_graph(UWG *uwg, void (*type_print_function)(void *data)) {
+void UndirectedWeightedGraph_print_full_graph(UndirectedWeightedGraph *uwg, void (*type_print_function)(void *data)) {
     if (anyThrows(
-            4,
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("UWG_remove_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            3,
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Adjacency Matrix", (void *) uwg->adjacency_matrix, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("UndirectedWeightedGraph_remove_vertex", "Undirected Weighted Graph::Vertices", (void *) uwg->vertices, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     _print_adjacency_matrix(uwg);
