@@ -1,5 +1,5 @@
-#ifndef STATIC_STACK
-#define STATIC_STACK
+#ifndef STATIC_STACK_H
+#define STATIC_STACK_H
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
@@ -10,6 +10,9 @@
     #undef SUPPRESS_PRINT_ERROR
 #endif
 #define SUPPRESS_PRINT_ERROR false
+#define SIZE_OF_STATIC_STACK_TYPE size_of_static_stack_type
+
+extern const size_t size_of_static_stack_type;
 
 /**
 * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n

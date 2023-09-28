@@ -8,6 +8,8 @@ typedef struct _static_stack {
     Array *data;
 } StaticStack;
 
+const size_t size_of_static_stack_type = sizeof(StaticStack);
+
 StaticStack *StaticStack_create(const long capacity, unsigned int size_of_type) {
     if (anyThrows(
             1,

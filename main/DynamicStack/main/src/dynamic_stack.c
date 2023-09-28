@@ -5,99 +5,101 @@
 #include "../include/dynamic_stack.h"
 
 typedef struct _dynamic_stack {
-    LinkedList *data;
-} Stack;
+    DoublyLinkedList *data;
+} DynamicStack;
 
-Stack *Stack_create() {
-    Stack *stack = (Stack *) calloc(1, sizeof(Stack));
-    stack->data = LinkedList_create();
+const size_t size_of_dynamic_stack_type = sizeof(DynamicStack);
+
+DynamicStack *DynamicStack_create() {
+    DynamicStack *stack = (DynamicStack *) calloc(1, sizeof(DynamicStack));
+    stack->data = DoublyLinkedList_create();
     return stack;
 }
 
-void Stack_clean(Stack *stack) {
+void DynamicStack_clean(DynamicStack *stack) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_clean", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_clean", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_clean(stack->data);
+    DoublyLinkedList_clean(stack->data);
 }
 
-void Stack_destroy(Stack **stack_ref) {
-    Stack *stack = *stack_ref;
+void DynamicStack_destroy(DynamicStack **stack_ref) {
+    DynamicStack *stack = *stack_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_destroy", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_destroy", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_destroy(&(stack->data));
+    DoublyLinkedList_destroy(&(stack->data));
     free(stack);
     *stack_ref = NULL;
 }
 
-bool Stack_is_empty(void *stack) {
+bool DynamicStack_is_empty(void *stack) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Stack_empty", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_empty", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
     ) return true;
-    return LinkedList_is_empty(((Stack *) stack)->data);
+    return DoublyLinkedList_is_empty(((DynamicStack *) stack)->data);
 }
 
-void Stack_push(Stack *stack, void *data) {
+void DynamicStack_push(DynamicStack *stack, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_push", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Stack_push", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_push", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DynamicStack_push", "Data", data, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_add_last(stack->data, data);
+    DoublyLinkedList_add_last(stack->data, data);
 }
 
-void *Stack_peek(const Stack *stack) {
+void *DynamicStack_peek(const DynamicStack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_peek", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Stack_peek", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_peek", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicStack_peek", "DynamicStack", (void *) stack, DynamicStack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    long top = LinkedList_size(stack->data) - 1;
-    return LinkedList_get(stack->data, top);
+    long top = DoublyLinkedList_size(stack->data) - 1;
+    return DoublyLinkedList_get(stack->data, top);
 }
 
-void Stack_pop(Stack *stack) {
+void DynamicStack_pop(DynamicStack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_pop", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Stack_pop", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_pop", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicStack_pop", "DynamicStack", (void *) stack, DynamicStack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    LinkedList_remove_last(stack->data);
+    DoublyLinkedList_remove_last(stack->data);
 }
 
-void Stack_print(const Stack *stack, void (*type_print_function)(void * data)) {
+void DynamicStack_print(const DynamicStack *stack, void (*type_print_function)(void * data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_print", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Stack_print", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_print", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicStack_print", "DynamicStack", (void *) stack, DynamicStack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
     printf("-:[");
-    size_t size = LinkedList_size(stack->data);
+    size_t size = DoublyLinkedList_size(stack->data);
     for(size_t i = 0; i < size - 1; i++) {
-        type_print_function(LinkedList_get(stack->data, i));
+        type_print_function(DoublyLinkedList_get(stack->data, i));
         printf(" -> ");
     }
-    type_print_function(LinkedList_get(stack->data, LinkedList_size(stack->data) - 1));
+    type_print_function(DoublyLinkedList_get(stack->data, DoublyLinkedList_size(stack->data) - 1));
     puts("]:-");
 }
 
-size_t Stack_size(const Stack *stack) {
+size_t DynamicStack_size(const DynamicStack *stack) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Stack_size", "Stack", (void *) stack, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Stack_size", "Stack", (void *) stack, Stack_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("DynamicStack_size", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("DynamicStack_size", "DynamicStack", (void *) stack, DynamicStack_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
-    return LinkedList_size(stack->data);
+    return DoublyLinkedList_size(stack->data);
 }

@@ -18,108 +18,108 @@ int _compare_int(void *data1, void *data2){
     return d2 - d1;
 }
 
-// Stack_create()
+// DynamicStack_create()
 void test_1() {
-    TEST_MESSAGE("Test: Stack_create(): ");
-    Stack *ss = Stack_create();
-    bool is_empty = Stack_is_empty(ss);
+    TEST_MESSAGE("Test: DynamicStack_create(): ");
+    DynamicStack *ss = DynamicStack_create();
+    bool is_empty = DynamicStack_is_empty(ss);
     TEST_ASSERT_EQUAL(1, is_empty);
-    TEST_ASSERT_EQUAL(0, Stack_size(ss));
+    TEST_ASSERT_EQUAL(0, DynamicStack_size(ss));
 }
 
-// Stack_clean(ss)
+// DynamicStack_clean(ss)
 void test_2() {
-    TEST_MESSAGE("Test: Stack_clean(ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_clean(ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42, data2 = 99;
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
 
-    Stack_clean(ss);
-    TEST_ASSERT_EQUAL(1, Stack_is_empty(ss));
-    TEST_ASSERT_EQUAL(0, Stack_size(ss));
+    DynamicStack_clean(ss);
+    TEST_ASSERT_EQUAL(1, DynamicStack_is_empty(ss));
+    TEST_ASSERT_EQUAL(0, DynamicStack_size(ss));
 }
 
-// Stack_destroy(&ss)
+// DynamicStack_destroy(&ss)
 void test_3() {
-    TEST_MESSAGE("Test: Stack_destroy(&ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_destroy(&ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42, data2 = 99;
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data2);
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data2);
 
-    Stack_destroy(&ss);
+    DynamicStack_destroy(&ss);
     TEST_ASSERT_EQUAL(NULL, ss);
 }
 
-// Stack_is_empty(ss)
+// DynamicStack_is_empty(ss)
 void test_4() {
-    TEST_MESSAGE("Test: Stack_is_empty(ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_is_empty(ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42, data2 = 99;
-    TEST_ASSERT_EQUAL(1, Stack_is_empty(ss));
-    TEST_ASSERT_EQUAL(0, Stack_size(ss));
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    TEST_ASSERT_EQUAL(0, Stack_is_empty(ss));
-    TEST_ASSERT_EQUAL(2, Stack_size(ss));
+    TEST_ASSERT_EQUAL(1, DynamicStack_is_empty(ss));
+    TEST_ASSERT_EQUAL(0, DynamicStack_size(ss));
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    TEST_ASSERT_EQUAL(0, DynamicStack_is_empty(ss));
+    TEST_ASSERT_EQUAL(2, DynamicStack_size(ss));
 }
 
-// Stack_push(ss, data)
+// DynamicStack_push(ss, data)
 void test_5() {
-    TEST_MESSAGE("Test: Stack_push(ss, data): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_push(ss, data): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42, data2 = 99;
-    Stack_push(ss, &data1);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(ss)));
-    Stack_push(ss, &data2);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(Stack_peek(ss)));
+    DynamicStack_push(ss, &data1);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(DynamicStack_peek(ss)));
+    DynamicStack_push(ss, &data2);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(DynamicStack_peek(ss)));
 }
 
-// Stack_peek(ss)
+// DynamicStack_peek(ss)
 void test_6() {
-    TEST_MESSAGE("Test: Stack_peek(ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_peek(ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42, data2 = 99;
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(Stack_peek(ss)));
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(DynamicStack_peek(ss)));
 }
 
-// Stack_pop(ss)
+// DynamicStack_pop(ss)
 void test_7() {
-    TEST_MESSAGE("Test: Stack_pop(ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_pop(ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data0 = 42, data1 = 99, data2 = 55;
-    Stack_push(ss, &data0);
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
+    DynamicStack_push(ss, &data0);
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
 
-    TEST_ASSERT_EQUAL(3, Stack_size(ss));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(Stack_peek(ss)));
+    TEST_ASSERT_EQUAL(3, DynamicStack_size(ss));
+    TEST_ASSERT_EQUAL(_convert_to_int(&data2), _convert_to_int(DynamicStack_peek(ss)));
 
-    Stack_pop(ss);
-    TEST_ASSERT_EQUAL(2, Stack_size(ss));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(Stack_peek(ss)));
+    DynamicStack_pop(ss);
+    TEST_ASSERT_EQUAL(2, DynamicStack_size(ss));
+    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(DynamicStack_peek(ss)));
 }
 
-// Stack_size(ss)
+// DynamicStack_size(ss)
 void test_8() {
-    TEST_MESSAGE("Test: Stack_size(ss): ");
-    Stack *ss = Stack_create();
+    TEST_MESSAGE("Test: DynamicStack_size(ss): ");
+    DynamicStack *ss = DynamicStack_create();
     int data1 = 42;
     int data2 = 99;
-    Stack_push(ss, &data1);
-    Stack_push(ss, &data2);
-    TEST_ASSERT_EQUAL(2, Stack_size(ss));
+    DynamicStack_push(ss, &data1);
+    DynamicStack_push(ss, &data2);
+    TEST_ASSERT_EQUAL(2, DynamicStack_size(ss));
 }
 
 int main(){

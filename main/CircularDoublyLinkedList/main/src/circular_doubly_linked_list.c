@@ -15,6 +15,8 @@ typedef struct _circular_linked_list {
     int sort_order;
 } CircularLinkedList;
 
+const size_t size_of_circular_doubly_linked_list_type = sizeof(CircularLinkedList);
+
 void _cll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node *slow = node;
     Node *fast = node;

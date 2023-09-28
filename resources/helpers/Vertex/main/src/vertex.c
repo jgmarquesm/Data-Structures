@@ -8,6 +8,8 @@ typedef struct _vertex {
     long valency;
 } Vertex;
 
+const size_t size_of_vertex_type = sizeof(Vertex);
+
 Vertex *Vertex_create(void *data) {
     Vertex *vertex = (Vertex *) calloc(1, sizeof(Vertex));
     vertex->data = data;
