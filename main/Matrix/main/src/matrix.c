@@ -149,12 +149,15 @@ Matrix *Matrix_clone(const Matrix *matrix) {
 
 Matrix *Matrix_sub(const Matrix *matrix, const long initial_row, const long initial_col, const long final_row, const long final_col) {
     if (anyThrows(
-            5,
-            ExceptionHandler_is_null("Matrix_sub", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR),
+            1,
+            ExceptionHandler_is_null("Matrix_sub", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            4,
             ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Row", final_row, matrix->number_of_rows-1, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Column", final_col, matrix->number_of_cols-1, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Row", initial_row, final_row-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Column", initial_row, final_col-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Column", initial_col, final_col-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     long rows = final_row - initial_row + 1;
@@ -212,10 +215,10 @@ bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, int (*type_compare
             ExceptionHandler_is_null("Matrix_is_equals", "Matrix 1", (void *) matrix1, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_null("Matrix_is_equals", "Matrix 2", (void *) matrix2, SUPPRESS_PRINT_ERROR)
         )
+        || matrix1->number_of_rows != matrix2->number_of_rows
+        || matrix1->number_of_cols != matrix2->number_of_cols
+        || matrix1->size_of_type != matrix2->size_of_type
     ) return false;
-    if (matrix1->size_of_type != matrix2->size_of_type) {
-        return false;
-    }
     for (long i = 0; i < matrix1->number_of_rows; i++) {
         for (long j = 0; j< matrix1->number_of_cols; j++) {
             void *data1 = Matrix_get_at(matrix1, i, j);
