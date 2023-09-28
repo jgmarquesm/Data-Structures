@@ -33,30 +33,12 @@ long Matrix_rows(const Matrix *matrix);
 long Matrix_cols(const Matrix *matrix);
 /**
  *
- * @param matrix -> Matrix to check size;
- * @return Number of elements that Matrix contains.
- */
-long Matrix_size(const Matrix *matrix);
-/**
- *
- * @param matrix -> Matrix to check emptiness;
- * @return  true if: Matrix is empty (size == 0);\n false if: Matrix not empty (size > 0).
- */
-bool Matrix_is_empty(void *matrix);
-/**
- *
- * @param matrix -> Matrix to check fullness;
- * @return true if: Matrix is full (size == rows*cols);\n false if: Matrix is not full (size <= rows*cols>).
- */
-bool Matrix_is_full(void *matrix);
-/**
- *
  * @param rows -> number of rows to be allocated
  * @param cols -> number of cols to be allocated
  * @param size_of_type -> size of data type to be allocated
  * @return A new Matrix with thw number of rows and cols passed and max number of elements equals to rows * cols
  */
-Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_type);
+Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_type, void *default_data);
 /**
  *
  * @param matrix -> Matrix to be cloned
@@ -77,12 +59,12 @@ Matrix *Matrix_sub(const Matrix *matrix, const long initial_row, const long init
  * When calling this function it will clean all data from Matrix;
  * @param matrix -> The Matrix to be clean;
  */
-void Matrix_clean(Matrix *matrix);
+bool Matrix_clean(Matrix *matrix);
 /**
  * When calling this function, it will clean all data from Matrix and it will be deallocated;
  * @param matrix_ref -> The pointer of the Matrix to be deleted;
  */
-void Matrix_delete(Matrix **matrix_ref);
+bool Matrix_delete(Matrix **matrix_ref);
 /**
  *
  * @param matrix -> Matrix to get data from position (row, col)
@@ -92,21 +74,13 @@ void Matrix_delete(Matrix **matrix_ref);
  */
 void *Matrix_get_at(const Matrix *matrix, const long row, const long col);
 /**
- * When calling this function it will insert data into position (row, col) of Matrix
- * @param matrix -> Matrix add data
- * @param row -> Row to add data at
- * @param col -> Column to add data at
- * @param data -> Data to be added
- */
-void Matrix_insert_at(Matrix *matrix, const long row, const long col, void *data);
-/**
  * When calling this function it will update the data of Matrix position (row, col)
  * @param matrix -> Matrix to update data
  * @param row -> Row to update data at
  * @param col -> Column to update data at
  * @param data -> Data to be set
  */
-void Matrix_set(Matrix *matrix, const long row, const long col, void *data);
+bool Matrix_set_at(Matrix *matrix, const long row, const long col, void *data);
 /**
  *
  * @param matrix -> Matrix to be printed
