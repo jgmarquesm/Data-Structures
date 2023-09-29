@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "../include/vertex.h"
 #include "../include/matrix.h"
+#include "../include/array.h"
 //#--ADD_TO_INCLUDE
 #include "../include/undirected_weighted_graph.h"
 
@@ -16,7 +17,7 @@ void _print_weight(void *value) {
 typedef struct _undirected_weighted_graph {
     long capacity;
     long size;
-    Vertex* *vertices;
+    Array *vertices;
     Matrix *adjacency_matrix;
     Matrix *weight_matrix;
 } UndirectedWeightedGraph;
@@ -25,7 +26,7 @@ const size_t size_of_undirected_weighted_graph_type = sizeof(UndirectedWeightedG
 
 long _vertex_index(UndirectedWeightedGraph *uwg, void *data) {
     for (long i = 0; i < uwg->size; i++) {
-        if (Vertex_get_data(uwg->vertices[i]) == data) {
+        if (Vertex_get_data((Vertex *) Array_get_at(uwg->vertices, i)) == data) {
             return i;
         }
     }
@@ -33,7 +34,7 @@ long _vertex_index(UndirectedWeightedGraph *uwg, void *data) {
 }
 
 Vertex *_vertex_get_at(UndirectedWeightedGraph *uwg, long index) {
-    return uwg->vertices[index];
+    return (Vertex *) Array_get_at(uwg->vertices, index);
 }
 
 Vertex *_vertex_find(UndirectedWeightedGraph *uwg, void *data) {
@@ -72,10 +73,10 @@ void _print_vertices(UndirectedWeightedGraph *uwg, void (*type_print_function)(v
         puts("]");
     } else {
         for(long i = 0; i < uwg->size-1; i++) {
-            type_print_function(Vertex_get_data(uwg->vertices[i]));
+            type_print_function(Vertex_get_data((Vertex *) Array_get_at(uwg->vertices, i)));
             printf(", ");
         }
-        type_print_function(Vertex_get_data(uwg->vertices[uwg->size-1]));
+        type_print_function(Vertex_get_data((Vertex *) Array_get_at(uwg->vertices, uwg->size-1)));
         puts("]");
     }
 }
@@ -108,7 +109,7 @@ UndirectedWeightedGraph *UndirectedWeightedGraph_create(const long max_of_vertic
     uwg->capacity = max_of_vertices;
     uwg->size = 0;
 
-    Vertex **vertices = (Vertex **) calloc(max_of_vertices, sizeof(Vertex*));
+    Array *vertices = Array_create(max_of_vertices, SIZE_OF_VERTEX_TYPE);
     uwg->vertices = vertices;
 
     Matrix *adjacency_matrix = _initial_adjacency_matrix(max_of_vertices);
@@ -126,15 +127,10 @@ bool UndirectedWeightedGraph_clean(UndirectedWeightedGraph *uwg) {
             ExceptionHandler_is_null("UndirectedWeightedGraph_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    for (long i = 0; i < uwg->capacity; i++) {
-        free(uwg->vertices[i]);
-    }
+    Array_clean(uwg->vertices);
     Matrix_clean(uwg->adjacency_matrix);
     Matrix_clean(uwg->weight_matrix);
-
     uwg->size = 0;
-    uwg->adjacency_matrix = _initial_adjacency_matrix(uwg->capacity);
-    uwg->weight_matrix = _initial_weight_matrix(uwg->capacity);
     return true;
 }
 
@@ -145,8 +141,7 @@ bool UndirectedWeightedGraph_destroy(UndirectedWeightedGraph **uwg_ref) {
             ExceptionHandler_is_null("UndirectedWeightedGraph_clean", "Undirected Weighted Graph", (void *) uwg, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    free(uwg->vertices);
-    uwg->vertices = NULL;
+    Array_delete(&(uwg->vertices));
     Matrix_delete(&(uwg->adjacency_matrix));
     Matrix_delete(&(uwg->weight_matrix));
     free(uwg);
@@ -200,7 +195,7 @@ bool UndirectedWeightedGraph_insert_vertex(UndirectedWeightedGraph *uwg, void *d
         )
     ) return false;
     if (_vertex_find(uwg, data)) return false;
-    uwg->vertices[uwg->size] = Vertex_create(data);
+    Array_insert_at(uwg->vertices, Vertex_create(data), uwg->size);
     uwg->size++;
     return true;
 }
@@ -229,8 +224,8 @@ bool UndirectedWeightedGraph_insert_edge(UndirectedWeightedGraph *uwg, void *exi
     ) return false;
 
     _set_value_to_matrices(uwg, exit_index, entry_index, weight, DEFAULT_EDGE_VALUE);
-    Vertex_valency_up(uwg->vertices[exit_index]);
-    Vertex_valency_up(uwg->vertices[entry_index]);
+    Vertex_valency_up((Vertex *) Array_get_at(uwg->vertices, exit_index));
+    Vertex_valency_up((Vertex *) Array_get_at(uwg->vertices, entry_index));
     return true;
 }
 
@@ -337,7 +332,7 @@ void *UndirectedWeightedGraph_get_data(UndirectedWeightedGraph *uwg, long index)
             ExceptionHandler_is_out_of_bounds("UndirectedWeightedGraph_get_data", "Undirected Weighted Graph", index, uwg->size, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    return Vertex_get_data(uwg->vertices[index]);
+    return Vertex_get_data((Vertex *) Array_get_at(uwg->vertices, index));
 }
 
 long UndirectedWeightedGraph_get_valency(UndirectedWeightedGraph *uwg, void *data) {
@@ -385,8 +380,8 @@ bool UndirectedWeightedGraph_remove_edge(UndirectedWeightedGraph *uwg, void *exi
 
     _set_value_to_matrices(uwg, exit_index, entry_index, DEFAULT_INITIAL_WEIGHT, DEFAULT_NULL_EDGE_VALUE);
 
-    Vertex_valency_down(uwg->vertices[exit_index]);
-    Vertex_valency_down(uwg->vertices[entry_index]);
+    Vertex_valency_down((Vertex *) Array_get_at(uwg->vertices, exit_index));
+    Vertex_valency_down((Vertex *) Array_get_at(uwg->vertices, entry_index));
     return true;
 }
 
@@ -418,7 +413,7 @@ bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *d
                 Matrix_set_at(uwg->adjacency_matrix, i, index,  &default_null_edge_value);
                 Matrix_set_at(uwg->weight_matrix, index, i, &default_initial_weight);
                 Matrix_set_at(uwg->weight_matrix, i, index, &default_initial_weight);
-                Vertex_valency_down(uwg->vertices[i]);
+                Vertex_valency_down((Vertex *) Array_get_at(uwg->vertices, i));
             }
             Matrix_set_at(uwg->adjacency_matrix, size-1, i, &default_null_edge_value);
             Matrix_set_at(uwg->adjacency_matrix, i, size-1,  &default_null_edge_value);
@@ -426,7 +421,7 @@ bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *d
             Matrix_set_at(uwg->weight_matrix, i, size-1, &default_initial_weight);
         }
         for (long i = index; i < size-1; i++) {
-            uwg->vertices[i] = uwg->vertices[i + 1];
+            Array_set(uwg->vertices, (Vertex *) Array_get_at(uwg->vertices, i + 1), i);
             for (long j = index; j < size-1; j++) {
                 Matrix_set_at(uwg->adjacency_matrix, i, j, Matrix_get_at(uwg->adjacency_matrix, i + 1, j + 1));
                 Matrix_set_at(uwg->weight_matrix, i, j, Matrix_get_at(uwg->weight_matrix, i + 1, j + 1));
@@ -435,7 +430,7 @@ bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *d
     } else {
         for (long i = 0; i < size; i++) {
             if (*((int *) Matrix_get_at(uwg->adjacency_matrix, index, i)) != default_null_edge_value) {
-                Vertex_valency_down(uwg->vertices[i]);
+                Vertex_valency_down((Vertex *) Array_get_at(uwg->vertices, i));
             }
         }
         Matrix_set_at(uwg->adjacency_matrix, index, index, &default_null_edge_value);
