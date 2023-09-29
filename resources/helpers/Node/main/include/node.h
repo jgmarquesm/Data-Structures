@@ -6,7 +6,7 @@
 #ifdef SUPPRESS_PRINT_ERROR
     #undef SUPPRESS_PRINT_ERROR
 #endif
-#define SUPPRESS_PRINT_ERROR true
+#define SUPPRESS_PRINT_ERROR false
 #define SIZE_OF_NODE_TYPE size_of_node_type
 
 extern const size_t size_of_node_type;

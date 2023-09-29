@@ -9,7 +9,7 @@
 #ifdef SUPPRESS_PRINT_ERROR
     #undef SUPPRESS_PRINT_ERROR
 #endif
-#define SUPPRESS_PRINT_ERROR
+#define SUPPRESS_PRINT_ERROR false
 #define SIZE_OF_DYNAMIC_QUEUE_TYPE size_of_dynamic_queue_type
 
 extern const size_t size_of_dynamic_queue_type;
