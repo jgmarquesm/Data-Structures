@@ -30,12 +30,12 @@ DynamicQueue *DynamicQueue_create();
  * When calling this function it will clean all data from DynamicQueue
  * @param queue -> The DynamicQueue to be clean
  */
-void DynamicQueue_clean(DynamicQueue *queue);
+bool DynamicQueue_clean(DynamicQueue *queue);
 /**
  * When calling this function, it will clean all data from DynamicQueue and it will be deallocated
  * @param queue_ref -> The pointer of the DynamicQueue to be deleted
  */
-void DynamicQueue_destroy(DynamicQueue **queue_ref);
+bool DynamicQueue_destroy(DynamicQueue **queue_ref);
 /**
  *
  * @param queue -> DynamicQueue to check emptiness
@@ -47,7 +47,7 @@ bool DynamicQueue_is_empty(void *queue);
  * @param queue -> DynamicQueue to add data
  * @param data -> Data to be add in DynamicQueue
  */
-void DynamicQueue_enqueue(DynamicQueue *queue, void *data);
+bool DynamicQueue_enqueue(DynamicQueue *queue, void *data);
 /**
  *
  * @param queue -> DynamicQueue to get data from the head
@@ -58,7 +58,7 @@ void *DynamicQueue_peek(const DynamicQueue *queue);
  * When calling this function it will remove data from head of the DynamicQueue;
  * @param queue -> DynamicQueue to remove last element;
  */
-void DynamicQueue_dequeue(DynamicQueue *queue);
+void *DynamicQueue_dequeue(DynamicQueue *queue);
 /**
  *
  * @param queue -> DynamicQueue to be printed
