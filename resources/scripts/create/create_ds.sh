@@ -76,6 +76,14 @@ echo "#ifndef ${3}_H
 #define ${3}_H
 //#--ADD_TO_INCLUDE
 
+#ifdef SUPPRESS_PRINT_ERROR
+    #undef SUPPRESS_PRINT_ERROR
+#endif
+#define SUPPRESS_PRINT_ERROR false
+#define SIZE_OF_${3}_TYPE size_of_${2}_type
+
+extern const size_t size_of_${2}_type;
+
 typedef struct _${2} ${1};
 
 #endif" > main/"${1}"/main/include/"${2}".h
@@ -87,7 +95,9 @@ echo "//#--ADD_TO_INCLUDE
 
 //typedef struct _${2} {
 // define your DS here
-//} ${1};" > main/"${1}"/main/src/"${2}".c
+//} ${1};
+
+const size_t size_of_${2}_type = sizeof(${1});" > main/"${1}"/main/src/"${2}".c
 }
 
 function CreateApp() {
