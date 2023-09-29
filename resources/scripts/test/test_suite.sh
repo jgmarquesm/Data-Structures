@@ -95,7 +95,7 @@ function set_suppress_print_error_off() {
   for helper in "${HELPERS[@]}"
   do
     header_file=$(_title_case_to_snake_case "${helper}")
-    sed -i~ 's#^\#define SUPPRESS_PRINT_ERROR false#\#define SUPPRESS_PRINT_ERROR true#' ../resources/helpers/"${helper}"/main/include/"${header_file}".h
+    sed -i~ 's#^\#define SUPPRESS_PRINT_ERROR true#\#define SUPPRESS_PRINT_ERROR false#' ../resources/helpers/"${helper}"/main/include/"${header_file}".h
   done
 }
 
