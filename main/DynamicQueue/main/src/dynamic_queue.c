@@ -16,25 +16,27 @@ DynamicQueue *DynamicQueue_create() {
     return S;
 }
 
-void DynamicQueue_clean(DynamicQueue *queue) {
+bool DynamicQueue_clean(DynamicQueue *queue) {
     if (anyThrows(
             1,
             ExceptionHandler_is_null("DynamicQueue_clean", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_clean(queue->data);
+    return true;
 }
 
-void DynamicQueue_destroy(DynamicQueue **queue_ref) {
+bool DynamicQueue_destroy(DynamicQueue **queue_ref) {
     DynamicQueue *queue = *queue_ref;
     if (anyThrows(
             1,
             ExceptionHandler_is_null("DynamicQueue_destroy", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_destroy(&(queue->data));
     free(queue);
     *queue_ref = NULL;
+    return true;
 }
 
 bool DynamicQueue_is_empty(void *queue) {
@@ -46,14 +48,15 @@ bool DynamicQueue_is_empty(void *queue) {
     return DoublyLinkedList_is_empty(((DynamicQueue *) queue)->data);
 }
 
-void DynamicQueue_enqueue(DynamicQueue *queue, void *data) {
+bool DynamicQueue_enqueue(DynamicQueue *queue, void *data) {
     if (anyThrows(
             2,
             ExceptionHandler_is_null("DynamicQueue_enqueue", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_null("DynamicQueue_enqueue", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_add_last(queue->data, data);
+    return true;
 }
 
 void *DynamicQueue_peek(const DynamicQueue *queue) {
@@ -66,14 +69,16 @@ void *DynamicQueue_peek(const DynamicQueue *queue) {
     return DoublyLinkedList_get(queue->data, 0);
 }
 
-void DynamicQueue_dequeue(DynamicQueue *queue) {
+void *DynamicQueue_dequeue(DynamicQueue *queue) {
     if (anyThrows(
             2,
             ExceptionHandler_is_null("DynamicQueue_dequeue", "DynamicQueue", (void *) queue, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_empty("DynamicQueue_dequeue", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return NULL;
+    void *data = DynamicQueue_peek(queue);
     DoublyLinkedList_remove_first(queue->data);
+    return data;
 }
 
 void DynamicQueue_print(const DynamicQueue *queue, void (*type_print_function)(void * data)) {
