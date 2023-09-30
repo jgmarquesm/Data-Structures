@@ -76,9 +76,7 @@ void *DynamicQueue_dequeue(DynamicQueue *queue) {
             ExceptionHandler_is_empty("DynamicQueue_dequeue", "DynamicQueue", (void *) queue, DynamicQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    void *data = DynamicQueue_peek(queue);
-    DoublyLinkedList_remove_first(queue->data);
-    return data;
+    return DoublyLinkedList_remove_first(queue->data);
 }
 
 void DynamicQueue_print(const DynamicQueue *queue, void (*type_print_function)(void * data)) {
