@@ -218,7 +218,7 @@ void test_SinglyLinkedList_add_first_1() {
 
 void test_SinglyLinkedList_add_first_2() {
     TEST_MESSAGE("Case 2 --> Adding on a Sorted SinglyLinkedList:");
-    TYPE d1, d2, d3;
+    TYPE d1 = 1, d2 = 2, d3 = 3;
     SinglyLinkedList *SLL = NEW_SLL;
     SinglyLinkedList_add_first(SLL, &d1);
     SinglyLinkedList_add_first(SLL, &d2);
@@ -259,7 +259,7 @@ void test_SinglyLinkedList_add_first_5() {
     bool added = SinglyLinkedList_add_first(SLL, NULL);
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
-    TEST_ASSERT_EQUAL(&d2, SinglyLinkedList_first_element(SLL));
+    TEST_ASSERT_EQUAL(&d1, SinglyLinkedList_first_element(SLL));
     TEST_ASSERT_EQUAL(ASC,  SinglyLinkedList_sort_order(SLL));
 }
 
@@ -276,7 +276,7 @@ void test_SinglyLinkedList_add_last_1() {
 
 void test_SinglyLinkedList_add_last_2() {
     TEST_MESSAGE("Case 2 --> Adding on a Sorted SinglyLinkedList:");
-    TYPE d1, d2, d3;
+    TYPE d1 = 1, d2 = 2, d3 = 3;
     SinglyLinkedList *SLL = NEW_SLL;
     SinglyLinkedList_add_last(SLL, &d1);
     SinglyLinkedList_add_last(SLL, &d2);
@@ -1210,7 +1210,7 @@ void test_SinglyLinkedList_reverse_3() {
 }
 
 void test_SinglyLinkedList_is_equals_strict_1() {
-    TEST_MESSAGE("Case 1 --> Same Data PoTYPEers:");
+    TEST_MESSAGE("Case 1 --> Same Data Pointers:");
     TYPE d1, d2, d3, d4;
     SinglyLinkedList *SLL1 = NEW_SLL;
     SinglyLinkedList *SLL2 = NEW_SLL;
@@ -1288,7 +1288,7 @@ void test_SinglyLinkedList_is_equals_strict_5() {
 }
 
 void test_SinglyLinkedList_is_equals_strict_6() {
-    TEST_MESSAGE("Case 6 --> Same Data PoTYPEers, but one of then is Sorted:");
+    TEST_MESSAGE("Case 6 --> Same Data Pointers, but one of then is Sorted:");
     TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4;
     SinglyLinkedList *SLL1 = NEW_SLL;
     SinglyLinkedList *SLL2 = NEW_SLL;
@@ -1311,7 +1311,7 @@ void test_SinglyLinkedList_is_equals_strict_6() {
 }
 
 void test_SinglyLinkedList_is_equals_strict_7() {
-    TEST_MESSAGE("Case 7 --> Same Data (content, not poTYPEers):");
+    TEST_MESSAGE("Case 7 --> Same Data (content, not pointers):");
     TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4;
     TYPE d11 = 1, d22 = 2, d33 = 3, d44 = 4;
     SinglyLinkedList *SLL1 = NEW_SLL;
@@ -1352,7 +1352,7 @@ void test_SinglyLinkedList_is_equals_strict_8() {
 }
 
 void test_SinglyLinkedList_is_equals_1() {
-    TEST_MESSAGE("Case 1 --> Same Data PoTYPEers:");
+    TEST_MESSAGE("Case 1 --> Same Data Pointers:");
     TYPE d1, d2, d3, d4;
     SinglyLinkedList *SLL1 = NEW_SLL;
     SinglyLinkedList *SLL2 = NEW_SLL;
@@ -1430,7 +1430,7 @@ void test_SinglyLinkedList_is_equals_5() {
 }
 
 void test_SinglyLinkedList_is_equals_6() {
-    TEST_MESSAGE("Case 6 --> Same Data PoTYPEers, but one of then is Sorted:");
+    TEST_MESSAGE("Case 6 --> Same Data Pointers, but one of then is Sorted:");
     TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4;
     SinglyLinkedList *SLL1 = NEW_SLL;
     SinglyLinkedList *SLL2 = NEW_SLL;
@@ -1453,7 +1453,7 @@ void test_SinglyLinkedList_is_equals_6() {
 }
 
 void test_SinglyLinkedList_is_equals_7() {
-    TEST_MESSAGE("Case 7 --> Same Data (content, not poTYPEers):");
+    TEST_MESSAGE("Case 7 --> Same Data (content, not pointers):");
     TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4;
     TYPE d11 = 1, d22 = 2, d33 = 3, d44 = 4;
     SinglyLinkedList *SLL1 = NEW_SLL;
