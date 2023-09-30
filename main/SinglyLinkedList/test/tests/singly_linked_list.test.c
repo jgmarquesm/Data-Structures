@@ -310,10 +310,11 @@ void test_SinglyLinkedList_add_last_5() {
     SinglyLinkedList_add_last(SLL, &d1);
     SinglyLinkedList_add_last(SLL, &d2);
     SinglyLinkedList_sort_asc(SLL, _compare_TYPE);
+    TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
 
     bool added = SinglyLinkedList_add_last(SLL, NULL);
     TEST_ASSERT_FALSE(added);
-    TEST_ASSERT_EQUAL(&d2, SinglyLinkedList_last_element(SLL));
+    TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
     TEST_ASSERT_EQUAL(ASC,  SinglyLinkedList_sort_order(SLL));
 }
 
