@@ -31,12 +31,12 @@ DoublyLinkedList *DoublyLinkedList_create();
  * erased and the the DoublyLinkedList is empty.
  * @param LL -> The (Doubly))DoublyLinkedList to clean up
  */
-void DoublyLinkedList_clean(DoublyLinkedList *LL);
+bool DoublyLinkedList_clean(DoublyLinkedList *LL);
 /**
  * When calling this function it will clean up and free all nodes and free the DoublyLinkedList.
  * @param LL_ref -> The DoublyLinkedList reference
  */
-void DoublyLinkedList_destroy(DoublyLinkedList **LL_ref);
+bool DoublyLinkedList_destroy(DoublyLinkedList **LL_ref);
 /**
  *
  * @param LL -> The DoublyLinkedList to verify if is empty
@@ -66,13 +66,13 @@ void DoublyLinkedList_print(const DoublyLinkedList *LL, void (*type_print_functi
  * @param LL -> DoublyLinkedList to add data
  * @param data -> data to be added.
  */
-void DoublyLinkedList_add_first(DoublyLinkedList *LL, void *data);
+bool DoublyLinkedList_add_first(DoublyLinkedList *LL, void *data);
 /**
  * When calling this functions it will add data to the last DoublyLinkedList node.
  * @param LL -> DoublyLinkedList to add data
  * @param data -> data to be added.
  */
-void DoublyLinkedList_add_last(DoublyLinkedList *LL, void *data);
+bool DoublyLinkedList_add_last(DoublyLinkedList *LL, void *data);
 /**
  * When calling this function it will remove first node of DoublyLinkedList.
  * @param LL -> DoublyLinkedList to remove data
@@ -98,14 +98,14 @@ void *DoublyLinkedList_remove_at(DoublyLinkedList *LL, const size_t index);
  * @param data -> data to be removed
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void DoublyLinkedList_remove(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool DoublyLinkedList_remove(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will remove all occurrences of data in the DoublyLinkedList.
  * @param LL -> DoublyLinkedList to remove data
  * @param data -> data to be removed
   * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void DoublyLinkedList_remove_all(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+size_t DoublyLinkedList_remove_all(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param LL -> DoublyLinkedList to check its size
@@ -152,7 +152,7 @@ bool DoublyLinkedList_contains(const DoublyLinkedList *LL, void *data);
  * @param data -> Data to be added
  * @param index -> Index to add data at
  */
-void DoublyLinkedList_insert_at(DoublyLinkedList *LL, void *data, const size_t index);
+bool DoublyLinkedList_insert_at(DoublyLinkedList *LL, void *data, const size_t index);
 /**
  *
  * @param LL -> DoublyLinkedList to be cloned
@@ -192,20 +192,20 @@ bool DoublyLinkedList_is_equals(const DoublyLinkedList *LL1, const DoublyLinkedL
  * @param LL -> DoublyLinkedList to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void DoublyLinkedList_sort_asc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+bool DoublyLinkedList_sort_asc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the DoublyLinkedList in descending order
  * @param LL -> DoublyLinkedList to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void DoublyLinkedList_sort_desc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
+bool DoublyLinkedList_sort_desc(DoublyLinkedList *LL, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will add data to DoublyLinkedList following the order sort
  * @param LL -> DoublyLinkedList to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void DoublyLinkedList_sorted_insert(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool DoublyLinkedList_sorted_insert(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param LL -> DoublyLinkedList to get the smaller data
