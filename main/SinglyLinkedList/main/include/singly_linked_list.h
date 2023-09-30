@@ -31,12 +31,12 @@ SinglyLinkedList *SinglyLinkedList_create();
  * erased and the the SinglyLinkedList is empty.
  * @param SLL -> The SinglyLinkedLIst to clean up
  */
-void SinglyLinkedList_clean(SinglyLinkedList *SLL);
+bool SinglyLinkedList_clean(SinglyLinkedList *SLL);
 /**
  * When calling this function it will clean up and free all nodes and free the SinglyLinkedList.
  * @param SLL_ref -> The SinglyLinkedList reference
  */
-void SinglyLinkedList_destroy(SinglyLinkedList **SLL_ref);
+bool SinglyLinkedList_destroy(SinglyLinkedList **SLL_ref);
 /**
  *
  * @param SLL -> The SinglyLinkedList to verify if is empty
@@ -66,13 +66,13 @@ void SinglyLinkedList_print(const SinglyLinkedList *SLL, void (*type_print_funct
  * @param SLL -> SinglyLinkedList to add data
  * @param data -> data to be added.
  */
-void SinglyLinkedList_add_first(SinglyLinkedList *SLL, void *data);
+bool SinglyLinkedList_add_first(SinglyLinkedList *SLL, void *data);
 /**
  * When calling this functions it will add data to the last SinglyLinkedList node.
  * @param SLL -> SinglyLinkedList to add data
  * @param data -> data to be added.
  */
-void SinglyLinkedList_add_last(SinglyLinkedList *SLL, void *data);
+bool SinglyLinkedList_add_last(SinglyLinkedList *SLL, void *data);
 /**
  * When calling this function it will remove first node of SinglyLinkedList.
  * @param SLL -> SinglyLinkedList to remove data
@@ -97,13 +97,13 @@ void *SinglyLinkedList_remove_at(SinglyLinkedList *SLL, const size_t index);
  * @param SLL -> SinglyLinkedList to remove data
  * @param data -> data to be removed
  */
-void SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will remove all occurrences of data in the SinglyLinkedList.
  * @param SLL -> SinglyLinkedList to remove data
  * @param data -> data to be removed
  */
-void SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param SLL -> SinglyLinkedList to check its size
@@ -135,7 +135,7 @@ void *SinglyLinkedList_get(const SinglyLinkedList *SLL, const size_t index);
  * @param data -> Data that the number of occurrences will be returned
  * @return The number of occurrences of data in the SinglyLinkedList
  */
-int SinglyLinkedList_count(const SinglyLinkedList *SLL, void *data);
+size_t SinglyLinkedList_count(const SinglyLinkedList *SLL, void *data);
 /**
  *
  * @param SLL -> SinglyLinkedList to check if data is contained
@@ -149,7 +149,7 @@ bool SinglyLinkedList_contains(const SinglyLinkedList *SLL, void *data);
  * @param data -> Data to be added
  * @param index -> Index to add data at
  */
-void SinglyLinkedList_insert_at(SinglyLinkedList *SLL, void *data, const size_t index);
+bool SinglyLinkedList_insert_at(SinglyLinkedList *SLL, void *data, const size_t index);
 /**
  *
  * @param SLL -> SinglyLinkedList to be cloned
@@ -189,20 +189,20 @@ bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinked
  * @param SLL -> SinglyLinkedList to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will sort the SinglyLinkedList in descending order
  * @param SLL -> SinglyLinkedList to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
 /**
  * When calling this function it will add data to SinglyLinkedList following the order sort
  * @param SLL -> SinglyLinkedList to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-void SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
 /**
  *
  * @param SLL -> SinglyLinkedList to get the smaller data
