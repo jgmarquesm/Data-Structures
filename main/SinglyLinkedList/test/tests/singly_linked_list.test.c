@@ -249,14 +249,16 @@ void test_SinglyLinkedList_add_first_4() {
 
 void test_SinglyLinkedList_add_first_5() {
     TEST_MESSAGE("Case 5 --> Adding NULL data on a Sorted SinglyLinkedList:");
-    TYPE d1, d2;
+    TYPE d1 = 1, d2 = 2;
     SinglyLinkedList *SLL = NEW_SLL;
     SinglyLinkedList_add_first(SLL, &d1);
     SinglyLinkedList_add_first(SLL, &d2);
     SinglyLinkedList_sort_asc(SLL, _compare_TYPE);
+    TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
 
     bool added = SinglyLinkedList_add_first(SLL, NULL);
     TEST_ASSERT_FALSE(added);
+    TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
     TEST_ASSERT_EQUAL(&d2, SinglyLinkedList_first_element(SLL));
     TEST_ASSERT_EQUAL(ASC,  SinglyLinkedList_sort_order(SLL));
 }
@@ -305,7 +307,7 @@ void test_SinglyLinkedList_add_last_4() {
 
 void test_SinglyLinkedList_add_last_5() {
     TEST_MESSAGE("Case 5 --> Adding NULL data on a Sorted SinglyLinkedList:");
-    TYPE d1, d2;
+    TYPE d1 = 1, d2 = 2;
     SinglyLinkedList *SLL = NEW_SLL;
     SinglyLinkedList_add_last(SLL, &d1);
     SinglyLinkedList_add_last(SLL, &d2);
@@ -315,6 +317,7 @@ void test_SinglyLinkedList_add_last_5() {
     bool added = SinglyLinkedList_add_last(SLL, NULL);
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
+    TEST_ASSERT_EQUAL(&d2, SinglyLinkedList_last_element(SLL));
     TEST_ASSERT_EQUAL(ASC,  SinglyLinkedList_sort_order(SLL));
 }
 
