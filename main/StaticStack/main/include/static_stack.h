@@ -32,12 +32,12 @@ StaticStack *StaticStack_create(const long capacity, unsigned int size_of_type);
  * When calling this function it will clean all data from Stack
  * @param SS -> The array to be clean
  */
-void StaticStack_clean(StaticStack *SS);
+bool StaticStack_clean(StaticStack *SS);
 /**
  * When calling this function, it will clean all data from StaticStack and it will be deallocated
  * @param SS_ref -> The pointer of the StaticStack to be deleted
  */
-void StaticStack_destroy(StaticStack **SS_ref);
+bool StaticStack_destroy(StaticStack **SS_ref);
 /**
  *
  * @param SS -> Stack to check emptiness
@@ -55,7 +55,7 @@ bool StaticStack_is_full(void *SS);
  * @param SS -> StaticStack to add data
  * @param data -> Data to be add in StaticStack
  */
-void StaticStack_push(StaticStack *SS, void *data);
+bool StaticStack_push(StaticStack *SS, void *data);
 /**
  *
  * @param SS -> StaticStack to get data from top
@@ -66,7 +66,7 @@ void *StaticStack_peek(const StaticStack *SS);
  * When calling this function it will remove data from top of the StaticStack;
  * @param SS -> StaticStack to remove last element;
  */
-void StaticStack_pop(StaticStack *SS);
+void *StaticStack_pop(StaticStack *SS);
 /**
  *
  * @param SS -> StaticStack to be printed
