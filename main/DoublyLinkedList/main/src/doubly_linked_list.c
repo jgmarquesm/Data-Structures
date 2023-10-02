@@ -524,6 +524,7 @@ DoublyLinkedList *DoublyLinkedList_reverse(DoublyLinkedList *LL) {
     while (node != NULL) {
         node_next = Node_get_next(node);
         Node_set_next(node, node_prev);
+        Node_set_prev(node, node_next);
         node_prev = node;
         node = node_next;
     }
@@ -602,8 +603,9 @@ bool DoublyLinkedList_sort_desc(DoublyLinkedList *LL, int (*type_compare_functio
 
 bool DoublyLinkedList_sorted_insert(DoublyLinkedList *LL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
-            3,
+            4,
             ExceptionHandler_is_null("DoublyLinkedList_sorted_insert", "Linked List", (void *) LL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("DoublyLinkedList_sorted_insert", "Data", data, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_empty("DoublyLinkedList_sorted_insert", "Linked List", (void *) LL, DoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_not_sorted("DoublyLinkedList_sorted_insert", "Linked List", (void*) LL, DoublyLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
         )

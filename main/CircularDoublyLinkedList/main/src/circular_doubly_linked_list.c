@@ -8,14 +8,14 @@
 #define ASC 1
 #define DESC -1
 
-typedef struct _circular_linked_list {
+typedef struct _circular_doubly_linked_list {
     Node *begin;
     Node *end;
     size_t size;
     int sort_order;
-} CircularLinkedList;
+} CircularDoublyLinkedList;
 
-const size_t size_of_circular_doubly_linked_list_type = sizeof(CircularLinkedList);
+const size_t size_of_circular_doubly_linked_list_type = sizeof(CircularDoublyLinkedList);
 
 void _cll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node *slow = node;
@@ -115,264 +115,270 @@ Node *_cll_sorted_merge(Node *left, Node *right, int (*type_compare_function)(vo
     return result;
 }
 
-bool _cll_merge_sort(Node **CLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
-    Node *CLL_begin = *CLL_begin_ref, *left, *right;
+bool _cll_merge_sort(Node **CDLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
+    Node *CDLL_begin = *CDLL_begin_ref, *left, *right;
 
-    if (CLL_begin == NULL || Node_get_next(CLL_begin) == CLL_begin) {
+    if (CDLL_begin == NULL || Node_get_next(CDLL_begin) == CDLL_begin) {
         return false;
     }
 
     if (order != ASC && order != DESC) {
-        fprintf(stderr, "\nERROR: on function 'CircularLinkedList_sort_*'.\n");
+        fprintf(stderr, "\nERROR: on function 'CircularDoublyLinkedList_sort_*'.\n");
         fprintf(stderr, "ERROR: Invalid sort order.\n");
         return false;
     }
 
-    _cll_left_right_split(CLL_begin, &left, &right);
+    _cll_left_right_split(CDLL_begin, &left, &right);
     _cll_merge_sort(&left, type_compare_function, order);
     _cll_merge_sort(&right, type_compare_function, order);
 
-    *CLL_begin_ref = _cll_sorted_merge(left, right, type_compare_function, order);
+    *CDLL_begin_ref = _cll_sorted_merge(left, right, type_compare_function, order);
     return true;
 }
 
-Node *_get_node(const CircularLinkedList *CLL, size_t index) {
-    Node *node = CLL->begin;
+Node *_get_node(const CircularDoublyLinkedList *CDLL, size_t index) {
+    Node *node = CDLL->begin;
     for (size_t i = 0; i < index; i++) {
         node = Node_get_next(node);
     }
     return node;
 }
 
-CircularLinkedList *CircularLinkedList_create() {
-    CircularLinkedList *CLL = (CircularLinkedList *) calloc(1, sizeof(CircularLinkedList));
-    CLL->begin = NULL;
-    CLL->end = NULL;
-    CLL->size = 0;
-    CLL->sort_order = 0;
+CircularDoublyLinkedList *CircularDoublyLinkedList_create() {
+    CircularDoublyLinkedList *CDLL = (CircularDoublyLinkedList *) calloc(1, sizeof(CircularDoublyLinkedList));
+    CDLL->begin = NULL;
+    CDLL->end = NULL;
+    CDLL->size = 0;
+    CDLL->sort_order = 0;
 
-    return CLL;
+    return CDLL;
 }
 
-void CircularLinkedList_clean(CircularLinkedList *CLL) {
+bool CircularDoublyLinkedList_clean(CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_clean", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_clean", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
-    Node *node = CLL->begin;
-    while (node != CLL->end) {
+    ) return false;
+    Node *node = CDLL->begin;
+    while (node != CDLL->end) {
         Node *node_next = Node_get_next(node);
         Node_destroy(&node);
         node = node_next;
     }
     Node_destroy(&node);
-    CLL->begin = NULL;
-    CLL->end = NULL;
-    CLL->size = 0;
-    CLL->sort_order = UNSORTED;
+    CDLL->begin = NULL;
+    CDLL->end = NULL;
+    CDLL->size = 0;
+    CDLL->sort_order = UNSORTED;
+    return true;
 }
 
-void CircularLinkedList_destroy(CircularLinkedList **CLL_ref) {
-    CircularLinkedList *CLL = *CLL_ref;
+bool CircularDoublyLinkedList_destroy(CircularDoublyLinkedList **CDLL_ref) {
+    CircularDoublyLinkedList *CDLL = *CDLL_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("CircularLinkedList_destroy", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
-        )
-    ) return;
-    CircularLinkedList_clean(CLL);
-    free(CLL);
-    *CLL_ref = NULL;
-}
-
-bool CircularLinkedList_is_empty(void *CLL) {
-    if (anyThrows(
-            1,
-            ExceptionHandler_is_null("CircularLinkedList_is_empty", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
-        )
-    ) return true;
-    return ((CircularLinkedList *) CLL)->size == 0;
-}
-
-bool CircularLinkedList_is_sorted(void *CLL) {
-    if (anyThrows(
-            1,
-            ExceptionHandler_is_null("CircularLinkedList_is_sorted", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_destroy", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    return ((CircularLinkedList *) CLL)->sort_order != UNSORTED;
+    CircularDoublyLinkedList_clean(CDLL);
+    free(CDLL);
+    *CDLL_ref = NULL;
+    return true;
 }
 
-int CircularLinkedList_sort_order(const CircularLinkedList *CLL) {
+bool CircularDoublyLinkedList_is_empty(void *CDLL) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_empty", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR)
+        )
+    ) return true;
+    return ((CircularDoublyLinkedList *) CDLL)->size == 0;
+}
+
+bool CircularDoublyLinkedList_is_sorted(void *CDLL) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_sorted", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR)
+        )
+    ) return false;
+    return ((CircularDoublyLinkedList *) CDLL)->sort_order != UNSORTED;
+}
+
+int CircularDoublyLinkedList_sort_order(const CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_order", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_order", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_sort_order", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_sort_order", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return UNSORTED;
-    return CLL->sort_order;
+    return CDLL->sort_order;
 }
 
-void CircularLinkedList_print(const CircularLinkedList *CLL, void (*type_print_function)(void *data)) {
+void CircularDoublyLinkedList_print(const CircularDoublyLinkedList *CDLL, void (*type_print_function)(void *data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_print", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_print", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_print", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_print", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    Node *node = CLL->begin;
+    Node *node = CDLL->begin;
     printf("LAST NODE <- -> ");
     do {
         type_print_function(Node_get_data(node));
         printf(" <- -> ");
         node = Node_get_next(node);
-    } while (node != CLL->begin);
+    } while (node != CDLL->begin);
     puts("FIRST NODE");
 }
 
-void CircularLinkedList_add_first(CircularLinkedList *CLL, void *data) {
+bool CircularDoublyLinkedList_add_first(CircularDoublyLinkedList *CDLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_add_first", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("CircularLinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_add_first", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     Node *node = Node_create(data);
 
-    if (CircularLinkedList_is_empty(CLL)) {
-        CLL->end = node;
+    if (CircularDoublyLinkedList_is_empty(CDLL)) {
+        CDLL->end = node;
     } else {
-        Node_set_next(node, CLL->begin);
-        Node_set_prev(CLL->begin, node);
-        Node_set_prev(node, CLL->end);
-        Node_set_next(CLL->end, node);
+        Node_set_next(node, CDLL->begin);
+        Node_set_prev(CDLL->begin, node);
     }
-
-    CLL->begin = node;
-    CLL->size++;
-    CLL->sort_order = UNSORTED;
+    Node_set_prev(node, CDLL->end);
+    Node_set_next(CDLL->end, node);
+    CDLL->begin = node;
+    CDLL->size++;
+    CDLL->sort_order = UNSORTED;
+    return true;
 }
 
-void CircularLinkedList_add_last(CircularLinkedList *CLL, void *data) {
+bool CircularDoublyLinkedList_add_last(CircularDoublyLinkedList *CDLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_add_last", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("CircularLinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_add_last", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     Node *node = Node_create(data);
-    if (CircularLinkedList_is_empty((void *) CLL)) CLL->begin = node;
+    if (CircularDoublyLinkedList_is_empty((void *) CDLL)) CDLL->begin = node;
     else {
-        Node_set_next(CLL->end, node);
-        Node_set_prev(node, CLL->end);
-        Node_set_prev(CLL->begin, node);
-        Node_set_next(node, CLL->begin);
+        Node_set_next(CDLL->end, node);
+        Node_set_prev(node, CDLL->end);
     }
-    CLL->end = node;
-    CLL->size++;
-    CLL->sort_order = UNSORTED;
+    Node_set_prev(CDLL->begin, node);
+    Node_set_next(node, CDLL->begin);
+    CDLL->end = node;
+    CDLL->size++;
+    CDLL->sort_order = UNSORTED;
+    return true;
 }
 
-void _cll_sorted_insert_asc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (type_compare_function(Node_get_data(CLL->begin), data) <= 0) {
-        CircularLinkedList_add_first(CLL, data);
-        CLL->sort_order = ASC;
+void _cll_sorted_insert_asc(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (type_compare_function(Node_get_data(CDLL->begin), data) <= 0) {
+        CircularDoublyLinkedList_add_first(CDLL, data);
+        CDLL->sort_order = ASC;
         return;
-    } else if (type_compare_function(Node_get_data(CLL->end), data) >= 0) {
-        CircularLinkedList_add_last(CLL, data);
-        CLL->sort_order = ASC;
+    } else if (type_compare_function(Node_get_data(CDLL->end), data) >= 0) {
+        CircularDoublyLinkedList_add_last(CDLL, data);
+        CDLL->sort_order = ASC;
         return;
     } else {
-        Node *node = CLL->begin, *node_new = Node_create(data);
-        while (node != CLL->end && type_compare_function(data, Node_get_data(node)) < 0) {
+        Node *node = CDLL->begin, *node_new = Node_create(data);
+        while (node != CDLL->end && type_compare_function(data, Node_get_data(node)) < 0) {
             node = Node_get_next(node);
         }
         Node_set_next(node_new, node);
         Node_set_prev(node_new, Node_get_prev(node));
         Node_set_next(Node_get_prev(node), node_new);
         Node_set_prev(node, node_new);
-        CLL->size++;
+        CDLL->size++;
     }
 }
 
-void _cll_sorted_insert_desc(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
-    if (type_compare_function(Node_get_data(CLL->begin), data) >= 0) {
-        CircularLinkedList_add_first(CLL, data);
-        CLL->sort_order = DESC;
+void _cll_sorted_insert_desc(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+    if (type_compare_function(Node_get_data(CDLL->begin), data) >= 0) {
+        CircularDoublyLinkedList_add_first(CDLL, data);
+        CDLL->sort_order = DESC;
         return;
-    } else if (type_compare_function(Node_get_data(CLL->end), data) <= 0) {
-        CircularLinkedList_add_last(CLL, data);
-        CLL->sort_order = DESC;
+    } else if (type_compare_function(Node_get_data(CDLL->end), data) <= 0) {
+        CircularDoublyLinkedList_add_last(CDLL, data);
+        CDLL->sort_order = DESC;
     } else {
-        Node *node = CLL->begin, *node_new = Node_create(data);
-        while (node != CLL->end && type_compare_function(data, Node_get_data(node)) > 0) {
+        Node *node = CDLL->begin, *node_new = Node_create(data);
+        while (node != CDLL->end && type_compare_function(data, Node_get_data(node)) > 0) {
             node = Node_get_next(node);
         }
         Node_set_next(node_new, node);
         Node_set_prev(node_new, Node_get_prev(node));
         Node_set_next(Node_get_prev(node), node_new);
         Node_set_prev(node, node_new);
-        CLL->size++;
+        CDLL->size++;
     }
 }
 
-void *CircularLinkedList_remove_first(CircularLinkedList *CLL) {
+void *CircularDoublyLinkedList_remove_first(CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_first", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_first", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove_first", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_remove_first", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    Node *node = CLL->begin;
+    Node *node = CDLL->begin;
     void *data = Node_get_data(node);
-    if (CLL->begin == CLL->end) {
-        CLL->begin = CLL->end = NULL;
+    if (CDLL->begin == CDLL->end) {
+        CDLL->begin = CDLL->end = NULL;
     } else {
-        CLL->begin = Node_get_next(node);
-        Node_set_prev(CLL->begin, CLL->end);
-        Node_set_next(CLL->end, CLL->begin);
+        CDLL->begin = Node_get_next(node);
+        Node_set_prev(CDLL->begin, CDLL->end);
+        Node_set_next(CDLL->end, CDLL->begin);
     }
     free(node);
-    CLL->size--;
+    CDLL->size--;
     return data;
 }
 
-void *CircularLinkedList_remove_last(CircularLinkedList *CLL) {
+void *CircularDoublyLinkedList_remove_last(CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_last", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_last", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove_last", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_remove_last", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    Node *node = CLL->end;
+    Node *node = CDLL->end;
     void *data = Node_get_data(node);
-    if (CLL->begin == CLL->end) {
-        CLL->begin = CLL->end = NULL;
+    if (CDLL->begin == CDLL->end) {
+        CDLL->begin = CDLL->end = NULL;
     } else {
-        CLL->end = Node_get_prev(node);
+        CDLL->end = Node_get_prev(node);
         Node_set_next(Node_get_prev(node), Node_get_next(node));
         Node_set_prev(Node_get_next(node), Node_get_prev(node));
     }
     Node_destroy(&node);
-    CLL->size--;
+    CDLL->size--;
     return data;
 }
 
-void *CircularLinkedList_remove_at(CircularLinkedList *CLL, size_t index) {
+void *CircularDoublyLinkedList_remove_at(CircularDoublyLinkedList *CDLL, size_t index) {
     if (anyThrows(
-            3,
-            ExceptionHandler_is_null("CircularLinkedList_remove_at", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_at", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_remove_at", "Index", index, CLL->size-1, SUPPRESS_PRINT_ERROR)
+            2,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove_at", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_remove_at", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_out_of_bounds("CircularDoublyLinkedList_remove_at", "Index", index, CDLL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
     if (index == 0) {
-        return CircularLinkedList_remove_first(CLL);
+        return CircularDoublyLinkedList_remove_first(CDLL);
     }
-    if (index == CLL->size-1) {
-        return CircularLinkedList_remove_last(CLL);
+    if (index == CDLL->size-1) {
+        return CircularDoublyLinkedList_remove_last(CDLL);
     }
-    Node *node = CLL->begin;
+    Node *node = CDLL->begin;
     void *data;
     for (size_t i = 0; i < index; i++) {
         node = Node_get_next(node);
@@ -381,141 +387,153 @@ void *CircularLinkedList_remove_at(CircularLinkedList *CLL, size_t index) {
     Node_set_prev(Node_get_next(node), Node_get_prev(node));
     data = Node_get_data(node);
     Node_destroy(&node);
-    CLL->size--;
+    CDLL->size--;
     return data;
 }
 
-void CircularLinkedList_remove(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool CircularDoublyLinkedList_remove(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("CircularLinkedList_remove", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_remove", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            3,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_remove", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
 
-    Node *node = CLL->begin;
-    if (type_compare_function(Node_get_data(CLL->begin), data) == 0) {
-        if (CLL->begin == CLL->end) {
-            CLL->begin = CLL->end = NULL;
+    Node *node = CDLL->begin;
+    if (type_compare_function(Node_get_data(CDLL->begin), data) == 0) {
+        if (CDLL->begin == CDLL->end) {
+            CDLL->begin = CDLL->end = NULL;
         } else {
-            CLL->begin = Node_get_next(node);
-            Node_set_prev(CLL->begin, CLL->end);
-            Node_set_next(CLL->end, CLL->begin);
+            CDLL->begin = Node_get_next(node);
+            Node_set_prev(CDLL->begin, CDLL->end);
+            Node_set_next(CDLL->end, CDLL->begin);
         }
         Node_destroy(&node);
-        CLL->size--;
+        CDLL->size--;
+        return true;
     } else {
         node = Node_get_next(node);
-        while (node != CLL->begin && type_compare_function(Node_get_data(node), data) != 0) {
+        while (node != CDLL->begin && type_compare_function(Node_get_data(node), data) != 0) {
             node = Node_get_next(node);
         }
-        if (node != NULL) {
-            if (CLL->end == node) {
-                CLL->end = Node_get_prev(node);
+        if (node != CDLL->begin) {
+            if (CDLL->end == node) {
+                CDLL->end = Node_get_prev(node);
             }
             Node_set_next(Node_get_prev(node), Node_get_next(node));
             Node_set_prev(Node_get_next(node), Node_get_prev(node));
             Node_destroy(&node);
-            CLL->size--;
+            CDLL->size--;
+            return true;
         }
     }
+    return false;
 }
 
-void CircularLinkedList_remove_all(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+size_t CircularDoublyLinkedList_remove_all(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("CircularLinkedList_remove_all", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_remove_all", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            3,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove_all", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_remove_all", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_remove_all", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return 0;
 
-    Node *node = CLL->begin;
+    Node *node = CDLL->begin;
+    size_t count = 0;
     while (true) {
         Node *aux_node = Node_get_next(node);
         if (type_compare_function(Node_get_data(node), data) == 0) {
-            if (CLL->begin == node) {
-                if (CLL->begin == CLL->end) {
-                    CLL->begin = CLL->end = NULL;
+            if (CDLL->begin == node) {
+                if (CDLL->begin == CDLL->end) {
+                    CDLL->begin = CDLL->end = NULL;
                 } else {
-                    CLL->begin = Node_get_next(node);
-                    Node_set_prev(CLL->begin, CLL->end);
-                    Node_set_next(CLL->end, CLL->begin);
+                    CDLL->begin = Node_get_next(node);
+                    Node_set_prev(CDLL->begin, CDLL->end);
+                    Node_set_next(CDLL->end, CDLL->begin);
                 }
             } else {
-                if (node == CLL->end) {
-                    CLL->end = Node_get_prev(node);
+                if (node == CDLL->end) {
+                    CDLL->end = Node_get_prev(node);
                 }
                 Node_set_next(Node_get_prev(node), Node_get_next(node));
                 Node_set_prev(Node_get_next(node), Node_get_prev(node));
             }
             Node_destroy(&node);
             node = aux_node;
-            CLL->size--;
+            CDLL->size--;
+            count++;
         } else {
-            if (CircularLinkedList_contains(CLL, data)) {
+            if (CircularDoublyLinkedList_contains(CDLL, data)) {
                 node = aux_node;
             } else {
                 break;
             }
         }
     }
+    return count;
 }
 
-size_t CircularLinkedList_size(const CircularLinkedList *CLL) {
+size_t CircularDoublyLinkedList_size(const CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_size", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_size", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_size", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_size", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
-    return CLL->size;
+    return CDLL->size;
 }
 
-void *CircularLinkedList_first_element(const CircularLinkedList *CLL) {
+void *CircularDoublyLinkedList_first_element(const CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_first_element", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_first_element", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_first_element", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_first_element", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    return Node_get_data(CLL->begin);
+    return Node_get_data(CDLL->begin);
 }
 
-void *CircularLinkedList_last_element(const CircularLinkedList *CLL) {
+void *CircularDoublyLinkedList_last_element(const CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_last_element", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_last_element", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_last_element", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_last_element", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    return Node_get_data(CLL->end);
+    return Node_get_data(CDLL->end);
 }
 
-void *CircularLinkedList_get(const CircularLinkedList *CLL, size_t index) {
+void *CircularDoublyLinkedList_get(const CircularDoublyLinkedList *CDLL, size_t index) {
     if (anyThrows(
-            3,
-            ExceptionHandler_is_null("CircularLinkedList_get", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_get", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_get", "Index", index, CLL->size-1, SUPPRESS_PRINT_ERROR)
+            2,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_get", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_get", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_out_of_bounds("CircularDoublyLinkedList_get", "Index", index, CDLL->size-1, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    Node *node = _get_node(CLL, index);
+    Node *node = _get_node(CDLL, index);
     return Node_get_data(node);
 }
 
-int CircularLinkedList_count(const CircularLinkedList *CLL, void *data) {
+int CircularDoublyLinkedList_count(const CircularDoublyLinkedList *CDLL, void *data) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("CircularLinkedList_count", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_count", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            3,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_count", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_count", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_count", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
     int count = 0;
-    if (Node_get_data(CLL->begin) == data) {
+    if (Node_get_data(CDLL->begin) == data) {
         count++;
     }
-    Node *node = Node_get_next(CLL->begin);
-    while (node != CLL->begin) {
+    Node *node = Node_get_next(CDLL->begin);
+    while (node != CDLL->begin) {
         if (Node_get_data(node) == data) {
             count++;
         }
@@ -524,18 +542,19 @@ int CircularLinkedList_count(const CircularLinkedList *CLL, void *data) {
     return count;
 }
 
-bool CircularLinkedList_contains(const CircularLinkedList *CLL, void *data) {
+bool CircularDoublyLinkedList_contains(const CircularDoublyLinkedList *CDLL, void *data) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("CircularLinkedList_contains", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_contains", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            3,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_contains", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_contains", "Data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_contains", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    if (Node_get_data(CLL->begin) == data) {
+    if (Node_get_data(CDLL->begin) == data) {
         return true;
     }
-    Node *node = Node_get_next(CLL->begin);
-    while (node != CLL->begin) {
+    Node *node = Node_get_next(CDLL->begin);
+    while (node != CDLL->begin) {
         if (Node_get_data(node) == data) {
             return true;
         }
@@ -544,243 +563,244 @@ bool CircularLinkedList_contains(const CircularLinkedList *CLL, void *data) {
     return false;
 }
 
-void CircularLinkedList_insert_at(CircularLinkedList *CLL, void *data, size_t index) {
+bool CircularDoublyLinkedList_insert_at(CircularDoublyLinkedList *CDLL, void *data, size_t index) {
     if (anyThrows(
-            3,
-            ExceptionHandler_is_null("CircularLinkedList_insert_at", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_insert_at", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("CircularLinkedList_insert_at", "Index", index, CLL->size, SUPPRESS_PRINT_ERROR)
+            2,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_insert_at", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_insert_at", "Data", data, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_out_of_bounds("CircularDoublyLinkedList_insert_at", "Index", index, CDLL->size, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     if (index == 0) {
-        CircularLinkedList_add_first(CLL, data);
-    } else if (index == CLL->size) {
-        CircularLinkedList_add_last(CLL, data);
-    } else {
-        Node *node_new = Node_create(data);
-        Node *node = CLL->begin;
-        for (size_t i = 0; i < index-1; i++) {
-            node = Node_get_next(node);
-        }
-        Node_set_next(node_new, Node_get_next(node));
-        Node_set_prev(Node_get_next(node), node_new);
-        Node_set_next(node, node_new);
-        Node_set_prev(node_new, node);
-        CLL->size++;
-        CLL->sort_order = UNSORTED;
+        return CircularDoublyLinkedList_add_first(CDLL, data);
+    } else if (index == CDLL->size) {
+        return CircularDoublyLinkedList_add_last(CDLL, data);
     }
+    Node *node_new = Node_create(data);
+    Node *node = CDLL->begin;
+    for (size_t i = 0; i < index-1; i++) {
+        node = Node_get_next(node);
+    }
+    Node_set_next(node_new, Node_get_next(node));
+    Node_set_prev(Node_get_next(node), node_new);
+    Node_set_next(node, node_new);
+    Node_set_prev(node_new, node);
+    CDLL->size++;
+    CDLL->sort_order = UNSORTED;
+    return true;
 }
 
-CircularLinkedList *CircularLinkedList_clone(const CircularLinkedList *CLL) {
+CircularDoublyLinkedList *CircularDoublyLinkedList_clone(const CircularDoublyLinkedList *CDLL) {
     if (anyThrows(
-            1,
-            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR)
+            2,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_clone", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_clone", "Circular Doubly Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    CircularLinkedList *clone = CircularLinkedList_create();
-    Node *node = Node_get_next(CLL->begin);
-    CircularLinkedList_add_first(clone, Node_get_data(CLL->begin));
+    CircularDoublyLinkedList *clone = CircularDoublyLinkedList_create();
+    Node *node = Node_get_next(CDLL->begin);
+    CircularDoublyLinkedList_add_first(clone, Node_get_data(CDLL->begin));
     int count = 1;
-    while (node != CLL->begin) {
-        CircularLinkedList_insert_at(clone, Node_get_data(node), count);
+    while (node != CDLL->begin) {
+        CircularDoublyLinkedList_insert_at(clone, Node_get_data(node), count);
         count++;
         node = Node_get_next(node);
     }
-    clone->sort_order = CLL->sort_order;
+    clone->sort_order = CDLL->sort_order;
     return clone;
 }
 
-CircularLinkedList *CircularLinkedList_concat(CircularLinkedList *CLL1, CircularLinkedList *CLL2) {
+CircularDoublyLinkedList *CircularDoublyLinkedList_concat(CircularDoublyLinkedList *CDLL1, CircularDoublyLinkedList *CDLL2) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("CircularLinkedList_concat", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_concat", "Circular Linked List 1", (void *) CDLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_concat", "Circular Linked List 2", (void *) CDLL2, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    if (CircularLinkedList_is_empty((void *) CLL1)) {
-        return CircularLinkedList_clone(CLL2);
-    } else if (CircularLinkedList_is_empty((void *) CLL2)) {
-        return CircularLinkedList_clone(CLL1);
+    if (CircularDoublyLinkedList_is_empty((void *) CDLL1)) {
+        return CircularDoublyLinkedList_clone(CDLL2);
+    } else if (CircularDoublyLinkedList_is_empty((void *) CDLL2)) {
+        return CircularDoublyLinkedList_clone(CDLL1);
     }
-    CircularLinkedList *CLL_new = CircularLinkedList_clone(CLL1);
-    Node *node = CLL2->begin;
-    while (Node_get_next(node) != CLL2->begin) {
-        CircularLinkedList_add_last(CLL_new, Node_get_data(node));
+    CircularDoublyLinkedList *CDLL_new = CircularDoublyLinkedList_clone(CDLL1);
+    Node *node = CDLL2->begin;
+    while (Node_get_next(node) != CDLL2->begin) {
+        CircularDoublyLinkedList_add_last(CDLL_new, Node_get_data(node));
         node = Node_get_next(node);
     }
-    CircularLinkedList_add_last(CLL_new, Node_get_data(node));
-    CLL_new->sort_order = UNSORTED;
-    return CLL_new;
+    CircularDoublyLinkedList_add_last(CDLL_new, Node_get_data(node));
+    CDLL_new->sort_order = UNSORTED;
+    return CDLL_new;
 }
 
-CircularLinkedList *CircularLinkedList_reverse(CircularLinkedList *CLL) {
+bool CircularDoublyLinkedList_reverse(CircularDoublyLinkedList **CDLL_ref) {
+    CircularDoublyLinkedList *reversed = *CDLL_ref;
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_clone", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_clone", "Circular Linked List", (void *) reversed, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_clone", "Circular Linked List", (void *) reversed, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return NULL;
-    CircularLinkedList *CLL_new = CircularLinkedList_clone(CLL);
-    Node *node = CLL->begin, *node_prev = NULL, *node_next = NULL;
-    CLL_new->begin = CLL->end;
-    for (size_t i = 0; i < CLL->size; i++) {
-        node_next = Node_get_next(node);
-        node_prev = Node_get_prev(node);
-        Node_set_next(node, node_prev);
-        Node_set_prev(node, node_next);
-        node = node_next;
+    ) return false;
+    CircularDoublyLinkedList *clone = CircularDoublyLinkedList_clone(reversed);
+    Node *node = clone->begin, *next = NULL, *prev = NULL;
+    for (size_t i = 0; i < reversed->size; i++) {
+        next = Node_get_next(node);
+        prev = Node_get_prev(node);
+        Node_set_prev(node, next);
+        Node_set_next(node, prev);
+        node = Node_get_next(node);
     }
-    CLL_new->end = CLL->begin;
-    CLL_new->sort_order = (-1)*CLL->sort_order;
-    return CLL_new;
+    reversed->sort_order = (-1)*reversed->sort_order;
+    return true;
 }
 
-bool CircularLinkedList_is_equals_strict(const CircularLinkedList *CLL1, const CircularLinkedList *CLL2) {
+bool CircularDoublyLinkedList_is_equals_strict(const CircularDoublyLinkedList *CDLL1, const CircularDoublyLinkedList *CDLL2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("CircularLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CLL1, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CLL2, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
-        ) || CLL1->size != CLL2->size
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CDLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CDLL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_is_equals_strict", "Circular Linked List 1", (void *) CDLL1, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_is_equals_strict", "Circular Linked List 2", (void *) CDLL2, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+        ) || CDLL1->size != CDLL2->size
     ) return false;
-    Node *node1 = CLL1->begin;
-    Node *node2 = CLL2->begin;
-    for (size_t i = 0; i < CLL1->size; i++) {
+    Node *node1 = CDLL1->begin;
+    Node *node2 = CDLL2->begin;
+    for (size_t i = 0; i < CDLL1->size; i++) {
         if (Node_get_data(node1) != Node_get_data(node2)) {
             return false;
         }
         node1 = Node_get_next(node1);
         node2 = Node_get_next(node2);
     }
-    return CLL1->sort_order == CLL2->sort_order;
+    return CDLL1->sort_order == CDLL2->sort_order;
 }
 
-bool CircularLinkedList_is_equals(const CircularLinkedList *CLL1, const CircularLinkedList *CLL2, int (*type_compare_function)(void *data1, void *data2)) {
+bool CircularDoublyLinkedList_is_equals(const CircularDoublyLinkedList *CDLL1, const CircularDoublyLinkedList *CDLL2, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 1", (void *) CLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("CircularLinkedList_is_equals", "Circular Linked List 2", (void *) CLL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 1", (void *) CLL1, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_is_equals", "Circular Linked List 2", (void *) CLL2, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
-        ) || CLL1->size != CLL2->size
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_equals", "Circular Linked List 1", (void *) CDLL1, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_is_equals", "Circular Linked List 2", (void *) CDLL2, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_is_equals", "Circular Linked List 1", (void *) CDLL1, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_is_equals", "Circular Linked List 2", (void *) CDLL2, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+        ) || CDLL1->size != CDLL2->size
     ) return false;
-    Node *node1 = CLL1->begin;
-    Node *node2 = CLL2->begin;
-    for (size_t i = 0; i < CLL1->size; i++) {
+    Node *node1 = CDLL1->begin;
+    Node *node2 = CDLL2->begin;
+    for (size_t i = 0; i < CDLL1->size; i++) {
         if (type_compare_function(Node_get_data(node1), Node_get_data(node2)) != 0) {
             return false;
         }
         node1 = Node_get_next(node1);
         node2 = Node_get_next(node2);
     }
-    return CLL1->sort_order == CLL2->sort_order;
+    return CDLL1->sort_order == CDLL2->sort_order;
 }
 
-void CircularLinkedList_sort_asc(CircularLinkedList **CLL_ref, int (*type_compare_function)(void *data1, void *data2)) {
-    CircularLinkedList *CLL = *CLL_ref;
+bool CircularDoublyLinkedList_sort_asc(CircularDoublyLinkedList **CDLL_ref, int (*type_compare_function)(void *data1, void *data2)) {
+    CircularDoublyLinkedList *CDLL = *CDLL_ref;
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_asc", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_asc", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_sort_asc", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_sort_asc", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
 
-    if (CLL->sort_order == ASC) {
-        return;
-    } else if (CLL->sort_order == DESC) {
-        *CLL_ref = CircularLinkedList_reverse(CLL);
-    } else {
-        bool is_sorted = _cll_merge_sort(&CLL->begin, type_compare_function, ASC);
-        if (!is_sorted) return;
-        CLL->sort_order = ASC;
-        CLL->end = _get_node(CLL, CLL->size - 1);
-        Node_set_next(CLL->end, CLL->begin);
-        Node_set_prev(CLL->begin, CLL->end);
+    if (CDLL->sort_order == ASC) {
+        return true;
     }
+    bool is_sorted = _cll_merge_sort(&CDLL->begin, type_compare_function, ASC);
+    if (!is_sorted) return false;
+    CDLL->sort_order = ASC;
+    CDLL->end = _get_node(CDLL, CDLL->size - 1);
+    Node_set_next(CDLL->end, CDLL->begin);
+    Node_set_prev(CDLL->begin, CDLL->end);
+    return true;
 }
 
-void CircularLinkedList_sort_desc(CircularLinkedList **CLL_ref, int (*type_compare_function)(void *data1, void *data2)) {
-    CircularLinkedList *CLL = *CLL_ref;
+bool CircularDoublyLinkedList_sort_desc(CircularDoublyLinkedList **CDLL_ref, int (*type_compare_function)(void *data1, void *data2)) {
+    CircularDoublyLinkedList *CDLL = *CDLL_ref;
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_sort_desc", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_sort_desc", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_sort_desc", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_sort_desc", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
 
-    if (CLL->sort_order == DESC) {
-        return;
-    } else if (CLL->sort_order == ASC) {
-        *CLL_ref = CircularLinkedList_reverse(CLL);
-    } else {
-        bool is_sorted = _cll_merge_sort(&CLL->begin, type_compare_function, DESC);
-        if (!is_sorted) return;
-        CLL->sort_order = DESC;
-        CLL->end = _get_node(CLL, CLL->size-1);
-        Node_set_next(CLL->end, CLL->begin);
-        Node_set_prev(CLL->begin, CLL->end);
+    if (CDLL->sort_order == DESC) {
+        return true;
     }
+    bool is_sorted = _cll_merge_sort(&CDLL->begin, type_compare_function, DESC);
+    if (!is_sorted) return false;
+    CDLL->sort_order = DESC;
+    CDLL->end = _get_node(CDLL, CDLL->size-1);
+    Node_set_next(CDLL->end, CDLL->begin);
+    Node_set_prev(CDLL->begin, CDLL->end);
+    return true;
 }
 
-void CircularLinkedList_sorted_insert(CircularLinkedList *CLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool CircularDoublyLinkedList_sorted_insert(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
-            3,
-            ExceptionHandler_is_null("CircularLinkedList_sorted_insert", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_sorted_insert", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_not_sorted("CircularLinkedList_sorted_insert", "Circular Linked List", (void*) CLL, CircularLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
+            4,
+            ExceptionHandler_is_null("CircularDoublyLinkedList_sorted_insert", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("CircularDoublyLinkedList_sorted_insert", "data", data, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_sorted_insert", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_not_sorted("CircularDoublyLinkedList_sorted_insert", "Circular Linked List", (void*) CDLL, CircularDoublyLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
 
-    if (CLL->sort_order == ASC) {
-        _cll_sorted_insert_asc(CLL, data, type_compare_function);
+    if (CDLL->sort_order == ASC) {
+        _cll_sorted_insert_asc(CDLL, data, type_compare_function);
     } else {
-        _cll_sorted_insert_desc(CLL, data, type_compare_function);
+        _cll_sorted_insert_desc(CDLL, data, type_compare_function);
     }
+    return true;
 }
 
-void *CircularLinkedList_min(const CircularLinkedList *CLL, int (*type_compare_function)(void *data1, void *data2)) {
+void *CircularDoublyLinkedList_min(const CircularDoublyLinkedList *CDLL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_min", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_min", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_min", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_min", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
-    if (CircularLinkedList_is_sorted((void *) CLL)) {
-        if (CLL->sort_order == ASC) {
-            return Node_get_data(CLL->begin);
+    if (CircularDoublyLinkedList_is_sorted((void *) CDLL)) {
+        if (CDLL->sort_order == ASC) {
+            return Node_get_data(CDLL->begin);
         } else {
-            return Node_get_data(CLL->end);
+            return Node_get_data(CDLL->end);
         }
     }
 
-    CircularLinkedList *clone = CircularLinkedList_clone(CLL);
-    CircularLinkedList_sort_asc(&clone, type_compare_function);
+    CircularDoublyLinkedList *clone = CircularDoublyLinkedList_clone(CDLL);
+    CircularDoublyLinkedList_sort_asc(&clone, type_compare_function);
     void *data = Node_get_data(clone->begin);
-    CircularLinkedList_destroy(&clone);
+    CircularDoublyLinkedList_destroy(&clone);
     return data;
 }
 
-void *CircularLinkedList_max(const CircularLinkedList *CLL, int (*type_compare_function)(void *data1, void *data2)) {
+void *CircularDoublyLinkedList_max(const CircularDoublyLinkedList *CDLL, int (*type_compare_function)(void *data1, void *data2)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("CircularLinkedList_max", "Circular Linked List", (void *) CLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("CircularLinkedList_max", "Circular Linked List", (void *) CLL, CircularLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("CircularDoublyLinkedList_max", "Circular Linked List", (void *) CDLL, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("CircularDoublyLinkedList_max", "Circular Linked List", (void *) CDLL, CircularDoublyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
-    if (CircularLinkedList_is_sorted((void *) CLL)) {
-        if (CLL->sort_order == ASC) {
-            return Node_get_data(CLL->end);
+    if (CircularDoublyLinkedList_is_sorted((void *) CDLL)) {
+        if (CDLL->sort_order == ASC) {
+            return Node_get_data(CDLL->end);
         } else {
-            return Node_get_data(CLL->begin);
+            return Node_get_data(CDLL->begin);
         }
     }
 
-    CircularLinkedList *clone = CircularLinkedList_clone(CLL);
-    CircularLinkedList_sort_desc(&clone, type_compare_function);
+    CircularDoublyLinkedList *clone = CircularDoublyLinkedList_clone(CDLL);
+    CircularDoublyLinkedList_sort_desc(&clone, type_compare_function);
     void *data = Node_get_data(clone->begin);
-    CircularLinkedList_destroy(&clone);
+    CircularDoublyLinkedList_destroy(&clone);
     return data;
 }
