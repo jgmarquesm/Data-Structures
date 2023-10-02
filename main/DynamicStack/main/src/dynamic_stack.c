@@ -16,25 +16,27 @@ DynamicStack *DynamicStack_create() {
     return stack;
 }
 
-void DynamicStack_clean(DynamicStack *stack) {
+bool DynamicStack_clean(DynamicStack *stack) {
     if (anyThrows(
             1,
             ExceptionHandler_is_null("DynamicStack_clean", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_clean(stack->data);
+    return true;
 }
 
-void DynamicStack_destroy(DynamicStack **stack_ref) {
+bool DynamicStack_destroy(DynamicStack **stack_ref) {
     DynamicStack *stack = *stack_ref;
     if (anyThrows(
             1,
             ExceptionHandler_is_null("DynamicStack_destroy", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_destroy(&(stack->data));
     free(stack);
     *stack_ref = NULL;
+    return true;
 }
 
 bool DynamicStack_is_empty(void *stack) {
@@ -46,14 +48,15 @@ bool DynamicStack_is_empty(void *stack) {
     return DoublyLinkedList_is_empty(((DynamicStack *) stack)->data);
 }
 
-void DynamicStack_push(DynamicStack *stack, void *data) {
+bool DynamicStack_push(DynamicStack *stack, void *data) {
     if (anyThrows(
             2,
             ExceptionHandler_is_null("DynamicStack_push", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_null("DynamicStack_push", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     DoublyLinkedList_add_last(stack->data, data);
+    return true;
 }
 
 void *DynamicStack_peek(const DynamicStack *stack) {
@@ -67,14 +70,14 @@ void *DynamicStack_peek(const DynamicStack *stack) {
     return DoublyLinkedList_get(stack->data, top);
 }
 
-void DynamicStack_pop(DynamicStack *stack) {
+void *DynamicStack_pop(DynamicStack *stack) {
     if (anyThrows(
             2,
             ExceptionHandler_is_null("DynamicStack_pop", "DynamicStack", (void *) stack, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_empty("DynamicStack_pop", "DynamicStack", (void *) stack, DynamicStack_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
-    DoublyLinkedList_remove_last(stack->data);
+    ) return NULL;
+    return DoublyLinkedList_remove_last(stack->data);
 }
 
 void DynamicStack_print(const DynamicStack *stack, void (*type_print_function)(void * data)) {

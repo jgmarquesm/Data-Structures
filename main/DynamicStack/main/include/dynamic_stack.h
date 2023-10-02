@@ -30,12 +30,12 @@ DynamicStack *DynamicStack_create();
  * When calling this function it will clean all data from DynamicStack
  * @param S -> The DynamicStack to be clean
  */
-void DynamicStack_clean(DynamicStack *S);
+bool DynamicStack_clean(DynamicStack *S);
 /**
  * When calling this function, it will clean all data from DynamicStack and it will be deallocated
  * @param S_ref -> The pointer of the DynamicStack to be deleted
  */
-void DynamicStack_destroy(DynamicStack **S_ref);
+bool DynamicStack_destroy(DynamicStack **S_ref);
 /**
  *
  * @param S -> DynamicStack to check emptiness
@@ -47,7 +47,7 @@ bool DynamicStack_is_empty(void *S);
  * @param S -> DynamicStack to add data
  * @param data -> Data to be add in DynamicStack
  */
-void DynamicStack_push(DynamicStack *S, void *data);
+bool DynamicStack_push(DynamicStack *S, void *data);
 /**
  *
  * @param S -> DynamicStack to get data from top
@@ -58,7 +58,7 @@ void *DynamicStack_peek(const DynamicStack *S);
  * When calling this function it will remove data from top of the DynamicStack;
  * @param S -> DynamicStack to remove last element;
  */
-void DynamicStack_pop(DynamicStack *S);
+void *DynamicStack_pop(DynamicStack *S);
 /**
  *
  * @param S -> DynamicStack to be printed
