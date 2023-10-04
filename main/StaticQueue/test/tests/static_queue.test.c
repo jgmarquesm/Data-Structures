@@ -2,156 +2,278 @@
 #include "../../main/include/static_queue.h"
 
 #define CAPACITY 5
-#define SIZE_OF_TYPE sizeof(int)
+#define TYPE int
+#define SIZE_OF_TYPE sizeof(TYPE)
+#define NEW_QUEUE StaticQueue_create(CAPACITY, SIZE_OF_TYPE)
 
 void setUp(){}
 
 void tearDown(){}
 
-int _convert_to_int(void *data){
-    return *((int *)data);
+void test_StaticQueue_create() {
+    StaticQueue *queue = NULL;
+    TEST_ASSERT_NULL(queue);
+    queue = NEW_QUEUE;
+    TEST_ASSERT_NOT_NULL(queue);
 }
 
-void _print_int(void *data){
-    printf("%d", _convert_to_int(data));
+void test_StaticQueue_clean_1() {
+    TEST_MESSAGE("Case --> 1 Queue != NULL:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    bool cleaned = StaticQueue_clean(queue);
+    TEST_ASSERT_TRUE(cleaned);
 }
 
-int _compare_int(void *data1, void *data2){
-    int d1 = _convert_to_int(data1), d2 = _convert_to_int(data2);
-    return d2 - d1;
+void test_StaticQueue_clean_2() {
+    TEST_MESSAGE("Case --> 2 Queue == NULL:");
+    StaticQueue *queue = NULL;
+
+    bool cleaned = StaticQueue_clean(queue);
+    TEST_ASSERT_FALSE(cleaned);
 }
 
-// StaticQueue_create(capacity, size_of_type)
-void test_1() {
-    TEST_MESSAGE("Test: StaticQueue_create(capacity, size_of_type): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    bool is_empty = StaticQueue_is_empty(SQ);
-    TEST_ASSERT_EQUAL(1, is_empty);
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(SQ));
+void test_StaticQueue_destroy_1() {
+    TEST_MESSAGE("Case --> 1 Queue != NULL:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    TEST_ASSERT_NOT_NULL(queue);
+    bool destroyed = StaticQueue_destroy(&queue);
+    TEST_ASSERT_TRUE(destroyed);
+    TEST_ASSERT_NULL(queue);
 }
 
-// StaticQueue_clean(SQ)
-void test_2() {
-    TEST_MESSAGE("Test: StaticQueue_clean(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99;
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
+void test_StaticQueue_destroy_2() {
+    TEST_MESSAGE("Case --> 2 Queue == NULL:");
+    StaticQueue *queue = NULL;
 
-    StaticQueue_clean(SQ);
-    TEST_ASSERT_EQUAL(1, StaticQueue_is_empty(SQ));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(SQ));
+    bool destroyed = StaticQueue_destroy(&queue);
+    TEST_ASSERT_FALSE(destroyed);
 }
 
-// StaticQueue_destroy(&SQ)
-void test_3() {
-    TEST_MESSAGE("Test: StaticQueue_destroy(&SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99;
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
+void test_StaticQueue_is_empty_1() {
+    TEST_MESSAGE("Case 1 --> Non Empty StaticQueue:");
+    TYPE d1, d2;
+    StaticQueue *queue = NEW_QUEUE;
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d2);
 
-    StaticQueue_destroy(&SQ);
-    TEST_ASSERT_EQUAL(NULL, SQ);
+    TEST_ASSERT_FALSE(StaticQueue_is_empty(queue));
+    TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
 }
 
-// StaticQueue_is_empty(SQ)
-void test_4() {
-    TEST_MESSAGE("Test: StaticQueue_is_empty(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99;
-    TEST_ASSERT_EQUAL(1, StaticQueue_is_empty(SQ));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(SQ));
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    TEST_ASSERT_EQUAL(0, StaticQueue_is_empty(SQ));
-    TEST_ASSERT_EQUAL(2, StaticQueue_size(SQ));
+void test_StaticQueue_is_empty_2() {
+    TEST_MESSAGE("Case 2 --> Empty StaticQueue:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    TEST_ASSERT_TRUE(StaticQueue_is_empty(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
 }
 
-// StaticQueue_is_full(SQ)
-void test_5() {
-    TEST_MESSAGE("Test: StaticQueue_is_full(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99;
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    TEST_ASSERT_EQUAL(0, StaticQueue_is_full(SQ));
-    TEST_ASSERT_EQUAL(1, CAPACITY != StaticQueue_size(SQ));
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data2);
-    TEST_ASSERT_EQUAL(1, StaticQueue_is_full(SQ));
-    TEST_ASSERT_EQUAL(CAPACITY, StaticQueue_size(SQ));
+void test_StaticQueue_is_empty_3() {
+    TEST_MESSAGE("Case 3 --> NULL StaticQueue:");
+    StaticQueue *queue = NULL;
+
+    TEST_ASSERT_TRUE(StaticQueue_is_empty(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
 }
 
-// StaticQueue_enqueue(SQ, data)
-void test_6() {
-    TEST_MESSAGE("Test: StaticQueue_enqueue(SQ, data): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99;
-    StaticQueue_enqueue(SQ, &data1);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(StaticQueue_peek(SQ)));
-    StaticQueue_enqueue(SQ, &data2);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(StaticQueue_peek(SQ)));
+void test_StaticQueue_is_full_1() {
+    TEST_MESSAGE("Case 1 --> Non Full StaticQueue:");
+    TYPE d1, d2;
+    StaticQueue *queue = NEW_QUEUE;
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d2);
+
+    TEST_ASSERT_FALSE(StaticQueue_is_full(queue));
+    TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
 }
 
-// StaticQueue_peek(SQ)
-void test_7() {
-    TEST_MESSAGE("Test: StaticQueue_peek(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42, data2 = 99, data3 = 43, data4 = 100;
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    StaticQueue_enqueue(SQ, &data3);
-    StaticQueue_enqueue(SQ, &data4);
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(StaticQueue_peek(SQ)));
+void test_StaticQueue_is_full_2() {
+    TEST_MESSAGE("Case 2 --> Full StaticQueue:");
+    TYPE d1, d2;
+    StaticQueue *queue = NEW_QUEUE;
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d2);
+    StaticQueue_enqueue(queue, &d2);
+    StaticQueue_enqueue(queue, &d2);
+
+    TEST_ASSERT_TRUE(StaticQueue_is_full(queue));
+    TEST_ASSERT_EQUAL(5, StaticQueue_size(queue));
 }
 
-// StaticQueue_dequeue(SQ)
-void test_8() {
-    TEST_MESSAGE("Test: StaticQueue_dequeue(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data0 = 42, data1 = 99, data2 = 55;
-    StaticQueue_enqueue(SQ, &data0);
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
+void test_StaticQueue_is_full_3() {
+    TEST_MESSAGE("Case 3 --> Empty StaticQueue:");
+    StaticQueue *queue = NEW_QUEUE;
 
-    TEST_ASSERT_EQUAL(3, StaticQueue_size(SQ));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data0), _convert_to_int(StaticQueue_peek(SQ)));
-
-    StaticQueue_dequeue(SQ);
-    TEST_ASSERT_EQUAL(2, StaticQueue_size(SQ));
-    TEST_ASSERT_EQUAL(_convert_to_int(&data1), _convert_to_int(StaticQueue_peek(SQ)));
+    TEST_ASSERT_FALSE(StaticQueue_is_full(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
 }
 
-// StaticQueue_size(SQ)
-void test_9() {
-    TEST_MESSAGE("Test: StaticQueue_size(SQ): ");
-    StaticQueue *SQ = StaticQueue_create(CAPACITY, SIZE_OF_TYPE);
-    int data1 = 42;
-    int data2 = 99;
-    StaticQueue_enqueue(SQ, &data1);
-    StaticQueue_enqueue(SQ, &data2);
-    TEST_ASSERT_EQUAL(2, StaticQueue_size(SQ));
+void test_StaticQueue_is_full_4() {
+    TEST_MESSAGE("Case 4 --> NULL StaticQueue:");
+    StaticQueue *queue = NULL;
+
+    TEST_ASSERT_FALSE(StaticQueue_is_full(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
 }
 
+void test_StaticQueue_enqueue_1() {
+    TEST_MESSAGE("Case 1 --> Non NULL StaticQueue and Non NULL Data:");
+    TYPE d1 = 1, d2 = 2;
+    StaticQueue *queue = NEW_QUEUE;
 
-int main(){
+    bool enqueued = StaticQueue_enqueue(queue, &d1);
+    TEST_ASSERT_TRUE(enqueued);
+    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(1, StaticQueue_size(queue));
+
+    bool enqueued_2 = StaticQueue_enqueue(queue, &d2);
+    TEST_ASSERT_TRUE(enqueued_2);
+    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
+}
+
+void test_StaticQueue_enqueue_2() {
+    TEST_MESSAGE("Case 2 --> NULL StaticQueue:");
+    TYPE d1;
+    StaticQueue *queue = NULL;
+
+    bool enqueued = StaticQueue_enqueue(queue, &d1);
+    TEST_ASSERT_FALSE(enqueued);
+    TEST_ASSERT_NULL(StaticQueue_peek(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+}
+
+void test_StaticQueue_enqueue_3() {
+    TEST_MESSAGE("Case 3 --> NULL Data:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    bool enqueued = StaticQueue_enqueue(queue, NULL);
+    TEST_ASSERT_FALSE(enqueued);
+    TEST_ASSERT_NULL(StaticQueue_peek(queue));
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+}
+
+void test_StaticQueue_peek_1() {
+    TEST_MESSAGE("Case 1 --> Non NULL Non Empty StaticQueue:");
+    TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4;
+    StaticQueue *queue = NEW_QUEUE;
+
+    StaticQueue_enqueue(queue, &d1);
+    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(1, StaticQueue_size(queue));
+
+    StaticQueue_enqueue(queue, &d2);
+    StaticQueue_enqueue(queue, &d3);
+    StaticQueue_enqueue(queue, &d4);
+    TEST_ASSERT_EQUAL(4, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+}
+
+void test_StaticQueue_peek_2() {
+    TEST_MESSAGE("Case 2 --> NULL StaticQueue:");
+    StaticQueue *queue = NULL;
+
+    TEST_ASSERT_NULL(StaticQueue_peek(queue));
+}
+
+void test_StaticQueue_peek_3() {
+    TEST_MESSAGE("Case 3 --> Empty StaticQueue:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    TEST_ASSERT_NULL(StaticQueue_peek(queue));
+}
+
+void test_StaticQueue_dequeue_1() {
+    TEST_MESSAGE("Case 1 --> Non NULL Non Empty StaticQueue:");
+    TYPE d1 = 1, d2 = 2, d3 = 3;
+    StaticQueue *queue = NEW_QUEUE;
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d2);
+    StaticQueue_enqueue(queue, &d3);
+
+    TEST_ASSERT_EQUAL(3, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+
+    bool dequeued = StaticQueue_dequeue(queue);
+    TEST_ASSERT_TRUE(dequeued);
+    TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(d2, *((int *) StaticQueue_peek(queue)));
+}
+
+void test_StaticQueue_dequeue_2() {
+    TEST_MESSAGE("Case 2 --> NULL StaticQueue:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    bool dequeued = StaticQueue_dequeue(queue);
+    TEST_ASSERT_FALSE(dequeued);
+}
+
+void test_StaticQueue_dequeue_3() {
+    TEST_MESSAGE("Case 3 --> Empty StaticQueue:");
+    StaticQueue *queue = NEW_QUEUE;
+
+    bool dequeued = StaticQueue_dequeue(queue);
+    TEST_ASSERT_FALSE(dequeued);
+}
+
+void test_StaticQueue_size_1() {
+    TEST_MESSAGE("Case 1 --> Non NULL Non Empty StaticQueue:");
+    TYPE d1, d2, d3, d4;
+    StaticQueue *queue = NEW_QUEUE;
+
+    StaticQueue_enqueue(queue, &d1);
+    StaticQueue_enqueue(queue, &d2);
+    StaticQueue_enqueue(queue, &d3);
+    StaticQueue_enqueue(queue, &d4);
+    TEST_ASSERT_EQUAL(4, StaticQueue_size(queue));
+
+    StaticQueue_dequeue(queue);
+    StaticQueue_dequeue(queue);
+    TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
+}
+
+void test_StaticQueue_size_2() {
+    TEST_MESSAGE("Case 2 --> NULL StaticQueue:");
+    StaticQueue *queue = NULL;
+
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+}
+
+void test_StaticQueue_size_3() {
+    TEST_MESSAGE("Case 3 --> Empty StaticQueue:");
+    StaticQueue *queue = NULL;
+
+    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+}
+
+int main() {
     UNITY_BEGIN();
-    RUN_TEST(test_1);
-    RUN_TEST(test_2);
-    RUN_TEST(test_3);
-    RUN_TEST(test_4);
-    RUN_TEST(test_5);
-    RUN_TEST(test_6);
-    RUN_TEST(test_7);
-    RUN_TEST(test_8);
-    RUN_TEST(test_9);
+    RUN_TEST(test_StaticQueue_create);
+    RUN_TEST(test_StaticQueue_clean_1);
+    RUN_TEST(test_StaticQueue_clean_2);
+    RUN_TEST(test_StaticQueue_destroy_1);
+    RUN_TEST(test_StaticQueue_destroy_2);
+    RUN_TEST(test_StaticQueue_is_empty_1);
+    RUN_TEST(test_StaticQueue_is_empty_2);
+    RUN_TEST(test_StaticQueue_is_empty_3);
+    RUN_TEST(test_StaticQueue_is_full_1);
+    RUN_TEST(test_StaticQueue_is_full_2);
+    RUN_TEST(test_StaticQueue_is_full_3);
+    RUN_TEST(test_StaticQueue_is_full_4);
+    RUN_TEST(test_StaticQueue_enqueue_1);
+    RUN_TEST(test_StaticQueue_enqueue_2);
+    RUN_TEST(test_StaticQueue_enqueue_3);
+    RUN_TEST(test_StaticQueue_peek_1);
+    RUN_TEST(test_StaticQueue_peek_2);
+    RUN_TEST(test_StaticQueue_peek_3);
+    RUN_TEST(test_StaticQueue_dequeue_1);
+    RUN_TEST(test_StaticQueue_dequeue_2);
+    RUN_TEST(test_StaticQueue_dequeue_3);
+    RUN_TEST(test_StaticQueue_size_1);
+    RUN_TEST(test_StaticQueue_size_2);
+    RUN_TEST(test_StaticQueue_size_3);
     return UNITY_END();
 }
