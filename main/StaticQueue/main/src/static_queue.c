@@ -16,104 +16,107 @@ StaticQueue *StaticQueue_create(const long capacity, unsigned int size_of_type) 
             ExceptionHandler_is_non_positive("StaticQueue_create", "Capacity", capacity, true, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    StaticQueue *staticQueue = (StaticQueue *) calloc(1, sizeof(StaticQueue));
-    staticQueue->data = Array_create(capacity, size_of_type);
-    return staticQueue;
+    StaticQueue *queue = (StaticQueue *) calloc(1, sizeof(StaticQueue));
+    queue->data = Array_create(capacity, size_of_type);
+    return queue;
 }
 
-void StaticQueue_clean(StaticQueue *staticQueue) {
+bool StaticQueue_clean(StaticQueue *queue) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("StaticQueue_clean", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR)
-        )
-    ) return;
-    Array_clean(staticQueue->data);
-}
-
-void StaticQueue_destroy(StaticQueue **staticQueue_ref) {
-    StaticQueue *staticQueue = *staticQueue_ref;
-    if (anyThrows(
-            1,
-            ExceptionHandler_is_null("StaticQueue_destroy", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR)
-        )
-    ) return;
-    Array_delete(&(staticQueue->data));
-    free(staticQueue);
-    *staticQueue_ref = NULL;
-}
-
-bool StaticQueue_is_empty(void *staticQueue) {
-    if (anyThrows(
-            1,
-            ExceptionHandler_is_null("StaticQueue_is_empty", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR)
-        )
-    ) return true;
-    return Array_is_empty(((StaticQueue *) staticQueue)->data);
-}
-
-bool StaticQueue_is_full(void *staticQueue) {
-    if (anyThrows(
-            1,
-            ExceptionHandler_is_null("StaticQueue_is_full", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("StaticQueue_clean", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
         )
     ) return false;
-    return Array_is_full(((StaticQueue *) staticQueue)->data);
+    Array_clean(queue->data);
+    return true;
 }
 
-void StaticQueue_enqueue(StaticQueue *staticQueue, void *data) {
+bool StaticQueue_destroy(StaticQueue **queue_ref) {
+    StaticQueue *queue = *queue_ref;
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticQueue_destroy", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+        )
+    ) return false;
+    Array_delete(&(queue->data));
+    free(queue);
+    *queue_ref = NULL;
+    return true;
+}
+
+bool StaticQueue_is_empty(void *queue) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticQueue_is_empty", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+        )
+    ) return true;
+    return Array_is_empty(((StaticQueue *) queue)->data);
+}
+
+bool StaticQueue_is_full(void *queue) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("StaticQueue_is_full", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR)
+        )
+    ) return false;
+    return Array_is_full(((StaticQueue *) queue)->data);
+}
+
+bool StaticQueue_enqueue(StaticQueue *queue, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("StaticQueue_enqueue", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("StaticQueue_enqueue", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
             ExceptionHandler_is_null("StaticQueue_enqueue", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
-    Array_add_last(staticQueue->data, data);
+    ) return false;
+    Array_add_last(queue->data, data);
+    return true;
 }
 
-void *StaticQueue_peek(const StaticQueue *staticQueue) {
+void *StaticQueue_peek(const StaticQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("StaticQueue_peek", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("StaticQueue_peek", "Data", (void *) staticQueue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("StaticQueue_peek", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("StaticQueue_peek", "Data", (void *) queue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
-    return Array_get_at(staticQueue->data, 0);
+    return Array_first_element(queue->data);
 }
 
-void StaticQueue_dequeue(StaticQueue *staticQueue) {
+bool StaticQueue_dequeue(StaticQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("StaticQueue_dequeue", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("StaticQueue_dequeue", "Data", (void *) staticQueue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("StaticQueue_dequeue", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("StaticQueue_dequeue", "Data", (void *) queue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
-    Array_remove_first(staticQueue->data);
+    ) return false;
+    return Array_remove_first(queue->data);
 }
 
-void StaticQueue_print(const StaticQueue *staticQueue, void (*type_print_function)(void * data)) {
+void StaticQueue_print(const StaticQueue *queue, void (*type_print_function)(void * data)) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("StaticQueue_print", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("StaticQueue_print", "Data", (void *) staticQueue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("StaticQueue_print", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("StaticQueue_print", "Data", (void *) queue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return;
-    printf("\nCapacity: %ld. Top: %ld.\n", Array_capacity(staticQueue->data), Array_size(staticQueue->data) - 1);
+    printf("\nCapacity: %ld. Top: %ld.\n", Array_capacity(queue->data), Array_size(queue->data) - 1);
     printf("--(");
-    long size = Array_size(staticQueue->data);
+    long size = Array_size(queue->data);
     for(long i = 0; i < size - 1; i++) {
-        type_print_function(Array_get_at(staticQueue->data, i));
+        type_print_function(Array_get_at(queue->data, i));
         printf(", ");
     }
-    type_print_function(Array_get_at(staticQueue->data, Array_size(staticQueue->data) - 1));
+    type_print_function(Array_get_at(queue->data, Array_size(queue->data) - 1));
     puts(")--");
 }
 
-long StaticQueue_size(const StaticQueue *staticQueue) {
+long StaticQueue_size(const StaticQueue *queue) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("StaticQueue_size", "Static Queue", (void *) staticQueue, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("StaticQueue_size", "Data", (void *) staticQueue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("StaticQueue_size", "Static Queue", (void *) queue, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_empty("StaticQueue_size", "Data", (void *) queue, StaticQueue_is_empty, SUPPRESS_PRINT_ERROR)
         )
     ) return 0;
-    return Array_size(staticQueue->data);
+    return Array_size(queue->data);
 }

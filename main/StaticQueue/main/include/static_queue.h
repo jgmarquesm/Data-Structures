@@ -32,12 +32,12 @@ StaticQueue *StaticQueue_create(const long capacity, unsigned int size_of_type);
  * When calling this function it will clean all data from Queue
  * @param staticQueue -> The Queue to be clean
  */
-void StaticQueue_clean(StaticQueue *staticQueue);
+bool StaticQueue_clean(StaticQueue *staticQueue);
 /**
  * When calling this function, it will clean all data from Static Queue and it will be deallocated
  * @param staticQueue_ref -> The pointer of the Static Queue to be deleted
  */
-void StaticQueue_destroy(StaticQueue **staticQueue_ref);
+bool StaticQueue_destroy(StaticQueue **staticQueue_ref);
 /**
  *
  * @param staticQueue -> Queue to check emptiness
@@ -55,7 +55,7 @@ bool StaticQueue_is_full(void *staticQueue);
  * @param staticQueue -> Static Queue to add data
  * @param data -> Data to be add in Static Queue
  */
-void StaticQueue_enqueue(StaticQueue *staticQueue, void *data);
+bool StaticQueue_enqueue(StaticQueue *staticQueue, void *data);
 /**
  *
  * @param staticQueue -> Static Queue to get data from head
@@ -66,7 +66,7 @@ void *StaticQueue_peek(const StaticQueue *staticQueue);
  * When calling this function it will remove data from head of the Static Queue;
  * @param staticQueue -> Static Queue to remove last element;
  */
-void StaticQueue_dequeue(StaticQueue *staticQueue);
+bool StaticQueue_dequeue(StaticQueue *staticQueue);
 /**
  *
  * @param staticQueue -> Static Queue to be printed
