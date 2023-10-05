@@ -1,20 +1,44 @@
-#ifndef DOUBLY_LINKED_LIST_H
-#define DOUBLY_LINKED_LIST_H
+/**
+ * @author João Gabriel M. Mendes
+ * @date 2023
+ */
+
+#ifndef ARRAY_H
+#define ARRAY_H
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
 #include <stddef.h>
 
+#define __UNSORTED__ 0
+#define __ASC__ 1
+#define __DESC__ -1
+#define __DEFAULT_LONG__ -1
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_ARRAY_TYPE size_of_array_type
 
 extern const size_t size_of_array_type;
 
 /**
+ * @remark
  * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
+ *
  * 1 - Type printing function: To print data correctly.\n
+ * @example void (*type_print_function)(void *data)
+ *
  * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
- * 3 - Type comparison function: To compare correctly data.
+ * @example type (*type_convert_function)(void * data)
+ *
+ * 3 - Type comparison function: To compare correctly data.\n
+ * @example __TYPE_COMPARE_FUNCTION_SIGNATURE__
  */
 typedef struct _array Array;
 /**
@@ -116,20 +140,20 @@ bool Array_remove_at(Array *array, const long index);
  * @param data -> Element to be removed
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_remove(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will remove all occurs of the element in the Array;
  * @param array -> Array to remove the element;
  * @param data -> Element to be removed;
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_remove_all(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Array_print(Array *array, void (*type_print_function)(void * data));
+void Array_print(Array *array, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will insert data into index-th Array index
  * @param array -> Array add data
@@ -184,7 +208,7 @@ Array *Array_reverse(Array *array);
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if Array contains the data, false otherwise
  */
-bool Array_contains(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_contains(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to count number os occurrences of data
@@ -192,7 +216,7 @@ bool Array_contains(Array *array, void *data, int (*type_compare_function)(void 
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The number of occurrences of data in the Array
  */
-long Array_count(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_count(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array1 -> First Array to check equality
@@ -200,7 +224,7 @@ long Array_count(Array *array, void *data, int (*type_compare_function)(void *da
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if array1 == array2;\n false if array1 != array2
  */
-bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2));
+bool Array_is_equals(Array *array1, Array *array2, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to find index of data
@@ -208,7 +232,7 @@ bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return First index of Data in Array, if does not exist it will return -1
  */
-long Array_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_index_of(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to find index of data
@@ -216,39 +240,39 @@ long Array_index_of(Array *array, void *data, int (*type_compare_function)(void 
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return Last index of Data in Array, if does not exist it will return -1
  */
-long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Array_last_index_of(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the Array in ascending order
  * @param array -> Array to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sort_asc(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the Array in descending order
  * @param array -> Array to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sort_desc(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will add data to Array following the order sort
  * @param array -> Array to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Array_sorted_insert(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to get the smaller data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The smaller data in Array
  */
-void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *data2));
+void *Array_min(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param array -> Array to get the bigger data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The bigger data in Array
  */
-void *Array_max(Array *array, int (*type_compare_function)(void *data1, void *data2));
+void *Array_max(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 
 #endif

@@ -20,6 +20,8 @@ DS = array
 TEST_DS = array.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
+ADD_DEP = /add_deps.sh
+GET_DEPS = /get_deps.sh
 hp_0 = exception_handler
 #--ADD_NEW_hp
 #--ADD_NEW_ds
@@ -66,10 +68,10 @@ run_tests: clean_all pack compile_test
 	make clean_all
 
 add_deps:
-	$(DEPS)/add_deps.sh
+	$(DEPS)$(ADD_DEP)
 
 get_deps:
-	$(DEPS)/get_deps.sh
+	$(DEPS)$(GET_DEPS)
 
 clean_all: clean_libs clean_apps clean_test clean_external
 
