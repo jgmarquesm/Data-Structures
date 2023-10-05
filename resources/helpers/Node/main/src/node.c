@@ -12,6 +12,11 @@ typedef struct _node {
 const size_t size_of_node_type = sizeof(Node);
 
 Node *Node_create(void *data) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Node_get_data", "Data", data, SUPPRESS_PRINT_ERROR)
+        )
+    ) return NULL;
     Node *node = (Node *) calloc(1, sizeof(Node));
     node->data = data;
     node->prev = NULL;
@@ -19,84 +24,80 @@ Node *Node_create(void *data) {
     return node;
 }
 
-void Node_destroy(Node **node_ref) {
+bool Node_destroy(Node **node_ref) {
     Node *node = *node_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_destroy", "node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_destroy", "Node", node, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return;
-    }
+    ) return false;
     free(node);
     *node_ref = NULL;
+    return true;
 }
 
 Node *Node_get_next(Node* node) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Node_get_next", "node", node, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Node_get_next", "node.next", node->next, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Node_get_next", "Node", node, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_null("Node_get_next", "Node::Next", node->next, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return NULL;
-    }
+    ) return NULL;
     return node->next;
 }
 
-void Node_set_next(Node *node, Node *next) {
+bool Node_set_next(Node *node, Node *next) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_next", "node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_set_next", "Node", node, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return;
-    }
+    ) return false;
     node->next = next;
+    return true;
 }
 
 Node *Node_get_prev(Node* node) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Node_get_prev", "node", node, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Node_get_prev", "node.prev", node->prev, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Node_get_prev", "Node", node, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_null("Node_get_prev", "Node::Prev", node->prev, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return NULL;
-    }
+    ) return NULL;
     return node->prev;
 }
 
-void Node_set_prev(Node *node, Node *prev) {
+bool Node_set_prev(Node *node, Node *prev) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_prev", "node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_set_prev", "Node", node, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return;
-    }
+    ) return false;
     node->prev = prev;
+    return true;
 }
 
 void *Node_get_data(Node* node) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Node_get_data", "node", node, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Node_get_data", "node.data", node->data, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Node_get_data", "Node", node, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return NULL;
-    }
+    ) return NULL;
     return node->data;
 }
 
-void Node_set_data(Node *node, void *data) {
+bool Node_set_data(Node *node, void *data) {
     if (anyThrows(
-            1,
-            ExceptionHandler_is_null("Node_set_data", "node", node, SUPPRESS_PRINT_ERROR)
+            2,
+            ExceptionHandler_is_null("Node_set_data", "Node", node, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Node_set_data", "Data", data, SUPPRESS_PRINT_ERROR)
         )
-    ) {
-        return;
-    }
+    ) return false;
     node->data = data;
+    return true;
 }
