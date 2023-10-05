@@ -11,80 +11,99 @@ typedef struct _vertex {
 const size_t size_of_vertex_type = sizeof(Vertex);
 
 Vertex *Vertex_create(void *data) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Vertex_create", "Data", data, SUPPRESS_PRINT_ERROR)
+        )
+    ) return NULL;
     Vertex *vertex = (Vertex *) calloc(1, sizeof(Vertex));
     vertex->data = data;
     vertex->valency = 0;
     return vertex;
 }
 
-void Vertex_destroy(Vertex **vertex_ref) {
+bool Vertex_destroy(Vertex **vertex_ref) {
     Vertex *vertex = *vertex_ref;
     if (anyThrows(
             1,
             ExceptionHandler_is_null("Vertex_destroy", "vertex", vertex, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
 
     free(vertex);
     *vertex_ref = NULL;
+    return true;
 }
 
 void *Vertex_get_data(Vertex *vertex) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Vertex_get_data", "vertex", vertex, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Vertex_get_data", "vertex.data", vertex->data, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Vertex_get_data", "Vertex", vertex, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_null("Vertex_get_data", "Vertex::Data", vertex->data, SUPPRESS_PRINT_ERROR)
         )
     ) return NULL;
 
     return vertex->data;
 }
 
-void Vertex_set_data(Vertex *vertex, void *new_data) {
+bool Vertex_set_data(Vertex *vertex, void *new_data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Vertex_set_data", "vertex", vertex, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Vertex_set_data", "new_data", new_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Vertex_set_data", "Vertex", vertex, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_null("Vertex_set_data", "New Data", new_data, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     vertex->data = new_data;
+    return true;
 }
 
 long Vertex_get_valency(Vertex *vertex) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Vertex_get_valency", "vertex", vertex, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("Vertex_get_valency", "vertex.valency", vertex->valency, true, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Vertex_get_valency", "Vertex", vertex, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_non_positive("Vertex_get_valency", "Vertex::Valency", vertex->valency, true, SUPPRESS_PRINT_ERROR)
         )
     ) return -1;
     return vertex->valency;
 }
 
-void Vertex_set_valency(Vertex *vertex, long new_valency) {
+long Vertex_set_valency(Vertex *vertex, long new_valency) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Vertex_set_valency", "vertex", vertex, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("Vertex_set_valency", "new_valency", new_valency, true, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Vertex_set_valency", "Vertex", vertex, SUPPRESS_PRINT_ERROR),
+            ExceptionHandler_is_non_positive("Vertex_set_valency", "New Valency", new_valency, true, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return -1;
     vertex->valency = new_valency;
+    return new_valency;
 }
 
-void Vertex_valency_up(Vertex *vertex) {
+bool Vertex_valency_up(Vertex *vertex) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Vertex_valency_up", "vertex", vertex, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Vertex_valency_up", "Vertex", vertex, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     vertex->valency++;
+    return true;
 }
 
-void Vertex_valency_down(Vertex *vertex) {
+bool Vertex_valency_down(Vertex *vertex) {
     if (anyThrows(
-            2,
-            ExceptionHandler_is_null("Vertex_valency_down", "vertex", vertex, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("Vertex_valency_down", "vertex.valency", vertex->valency, false, SUPPRESS_PRINT_ERROR)
+            1,
+            ExceptionHandler_is_null("Vertex_valency_down", "Vertex", vertex, SUPPRESS_PRINT_ERROR)
+        ) ||
+        anyThrows(
+            1,
+            ExceptionHandler_is_non_positive("Vertex_valency_down", "Vertex::Valency", vertex->valency, false, SUPPRESS_PRINT_ERROR)
         )
-    ) return;
+    ) return false;
     vertex->valency--;
+    return true;
 }
