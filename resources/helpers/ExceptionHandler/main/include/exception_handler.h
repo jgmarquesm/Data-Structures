@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#define SUPPRESS_PRINT_ERROR false
+
 // See: https://modelingwithdata.org/arch/00000022.htm
 #define function_declaration(type, name) \
          type variadic_##name(variadic_type_##name args)

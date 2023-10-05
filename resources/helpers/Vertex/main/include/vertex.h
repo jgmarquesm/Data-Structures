@@ -3,10 +3,6 @@
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
-#ifdef SUPPRESS_PRINT_ERROR
-    #undef SUPPRESS_PRINT_ERROR
-#endif
-#define SUPPRESS_PRINT_ERROR false
 #define SIZE_OF_VERTEX_TYPE size_of_vertex_type
 
 extern const size_t size_of_vertex_type;
