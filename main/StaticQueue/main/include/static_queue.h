@@ -6,10 +6,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#ifdef SUPPRESS_PRINT_ERROR
-    #undef SUPPRESS_PRINT_ERROR
-#endif
-#define SUPPRESS_PRINT_ERROR false
 #define SIZE_OF_STATIC_QUEUE_TYPE size_of_static_queue_type
 
 extern const size_t size_of_static_queue_type;

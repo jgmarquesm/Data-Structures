@@ -6,10 +6,6 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#ifdef SUPPRESS_PRINT_ERROR
-    #undef SUPPRESS_PRINT_ERROR
-#endif
-#define SUPPRESS_PRINT_ERROR false
 #define SIZE_OF_CIRCULAR_DOUBLY_LINKED_LIST_TYPE size_of_circular_doubly_linked_list_type
 
 extern const size_t size_of_circular_doubly_linked_list_type;
