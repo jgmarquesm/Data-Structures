@@ -2,10 +2,8 @@
 #include "../../main/include/circular_doubly_linked_list.h"
 
 #define TYPE int
-#define UNSORTED 0
-#define ASC 1
-#define DESC -1
 #define NEW_CDLL CircularDoublyLinkedList_create()
+#define EMPTY_SIZE 0
 
 void setUp(){}
 
@@ -20,16 +18,15 @@ int _compare_TYPE(void *data1, void *data2){
     return d2 - d1;
 }
 
-
 void test_CircularDoublyLinkedList_create_1() {
     CircularDoublyLinkedList *CDLL = NULL;
 
     CDLL = NEW_CDLL;
     TEST_ASSERT_NOT_NULL(CDLL);
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_empty(CDLL));
-    TEST_ASSERT_EQUAL(0, CircularDoublyLinkedList_size(CDLL));
+    TEST_ASSERT_EQUAL(EMPTY_SIZE, CircularDoublyLinkedList_size(CDLL));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_clean_1() {
@@ -109,7 +106,7 @@ void test_CircularDoublyLinkedList_is_empty_3() {
 
 void test_CircularDoublyLinkedList_is_sorted_1() {
     TEST_MESSAGE("Case 1--> Unsorted CircularDoublyLinkedList:");
-    TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4, d5 = 5;
+    TYPE d1, d2, d3, d4, d5;
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
     CircularDoublyLinkedList_add_last(CDLL, &d4);
     CircularDoublyLinkedList_add_last(CDLL, &d5);
@@ -118,7 +115,7 @@ void test_CircularDoublyLinkedList_is_sorted_1() {
     CircularDoublyLinkedList_add_last(CDLL, &d3);
 
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_is_sorted_2() {
@@ -133,7 +130,7 @@ void test_CircularDoublyLinkedList_is_sorted_2() {
     CircularDoublyLinkedList_sort_asc(&CDLL, _compare_TYPE);
 
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(ASC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_is_sorted_3() {
@@ -148,7 +145,7 @@ void test_CircularDoublyLinkedList_is_sorted_3() {
     CircularDoublyLinkedList_sort_desc(&CDLL, _compare_TYPE);
 
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(DESC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__DESC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_is_sorted_4() {
@@ -160,7 +157,7 @@ void test_CircularDoublyLinkedList_is_sorted_4() {
 
 void test_CircularDoublyLinkedList_sort_order_1() {
     TEST_MESSAGE("Case 1--> Unsorted CircularDoublyLinkedList:");
-    TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4, d5 = 5;
+    TYPE d1, d2, d3, d4, d5;
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
     CircularDoublyLinkedList_add_last(CDLL, &d4);
     CircularDoublyLinkedList_add_last(CDLL, &d5);
@@ -168,7 +165,7 @@ void test_CircularDoublyLinkedList_sort_order_1() {
     CircularDoublyLinkedList_add_last(CDLL, &d2);
     CircularDoublyLinkedList_add_last(CDLL, &d3);
 
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_sort_order_2() {
@@ -182,7 +179,7 @@ void test_CircularDoublyLinkedList_sort_order_2() {
     CircularDoublyLinkedList_add_last(CDLL, &d3);
     CircularDoublyLinkedList_sort_asc(&CDLL, _compare_TYPE);
 
-    TEST_ASSERT_EQUAL(ASC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_sort_order_3() {
@@ -196,14 +193,14 @@ void test_CircularDoublyLinkedList_sort_order_3() {
     CircularDoublyLinkedList_add_last(CDLL, &d3);
     CircularDoublyLinkedList_sort_desc(&CDLL, _compare_TYPE);
 
-    TEST_ASSERT_EQUAL(DESC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__DESC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_sort_order_4() {
     TEST_MESSAGE("Case 4--> NULL CircularDoublyLinkedList:");
     CircularDoublyLinkedList *CDLL = NULL;
 
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_first_1() {
@@ -214,7 +211,7 @@ void test_CircularDoublyLinkedList_add_first_1() {
     CircularDoublyLinkedList_add_first(CDLL, &d2);
 
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_first_element(CDLL));
-    TEST_ASSERT_EQUAL(0,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_first_2() {
@@ -228,7 +225,7 @@ void test_CircularDoublyLinkedList_add_first_2() {
     bool added = CircularDoublyLinkedList_add_first(CDLL, &d3);
     TEST_ASSERT_TRUE(added);
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_first_element(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_first_3() {
@@ -261,7 +258,7 @@ void test_CircularDoublyLinkedList_add_first_5() {
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, CircularDoublyLinkedList_size(CDLL));
     TEST_ASSERT_EQUAL(&d1, CircularDoublyLinkedList_first_element(CDLL));
-    TEST_ASSERT_EQUAL(ASC,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_last_1() {
@@ -272,7 +269,7 @@ void test_CircularDoublyLinkedList_add_last_1() {
     CircularDoublyLinkedList_add_last(CDLL, &d2);
 
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_last_element(CDLL));
-    TEST_ASSERT_EQUAL(0,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_last_2() {
@@ -286,7 +283,7 @@ void test_CircularDoublyLinkedList_add_last_2() {
     bool added = CircularDoublyLinkedList_add_last(CDLL, &d3);
     TEST_ASSERT_TRUE(added);
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_last_element(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_add_last_3() {
@@ -319,7 +316,7 @@ void test_CircularDoublyLinkedList_add_last_5() {
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, CircularDoublyLinkedList_size(CDLL));
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_last_element(CDLL));
-    TEST_ASSERT_EQUAL(ASC,  CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__,  CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_remove_first_1() {
@@ -601,13 +598,13 @@ void test_CircularDoublyLinkedList_size_1() {
 void test_CircularDoublyLinkedList_size_2() {
     TEST_MESSAGE("Case 2 --> NULL CircularDoublyLinkedList:");
     CircularDoublyLinkedList *CDLL = NULL;
-    TEST_ASSERT_EQUAL(0, CircularDoublyLinkedList_size(CDLL));
+    TEST_ASSERT_EQUAL(EMPTY_SIZE, CircularDoublyLinkedList_size(CDLL));
 }
 
 void test_CircularDoublyLinkedList_size_3() {
     TEST_MESSAGE("Case 3 --> Empty CircularDoublyLinkedList:");
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
-    TEST_ASSERT_EQUAL(0, CircularDoublyLinkedList_size(CDLL));
+    TEST_ASSERT_EQUAL(EMPTY_SIZE, CircularDoublyLinkedList_size(CDLL));
 }
 
 void test_CircularDoublyLinkedList_first_element_1() {
@@ -751,7 +748,7 @@ void test_CircularDoublyLinkedList_count_2() {
     TYPE d1;
     CircularDoublyLinkedList *CDLL = NULL;
 
-    TYPE count = CircularDoublyLinkedList_count(CDLL, &d1);
+    size_t count = CircularDoublyLinkedList_count(CDLL, &d1);
     TEST_ASSERT_EQUAL(0, count);
 }
 
@@ -760,7 +757,7 @@ void test_CircularDoublyLinkedList_count_3() {
     TYPE d1;
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
 
-    TYPE count = CircularDoublyLinkedList_count(CDLL, &d1);
+    size_t count = CircularDoublyLinkedList_count(CDLL, &d1);
     TEST_ASSERT_EQUAL(0, count);
 }
 
@@ -770,7 +767,7 @@ void test_CircularDoublyLinkedList_count_4() {
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
     CircularDoublyLinkedList_add_last(CDLL, &d1);
 
-    TYPE count = CircularDoublyLinkedList_count(CDLL, NULL);
+    size_t count = CircularDoublyLinkedList_count(CDLL, NULL);
     TEST_ASSERT_EQUAL(0, count);
 }
 
@@ -780,7 +777,7 @@ void test_CircularDoublyLinkedList_count_5() {
     CircularDoublyLinkedList *CDLL = NEW_CDLL;
     CircularDoublyLinkedList_add_last(CDLL, &d1);
 
-    TYPE count = CircularDoublyLinkedList_count(CDLL, &d2);
+    size_t count = CircularDoublyLinkedList_count(CDLL, &d2);
     TEST_ASSERT_EQUAL(0, count);
 }
 
@@ -869,7 +866,7 @@ void test_CircularDoublyLinkedList_insert_at_2() {
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_contains(CDLL, &d3));
     TEST_ASSERT_EQUAL(&d4, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(ASC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__, CircularDoublyLinkedList_sort_order(CDLL));
 
     bool added = CircularDoublyLinkedList_insert_at(CDLL, &d3, 2);
     TEST_ASSERT_TRUE(added);
@@ -878,7 +875,7 @@ void test_CircularDoublyLinkedList_insert_at_2() {
     TEST_ASSERT_NOT_EQUAL(&d4, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_insert_at_3() {
@@ -896,7 +893,7 @@ void test_CircularDoublyLinkedList_insert_at_3() {
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_contains(CDLL, &d3));
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(DESC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__DESC__, CircularDoublyLinkedList_sort_order(CDLL));
 
     bool added = CircularDoublyLinkedList_insert_at(CDLL, &d3, 2);
     TEST_ASSERT_TRUE(added);
@@ -905,7 +902,7 @@ void test_CircularDoublyLinkedList_insert_at_3() {
     TEST_ASSERT_NOT_EQUAL(&d2, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_get(CDLL, 2));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_insert_at_4() {
@@ -1152,28 +1149,28 @@ void test_CircularDoublyLinkedList_concat_8() {
     TEST_ASSERT_EQUAL(&d1, CircularDoublyLinkedList_first_element(concatenated));
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_last_element(concatenated));
     TEST_ASSERT_EQUAL(concatenated_size, CircularDoublyLinkedList_size(concatenated));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(concatenated));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(concatenated));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(concatenated));
 
     CircularDoublyLinkedList *concatenated_2 = CircularDoublyLinkedList_concat(CDLL2, CDLL1);
     TEST_ASSERT_EQUAL(&d4, CircularDoublyLinkedList_first_element(concatenated_2));
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_last_element(concatenated_2));
     TEST_ASSERT_EQUAL(concatenated_size, CircularDoublyLinkedList_size(concatenated_2));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(concatenated_2));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(concatenated_2));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(concatenated_2));
 
     CircularDoublyLinkedList *concatenated_3 = CircularDoublyLinkedList_concat(CDLL1, CDLL1);
     TEST_ASSERT_EQUAL(&d1, CircularDoublyLinkedList_first_element(concatenated_3));
     TEST_ASSERT_EQUAL(&d2, CircularDoublyLinkedList_last_element(concatenated_3));
     TEST_ASSERT_EQUAL(concatenated_size, CircularDoublyLinkedList_size(concatenated_3));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(concatenated_3));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(concatenated_3));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(concatenated_3));
 
     CircularDoublyLinkedList *concatenated_4 = CircularDoublyLinkedList_concat(CDLL2, CDLL2);
     TEST_ASSERT_EQUAL(&d4, CircularDoublyLinkedList_first_element(concatenated_4));
     TEST_ASSERT_EQUAL(&d3, CircularDoublyLinkedList_last_element(concatenated_4));
     TEST_ASSERT_EQUAL(concatenated_size, CircularDoublyLinkedList_size(concatenated_4));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(concatenated_4));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(concatenated_4));
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(concatenated_4));
 }
 
@@ -1190,7 +1187,7 @@ void test_CircularDoublyLinkedList_reverse_1() {
 
    CircularDoublyLinkedList_reverse(&CDLL);
     for (long i = 0, j = size - 1; i < size && j >= 0; i++, j--) {
-        TEST_ASSERT_EQUAL(j+1, *((int *) CircularDoublyLinkedList_get(CDLL, j)));
+        TEST_ASSERT_EQUAL(j+1, _convert_to_TYPE(CircularDoublyLinkedList_get(CDLL, j)));
     }
     TEST_ASSERT_EQUAL((-1)*sort_order, CircularDoublyLinkedList_sort_order(CDLL));
 }
@@ -1226,7 +1223,7 @@ void test_CircularDoublyLinkedList_reverse_4() {
     for (long i = 0; i < size; i++) {
         TEST_ASSERT_EQUAL(i+1, *((int *) CircularDoublyLinkedList_get(CDLL, i)));
     }
-    TEST_ASSERT_EQUAL(DESC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__DESC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_reverse_5() {
@@ -1244,7 +1241,7 @@ void test_CircularDoublyLinkedList_reverse_5() {
     for (long i = 0, j = size - 1; i < size && j >= 0; i++, j--) {
         TEST_ASSERT_EQUAL(j+1, *((int *) CircularDoublyLinkedList_get(CDLL, i)));
     }
-    TEST_ASSERT_EQUAL(ASC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__, CircularDoublyLinkedList_sort_order(CDLL));
 }
 
 void test_CircularDoublyLinkedList_is_equals_strict_1() {
@@ -1542,12 +1539,12 @@ void test_CircularDoublyLinkedList_sort_asc_1() {
     CircularDoublyLinkedList_add_last(CDLL, &d2);
 
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 
     bool sorted = CircularDoublyLinkedList_sort_asc(&CDLL, _compare_TYPE);
     TEST_ASSERT_TRUE(sorted);
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(ASC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__ASC__, CircularDoublyLinkedList_sort_order(CDLL));
     for (long i = 0; i < CircularDoublyLinkedList_size(CDLL); i++) {
         TEST_ASSERT_EQUAL(i+1, _convert_to_TYPE(CircularDoublyLinkedList_get(CDLL, i)));
     }
@@ -1581,12 +1578,12 @@ void test_CircularDoublyLinkedList_sort_desc_1() {
     size_t  size = CircularDoublyLinkedList_size(CDLL);
 
     TEST_ASSERT_FALSE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(UNSORTED, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, CircularDoublyLinkedList_sort_order(CDLL));
 
     bool sorted = CircularDoublyLinkedList_sort_desc(&CDLL, _compare_TYPE);
     TEST_ASSERT_TRUE(sorted);
     TEST_ASSERT_TRUE(CircularDoublyLinkedList_is_sorted(CDLL));
-    TEST_ASSERT_EQUAL(DESC, CircularDoublyLinkedList_sort_order(CDLL));
+    TEST_ASSERT_EQUAL(__DESC__, CircularDoublyLinkedList_sort_order(CDLL));
     for (long i = 0, j = size; i < size && j > 0; i++, j--) {
         TEST_ASSERT_EQUAL(j, _convert_to_TYPE(CircularDoublyLinkedList_get(CDLL, i)));
     }
