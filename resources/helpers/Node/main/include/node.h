@@ -3,6 +3,10 @@
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+
 #define SIZE_OF_NODE_TYPE size_of_node_type
 
 extern const size_t size_of_node_type;
