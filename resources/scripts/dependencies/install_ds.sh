@@ -123,14 +123,6 @@ function _add_DS () {
   echo "${GREEN}${1} successfully added.${NO_COLOR}"
 }
 
-function _add_Helper () {
-  echo "${BLUE}Adding ${1}...${NO_COLOR}"
-  index=$(_get_Helpers_count)
-  _set_new_deps "$H" "${1}" "$index"
-  _add_dep_with_type_and_access_modifier "${2}" "$H" "${1}"
-  echo "${GREEN}${1} successfully added.${NO_COLOR}"
-}
-
 function _add_DS_deps () {
   # shellcheck disable=SC2207
   local newBaseDSDeps=( $(echo "${1}" | tr '\n' "\n") )
@@ -232,20 +224,11 @@ function UpdateExtLibsLabel() {
 }
 
 function AddNewDependencies() {
-  if [[ "${2}" == "$DS" ]]; then
-    local infoContent=( "${(f)$(< ../"${3}"/.info)}" )
-    _add_DS "${3}" "${1}"
-  elif [[ "${2}" == "$H" ]]; then
-    local infoContent=( "${(f)$(< ../../resources/helpers/"${3}"/.info)}" )
-    _add_Helper "${3}" "${1}"
-  fi
+  local infoContent=( "${(f)$(< ../"${2}"/.info)}" )
+  _add_DS "${2}" "${1}"
   # shellcheck disable=SC2128
   if [[ -n "${infoContent}" ]]; then
-    if [[ "${2}" == "$DS" ]]; then
-      _add_DS_deps "${infoContent}" 1
-    elif [[ "${2}" == "$H" ]]; then
-      _add_Helper_deps "${infoContent}" 1
-    fi
+    _add_DS_deps "${infoContent}" 1
   fi
   sed -i~ "/^ *$/d" .info
 }
@@ -269,21 +252,13 @@ function SetDepAccessModifier() {
 
 function CallTasks() {
   UpdateExtLibsLabel
-  AddNewDependencies "${1}" "${2}" "${3}"
+  AddNewDependencies "${1}" "${2}"
   EvalIndex
 }
 
 clear
 
-echo "${CYAN}Do you wanna add a Data Structure or a Helper?${NO_COLOR}
-${PURPLE}1 )${WHITE} Data Structure
-${PURPLE}2 )${WHITE} Helper
-${NO_COLOR}"
-read -r DS_OR_HELPER
-
-case ${DS_OR_HELPER} in
-  1 )
-    echo "${CYAN}Select new dependency to add:${WHITE}
+echo "${CYAN}Select new dependency to add:${WHITE}
 ${PURPLE}1 )${WHITE} Array
 ${PURPLE}2 )${WHITE} Singly Linked List
 ${PURPLE}3 )${WHITE} Doubly Linked List
@@ -296,49 +271,23 @@ ${PURPLE}9 )${WHITE} Matrix
 ${PURPLE}10)${WHITE} Undirected Weighted Graph
 ${NO_COLOR}" #--DS
 
-    read -r SELECTION
+read -r SELECTION
 
-    case ${SELECTION} in
-        1 ) DEPENDENCY="Array";;
-        2 ) DEPENDENCY="SinglyLinkedList";;
-        3 ) DEPENDENCY="DoublyLinkedList";;
-        4 ) DEPENDENCY="CircularDoublyLinkedList";;
-        5 ) DEPENDENCY="StaticStack";;
-        6 ) DEPENDENCY="DynamicStack";;
-        7 ) DEPENDENCY="StaticQueue";;
-        8 ) DEPENDENCY="DynamicQueue";;
-        9 ) DEPENDENCY="Matrix";;
-        10 ) DEPENDENCY="UndirectedWeightedGraph";;
+case ${SELECTION} in
+    1 ) DEPENDENCY="Array";;
+    2 ) DEPENDENCY="SinglyLinkedList";;
+    3 ) DEPENDENCY="DoublyLinkedList";;
+    4 ) DEPENDENCY="CircularDoublyLinkedList";;
+    5 ) DEPENDENCY="StaticStack";;
+    6 ) DEPENDENCY="DynamicStack";;
+    7 ) DEPENDENCY="StaticQueue";;
+    8 ) DEPENDENCY="DynamicQueue";;
+    9 ) DEPENDENCY="Matrix";;
+    10 ) DEPENDENCY="UndirectedWeightedGraph";;
 #--ADD_NEW_OPT
-        * )
-          echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
-          exit 1
-        ;;
-    esac
-    ;;
-  2 )
-    echo "${CYAN}Select new dependency to add:${WHITE}
-${PURPLE}1 )${WHITE} Exception Handler
-${PURPLE}2 )${WHITE} Node
-${PURPLE}3 )${WHITE} Vertex
-${NO_COLOR}" #--H
-
-      read -r SELECTION
-
-      case ${SELECTION} in
-          1 ) DEPENDENCY="ExceptionHandler";;
-          2 ) DEPENDENCY="Node";;
-          3 ) DEPENDENCY="Vertex";;
-#--ADD_NEW_HELPER_OPT
-          * )
-            echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
-            exit 1
-          ;;
-      esac
-    ;;
-  * )
-    echo "${YELLOW}Invalid selection: ${RED}${DS_OR_HELPER}.${NO_COLOR}"
-    exit 1
+    * )
+      echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
+      exit 1
     ;;
 esac
 
@@ -350,12 +299,7 @@ ${PURPLE}2 )${WHITE} Protected
 ${PURPLE}3 )${WHITE} Private
 ${NO_COLOR}"
 MODIFIER=$(SetDepAccessModifier)
-TYPE=$DS
-if [[ ${DS_OR_HELPER} == "2" ]]
-then
-  TYPE=$H
-fi
 
-CallTasks "$MODIFIER" "$TYPE" "$DEPENDENCY"
+CallTasks "$MODIFIER" "$DEPENDENCY"
 
 echo "${GREEN}Finishing...${NO_COLOR}"

@@ -50,7 +50,7 @@ function _get_executed_tests() {
   do
     e="$( echo "$line" | grep -o -P "^\d+," | rev | cut -c2- | rev )"
     (( execs=execs+$(( e )) ))
-  done < ../resources/scripts/test/tests_result.txt
+  done < ../resources/scripts/test/temp_result.txt
   echo "$execs"
 }
 
@@ -60,12 +60,12 @@ function _get_failed_tests() {
   do
     f="$( echo "$line" | grep -o -P ",\d+$" | cut -c2-)"
     (( fail=fail+$(( f )) ))
-  done < ../resources/scripts/test/tests_result.txt
+  done < ../resources/scripts/test/temp_result.txt
   echo "$fail"
 }
 
 function _parse_test_result() {
-  sed -i~ -E 's/(.+) Tests (.+) Failures/\1,\2/g' ../resources/scripts/test/tests_result.txt
+  sed -i~ -E 's/(.+) Tests (.+) Failures/\1,\2/g' ../resources/scripts/test/temp_result.txt
 }
 
 function _title_case_to_snake_case() {
@@ -76,13 +76,13 @@ function _title_case_to_snake_case() {
 function set_suppress_print_error_on() {
   helper=${HELPERS[1]}
   header_file=$(_title_case_to_snake_case "${helper}")
-  sed -i~ 's#^\#define SUPPRESS_PRINT_ERROR false#\#define SUPPRESS_PRINT_ERROR true#' ./resources/helpers/"${helper}"/main/include/"${header_file}".h
+  sed -i~ 's#^\#define __SUPPRESS_PRINT_ERROR__ false#\#define __SUPPRESS_PRINT_ERROR__ true#' ./resources/helpers/"${helper}"/main/include/"${header_file}".h
 }
 
 function set_suppress_print_error_off() {
     helper=${HELPERS[1]}
     header_file=$(_title_case_to_snake_case "${helper}")
-    sed -i~ 's#^\#define SUPPRESS_PRINT_ERROR true#\#define SUPPRESS_PRINT_ERROR false#' ../resources/helpers/"${helper}"/main/include/"${header_file}".h
+    sed -i~ 's#^\#define __SUPPRESS_PRINT_ERROR__ true#\#define __SUPPRESS_PRINT_ERROR__ false#' ../resources/helpers/"${helper}"/main/include/"${header_file}".h
 }
 
 function formatted_name() {
@@ -105,7 +105,7 @@ function run_HELPERS_test_suite() {
         if [[ $DEBUG = "on" ]]; then
           make run_tests -s
         fi
-        make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../scripts/test/tests_result.txt
+        make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../scripts/test/temp_result.txt
       fi
       cd ..
       end_for_helper=$(date +%s%N)
@@ -127,7 +127,7 @@ function run_DS_test_suite() {
       if [[ $DEBUG = "on" ]]; then
         make run_tests -s
       fi
-      make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../resources/scripts/test/tests_result.txt
+      make run_tests -s | grep -o -P '\d+ Test(?:|s) (?:\d+ Failures)' >> ../../resources/scripts/test/temp_result.txt
     fi
     cd ..
     end_for_ds=$(date +%s%N)
@@ -135,7 +135,7 @@ function run_DS_test_suite() {
   done
 }
 
-rm -rf ../resources/scripts/test/tests_result.txt
+rm -rf ../resources/scripts/test/temp_result.txt
 clear
 set_suppress_print_error_on
 run_HELPERS_test_suite
@@ -153,5 +153,5 @@ else
   echo "${BLUE}${executed} Tests executed in $(_delta_T_in_ms "$end" "$start")ms ${NO_COLOR}
 ${GREEN}${passed} Pass${NO_COLOR}
 ${RED}${failed} Fail${NO_COLOR}"
-  rm -rf ../resources/scripts/test/tests_result.txt
+  rm -rf ../resources/scripts/test/temp_result.txt
 fi

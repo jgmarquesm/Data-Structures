@@ -21,8 +21,7 @@ DS = circular_doubly_linked_list
 TEST_DS = circular_doubly_linked_list.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
-ADD_DEP = /add_deps.sh
-GET_DEPS = /get_deps.sh
+INSTALL = install.sh
 hp_0 = node
 hp_DEP_0_1 = exception_handler
 #--ADD_NEW_hp
@@ -73,11 +72,14 @@ run_tests: clean_all pack compile_test
 	$(TEST)/$(BIN)/$(TEST_DS)
 	make clean_all
 
-add_deps:
-	$(DEPS)$(ADD_DEP)
+install_ds:
+	$(DEPS)/$(INSTALL) -ds
 
-get_deps:
-	$(DEPS)$(GET_DEPS)
+install_helper:
+	$(DEPS)/$(INSTALL) -h
+
+install:
+	$(DEPS)/$(INSTALL) -$(filter-out $@,$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_apps clean_test clean_external
 

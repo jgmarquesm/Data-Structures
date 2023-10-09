@@ -75,10 +75,18 @@ echo "#ifndef ${3}_H
 #define ${3}_H
 //#--ADD_TO_INCLUDE
 
-#ifdef SUPPRESS_PRINT_ERROR
-    #undef SUPPRESS_PRINT_ERROR
-#endif
-#define SUPPRESS_PRINT_ERROR false
+#define __UNSORTED__ 0
+#define __ASC__ 1
+#define __DESC__ -1
+#define __DEFAULT_LONG__ -1
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_${3}_TYPE size_of_${2}_type
 
 extern const size_t size_of_${2}_type;
@@ -107,10 +115,6 @@ void setUp(){}
 
 void tearDown(){}
 
-// define a print function like: void (*type_print_function)(void * data)
-// define a conversion function like: type (*type_convert_function)(void * data)
-// define a comparison function like: int (*type_compare_function)(void *data1, void *data2)
-
 void test_1() {
     TEST_MESSAGE(\"Please, write the tests.\");
     TEST_ASSERT_EQUAL(1, 0);
@@ -126,7 +130,8 @@ int main(){
 }
 
 function CreateMakefile() {
-  echo "# Directories
+  echo "#helper
+# Directories
 MAIN = main
 TEST = test
 # Generics
@@ -143,6 +148,7 @@ HELPER = ${2}
 TEST_HELPER = ${2}.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
+INSTALL = install.sh
 #--ADD_NEW_hp
 #hp0
 
@@ -174,13 +180,11 @@ run_tests: clean_all pack compile_test
 	\$(TEST)/\$(BIN)/\$(TEST_HELPER)
 	make clean_all
 
-add_deps:
-	\$(DEPS)/add_deps_to_helper.sh
+install_helper:
+	\$(DEPS)/\$(INSTALL) -h
 
-get_deps:
-	\$(DEPS)/get_deps.sh
-
-clean_all: clean_libs clean_test clean_unity
+install:
+	\$(DEPS)/\$(INSTALL) -\$(filter-out \$@,\$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_test clean_unity
 
@@ -216,10 +220,8 @@ function SetNewHelper() {
   LIB=$(_get_lib_name "${1}")
   DIR=$(_get_dir_name "${1}")
   TITLE=$(_title_case_converter "${1}")
-  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$INDEX \)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps_to_helper.sh
-  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps_to_helper.sh
-  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$INDEX \)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\#--ADD_NEW_HELPER_OPT#\t\t\t\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\${NO_COLOR}\" \#--H#\${PURPLE}$INDEX \)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--H#" ./resources/scripts/dependencies/install_helper.sh
+  sed -i~ "s#^\#--ADD_NEW_OPT#\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_HELPER_OPT#" ./resources/scripts/dependencies/install_helper.sh
   sed -i~ "s#^\(\#--NEW_HELPER_DIR\)#$LIB = \$\(HELPERS\)\/$DIR\n\#--NEW_HELPER_DIR#" Makefile
   sed -i~ "s#^\(\#--ADD_NEW_HELPER\)#H$INDEX = $LOWER\n\#--ADD_NEW_HELPER#" Makefile
   sed -i~ "s#^\#H$INDEX#\#H$(( INDEX + 1 ))#" Makefile
