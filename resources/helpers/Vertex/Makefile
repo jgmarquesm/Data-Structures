@@ -1,3 +1,4 @@
+#helper
 # Directories
 MAIN = main
 TEST = test
@@ -16,6 +17,7 @@ HELPER = vertex
 TEST_HELPER = vertex.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
+INSTALL = install.sh
 hp_0 = exception_handler
 #--ADD_NEW_hp
 #hp1
@@ -53,11 +55,11 @@ run_tests: clean_all pack compile_test
 	$(TEST)/$(BIN)/$(TEST_HELPER)
 	make clean_all
 
-add_deps:
-	$(DEPS)/add_deps_to_helper.sh
+install_helper:
+	$(DEPS)/$(INSTALL) -h
 
-get_deps:
-	$(DEPS)/get_deps.sh
+install:
+	$(DEPS)/$(INSTALL) -$(filter-out $@,$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_test clean_external
 
