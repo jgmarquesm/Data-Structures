@@ -6,6 +6,13 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#define __DEFAULT_SIZE_T__ 0
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_DYNAMIC_QUEUE_TYPE size_of_dynamic_queue_type
 
 extern const size_t size_of_dynamic_queue_type;
@@ -60,7 +67,7 @@ void *DynamicQueue_dequeue(DynamicQueue *queue);
  * @param queue -> DynamicQueue to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void DynamicQueue_print(const DynamicQueue *queue, void (*type_print_function)(void * data));
+void DynamicQueue_print(const DynamicQueue *queue, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 /**
  *
  * @param queue -> DynamicQueue to check size
