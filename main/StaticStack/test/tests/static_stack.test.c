@@ -67,7 +67,7 @@ void test_StaticStack_is_empty_2() {
     StaticStack *stack = NEW_STACK;
 
     TEST_ASSERT_TRUE(StaticStack_is_empty(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_is_empty_3() {
@@ -75,7 +75,7 @@ void test_StaticStack_is_empty_3() {
     StaticStack *stack = NULL;
 
     TEST_ASSERT_TRUE(StaticStack_is_empty(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_is_full_1() {
@@ -108,7 +108,7 @@ void test_StaticStack_is_full_3() {
     StaticStack *stack = NEW_STACK;
 
     TEST_ASSERT_FALSE(StaticStack_is_full(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_is_full_4() {
@@ -116,7 +116,7 @@ void test_StaticStack_is_full_4() {
     StaticStack *stack = NULL;
 
     TEST_ASSERT_FALSE(StaticStack_is_full(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_push_1() {
@@ -143,7 +143,7 @@ void test_StaticStack_push_2() {
     bool pushed = StaticStack_push(stack, &d1);
     TEST_ASSERT_FALSE(pushed);
     TEST_ASSERT_NULL(StaticStack_peek(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_push_3() {
@@ -153,7 +153,7 @@ void test_StaticStack_push_3() {
     bool pushed = StaticStack_push(stack, NULL);
     TEST_ASSERT_FALSE(pushed);
     TEST_ASSERT_NULL(StaticStack_peek(stack));
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_peek_1() {
@@ -239,14 +239,14 @@ void test_StaticStack_size_2() {
     TEST_MESSAGE("Case 2 --> NULL StaticStack:");
     StaticStack *stack = NULL;
 
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 void test_StaticStack_size_3() {
     TEST_MESSAGE("Case 3 --> Empty StaticStack:");
     StaticStack *stack = NULL;
 
-    TEST_ASSERT_EQUAL(0, StaticStack_size(stack));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticStack_size(stack));
 }
 
 int main() {
