@@ -28,8 +28,7 @@ LIB_NAME = ds
 SCRIPTS = resources/scripts
 TEST_SCRIPT = test/test_suite.sh
 BUILD_TEST_SCRIPT = test/build_test_suite.sh
-CREATE_DS_SCRIPT = create/create_ds.sh
-CREATE_HELPER_SCRIPT = create/create_helper.sh
+CREATE_SCRIPT = create/create.sh
 
 # Data Structures
 ED1 = array
@@ -132,12 +131,12 @@ build: --private-test-build-mode --private-get_eds
 	make compile
 
 .SILENT:
-create:
-	$(SCRIPTS)/$(CREATE_DS_SCRIPT)
+create-ds:
+	$(SCRIPTS)/$(CREATE_SCRIPT) -ds
 
 .SILENT:
 create-helper:
-	$(SCRIPTS)/$(CREATE_HELPER_SCRIPT)
+	$(SCRIPTS)/$(CREATE_SCRIPT) -h
 
 .SILENT:
 pack: build
@@ -155,7 +154,7 @@ check: --private-test-build-mode
 
 b: build
 
-c: create
+c: create-ds
 
 ch: create-helper
 

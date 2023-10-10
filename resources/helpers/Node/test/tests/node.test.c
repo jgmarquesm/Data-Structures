@@ -10,16 +10,15 @@ void tearDown(){}
 void test_Node_create_1() {
     TEST_MESSAGE("Case 1 --> Non NULL Data:");
     Node *node = NULL;
-    TYPE d;
+    TYPE d1;
 
-    TEST_ASSERT_EQUAL(NULL, node);
+    TEST_ASSERT_NULL(node);
 
-    node = Node_create(&d);
-    TEST_ASSERT_NOT_EQUAL(NULL, node);
+    node = Node_create(&d1);
+    TEST_ASSERT_NOT_NULL(node);
 
     TYPE *data_ = Node_get_data(node);
-    TEST_ASSERT_EQUAL(&d, data_);
-    TEST_ASSERT_EQUAL(d, *data_);
+    TEST_ASSERT_EQUAL(&d1, data_);
 }
 
 void test_Node_create_2() {
@@ -33,16 +32,16 @@ void test_Node_create_2() {
 
 void test_Node_destroy_1() {
     TEST_MESSAGE("Case 1 --> Non NULL Node:");
-    TYPE d;
+    TYPE d1;
     Node *node = NULL;
-    TEST_ASSERT_EQUAL(NULL, node);
+    TEST_ASSERT_NULL(node);
 
-    node = Node_create(&d);
-    TEST_ASSERT_NOT_EQUAL(NULL, node);
+    node = Node_create(&d1);
+    TEST_ASSERT_NOT_NULL(node);
 
     bool destroyed = Node_destroy(&node);
     TEST_ASSERT_TRUE(destroyed);
-    TEST_ASSERT_EQUAL(NULL, node);
+    TEST_ASSERT_NULL(node);
 }
 
 void test_Node_destroy_2() {
@@ -56,9 +55,9 @@ void test_Node_next_getter_and_setter_1() {
     TYPE d1, d2;
     Node *node = Node_create(&d1), *next = NULL, *next_ = NULL;
 
-    TEST_ASSERT_EQUAL(NULL, next);
+    TEST_ASSERT_NULL(next);
     next = Node_create(&d2);
-    TEST_ASSERT_NOT_EQUAL(NULL, next);
+    TEST_ASSERT_NOT_NULL(next);
 
     Node_set_next(node, next);
     next_ = Node_get_next(node);
@@ -95,9 +94,9 @@ void test_Node_prev_getter_and_setter_1() {
     TYPE d1, d2;
     Node *node = Node_create(&d1), *prev = NULL, *prev_ = NULL;
 
-    TEST_ASSERT_EQUAL(NULL, prev);
+    TEST_ASSERT_NULL(prev);
     prev = Node_create(&d2);
-    TEST_ASSERT_NOT_EQUAL(NULL, prev);
+    TEST_ASSERT_NOT_NULL(prev);
 
     Node_set_prev(node, prev);
     prev_ = Node_get_prev(node);

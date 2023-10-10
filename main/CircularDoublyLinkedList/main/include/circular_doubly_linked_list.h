@@ -6,6 +6,52 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __UNSORTED__
+    #undef __UNSORTED__
+#endif
+#ifdef __ASC__
+    #undef __ASC__
+#endif
+#ifdef __DESC__
+    #undef __DESC__
+#endif
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_NAME__
+    #undef __TYPE_COMPARE_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+    #undef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
+#define __UNSORTED__ 0
+#define __ASC__ 1
+#define __DESC__ -1
+#define __DEFAULT_SIZE_T__ 0
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_CIRCULAR_DOUBLY_LINKED_LIST_TYPE size_of_circular_doubly_linked_list_type
 
 extern const size_t size_of_circular_doubly_linked_list_type;
@@ -56,7 +102,7 @@ int CircularDoublyLinkedList_sort_order(const CircularDoublyLinkedList *CDLL);
  * @param CDLL -> (Doubly)CircularDoublyLinkedList to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void CircularDoublyLinkedList_print(const CircularDoublyLinkedList *CDLL, void (*type_print_function)(void *data));
+void CircularDoublyLinkedList_print(const CircularDoublyLinkedList *CDLL, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 /**
  * When calling this functions it will add data to the first CircularDoublyLinkedList node.
  * @param CDLL -> CircularDoublyLinkedList to add data
@@ -94,14 +140,14 @@ void *CircularDoublyLinkedList_remove_at(CircularDoublyLinkedList *CDLL, const s
  * @param data -> data to be removed
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool CircularDoublyLinkedList_remove(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool CircularDoublyLinkedList_remove(CircularDoublyLinkedList *CDLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will remove all occurrences of data in the CircularDoublyLinkedList.
  * @param CDLL -> CircularDoublyLinkedList to remove data
  * @param data -> data to be removed
   * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-size_t CircularDoublyLinkedList_remove_all(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+size_t CircularDoublyLinkedList_remove_all(CircularDoublyLinkedList *CDLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param CDLL -> CircularDoublyLinkedList to check its size
@@ -133,7 +179,7 @@ void *CircularDoublyLinkedList_get(const CircularDoublyLinkedList *CDLL, const s
  * @param data -> Data that the number of occurrences will be returned
  * @return The number of occurrences of data in the CircularDoublyLinkedList
  */
-int CircularDoublyLinkedList_count(const CircularDoublyLinkedList *CDLL, void *data);
+size_t CircularDoublyLinkedList_count(const CircularDoublyLinkedList *CDLL, void *data);
 /**
  *
  * @param CDLL -> CircularDoublyLinkedList to check if data is contained
@@ -181,39 +227,39 @@ bool CircularDoublyLinkedList_is_equals_strict(const CircularDoublyLinkedList *C
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return rue if CDLL1 == CDLL2;\n false if CDLL1 != CDLL2
  */
-bool CircularDoublyLinkedList_is_equals(const CircularDoublyLinkedList *CDLL1, const CircularDoublyLinkedList *CDLL2, int (*type_compare_function)(void *data1, void *data2));
+bool CircularDoublyLinkedList_is_equals(const CircularDoublyLinkedList *CDLL1, const CircularDoublyLinkedList *CDLL2, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the CircularDoublyLinkedList in ascending order
  * @param CDLL_ref -> CircularDoublyLinkedList reference to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool CircularDoublyLinkedList_sort_asc(CircularDoublyLinkedList **CDLL_ref, int (*type_compare_function)(void *data1, void *data2));
+bool CircularDoublyLinkedList_sort_asc(CircularDoublyLinkedList **CDLL_ref, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the CircularDoublyLinkedList in descending order
  * @param CDLL_ref -> CircularDoublyLinkedList reference to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool CircularDoublyLinkedList_sort_desc(CircularDoublyLinkedList **CDLL_ref, int (*type_compare_function)(void *data1, void *data2));
+bool CircularDoublyLinkedList_sort_desc(CircularDoublyLinkedList **CDLL_ref, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will add data to CircularDoublyLinkedList following the order sort
  * @param CDLL -> CircularDoublyLinkedList to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool CircularDoublyLinkedList_sorted_insert(CircularDoublyLinkedList *CDLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool CircularDoublyLinkedList_sorted_insert(CircularDoublyLinkedList *CDLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param CDLL -> CircularDoublyLinkedList to get the smaller data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The smaller data in CircularDoublyLinkedList
  */
-void *CircularDoublyLinkedList_min(const CircularDoublyLinkedList *CDLL, int (*type_compare_function)(void *data1, void *data2));
+void *CircularDoublyLinkedList_min(const CircularDoublyLinkedList *CDLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param CDLL -> CircularDoublyLinkedList to get the bigger data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The bigger data in CircularDoublyLinkedList
  */
-void *CircularDoublyLinkedList_max(const CircularDoublyLinkedList *CDLL, int (*type_compare_function)(void *data1, void *data2));
+void *CircularDoublyLinkedList_max(const CircularDoublyLinkedList *CDLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 
 #endif

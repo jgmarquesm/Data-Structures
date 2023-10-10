@@ -6,8 +6,7 @@
 #define VALENCY_42 42
 #define VALENCY_99 99
 #define VALENCY_0 INITIAL_VALENCY
-#define NON_VALID_VALENCY -1
-#define VALENCY_NEGATIVE_1 NON_VALID_VALENCY
+#define VALENCY_NEGATIVE_1 __DEFAULT_LONG__
 
 void setUp(){}
 
@@ -18,10 +17,10 @@ void test_Vertex_create_1() {
     TYPE d1;
     Vertex *vertex = NULL;
 
-    TEST_ASSERT_EQUAL(NULL, vertex);
+    TEST_ASSERT_NULL(vertex);
 
     vertex = Vertex_create(&d1);
-    TEST_ASSERT_NOT_EQUAL(NULL, vertex);
+    TEST_ASSERT_NOT_NULL(vertex);
 
     TYPE *got = Vertex_get_data(vertex);
     TEST_ASSERT_EQUAL(&d1, got);
@@ -33,10 +32,10 @@ void test_Vertex_create_1() {
 void test_Vertex_create_2() {
     TEST_MESSAGE("Case 2 --> NULL Data:");
     Vertex *vertex = NULL;
-    TEST_ASSERT_EQUAL(NULL, vertex);
+    TEST_ASSERT_NULL(vertex);
 
     vertex = Vertex_create(NULL);
-    TEST_ASSERT_EQUAL(NULL, vertex);
+    TEST_ASSERT_NULL(vertex);
 }
 
 void test_Vertex_destroy_1() {
@@ -126,7 +125,7 @@ void test_Vertex_valency_getter_2() {
     Vertex *vertex = NULL;
 
     long valency = Vertex_get_valency(vertex);
-    TEST_ASSERT_EQUAL(NON_VALID_VALENCY, valency);
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, valency);
 }
 
 void test_Vertex_valency_setter_1() {
@@ -147,7 +146,7 @@ void test_Vertex_valency_setter_2() {
     Vertex *vertex = NULL;
 
     long set = Vertex_set_valency(vertex, VALENCY_99);
-    TEST_ASSERT_EQUAL(NON_VALID_VALENCY, set);
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, set);
 }
 
 void test_Vertex_valency_setter_3() {
@@ -172,7 +171,7 @@ void test_Vertex_valency_setter_4() {
     long set = Vertex_set_valency(vertex, VALENCY_NEGATIVE_1);
     long try_negative_valency = Vertex_get_valency(vertex);
 
-    TEST_ASSERT_EQUAL(NON_VALID_VALENCY, set);
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, set);
     TEST_ASSERT_NOT_EQUAL(VALENCY_NEGATIVE_1, try_negative_valency);
     TEST_ASSERT_EQUAL(INITIAL_VALENCY, try_negative_valency);
 }
@@ -238,7 +237,7 @@ void test_Vertex_valency_down_2() {
     Vertex *vertex = NULL;
     long initial_valency = Vertex_get_valency(vertex);
 
-    TEST_ASSERT_EQUAL(NON_VALID_VALENCY, initial_valency);
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, initial_valency);
     Vertex_set_valency(vertex, VALENCY_99);
 
     bool valency_downed = Vertex_valency_down(vertex);

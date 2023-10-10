@@ -4,8 +4,41 @@
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
+#include <stddef.h>
 
-#define INITIAL_VALUE 0
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_NAME__
+    #undef __TYPE_COMPARE_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+    #undef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
+#define __DEFAULT_LONG__ 0
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
 
 #define SIZE_OF_MATRIX_TYPE size_of_matrix_type
 
@@ -85,7 +118,7 @@ bool Matrix_set_at(Matrix *matrix, const long row, const long col, void *data);
  * @param matrix -> Matrix to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void Matrix_print(const Matrix *matrix, void (*type_print_function)(void * data));
+void Matrix_print(const Matrix *matrix, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 /**
  *
  * @param matrix -> Matrix to check if data is contained
@@ -93,7 +126,7 @@ void Matrix_print(const Matrix *matrix, void (*type_print_function)(void * data)
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if Array contains the data, false otherwise
  */
-bool Matrix_contains(const Matrix *matrix, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool Matrix_contains(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param matrix -> Matrix to count number os occurrences of data
@@ -101,7 +134,7 @@ bool Matrix_contains(const Matrix *matrix, void *data, int (*type_compare_functi
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The number of occurrences of data in the Matrix
  */
-long Matrix_count(const Matrix *matrix, void *data, int (*type_compare_function)(void *data1, void *data2));
+long Matrix_count(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param matrix1 -> First Matrix to check equality
@@ -109,6 +142,6 @@ long Matrix_count(const Matrix *matrix, void *data, int (*type_compare_function)
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if matrix1 == matrix2;\n false if matrix1 != matrix2
  */
-bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, int (*type_compare_function)(void *data1, void *data2));
+bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 
 #endif

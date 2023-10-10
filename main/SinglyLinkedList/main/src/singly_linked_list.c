@@ -4,10 +4,6 @@
 //#--ADD_TO_INCLUDE
 #include "../include/singly_linked_list.h"
 
-#define UNSORTED 0
-#define ASC 1
-#define DESC -1
-
 typedef struct _singly_linked_list {
     Node *begin;
     Node *end;
@@ -30,7 +26,7 @@ void _sll_left_right_split(Node *node, Node **left_ref, Node **right_ref) {
     Node_set_next(slow, NULL);
 }
 
-Node *_sll_sorted_merge(Node *left, Node *right, int (*type_compare_function)(void *data1, void *data2), int order) {
+Node *_sll_sorted_merge(Node *left, Node *right, __TYPE_COMPARE_FUNCTION_SIGNATURE__, int order) {
     Node *SLL_begin_result = NULL;
 
     if (left == NULL) {
@@ -39,45 +35,45 @@ Node *_sll_sorted_merge(Node *left, Node *right, int (*type_compare_function)(vo
         return left;
     }
 
-    if (order == ASC) {
-        if (type_compare_function(Node_get_data(left), Node_get_data(right)) >= 0) {
+    if (order == __ASC__) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(left), Node_get_data(right)) >= 0) {
             SLL_begin_result = left;
-            Node_set_next(SLL_begin_result, _sll_sorted_merge(Node_get_next(left), right, type_compare_function, order));
+            Node_set_next(SLL_begin_result, _sll_sorted_merge(Node_get_next(left), right, __TYPE_COMPARE_FUNCTION_NAME__, order));
         } else {
             SLL_begin_result = right;
-            Node_set_next(SLL_begin_result, _sll_sorted_merge(left, Node_get_next(right), type_compare_function, order));
+            Node_set_next(SLL_begin_result, _sll_sorted_merge(left, Node_get_next(right), __TYPE_COMPARE_FUNCTION_NAME__, order));
         }
     } else {
-        if (type_compare_function(Node_get_data(left), Node_get_data(right)) <= 0) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(left), Node_get_data(right)) <= 0) {
             SLL_begin_result = left;
-            Node_set_next(SLL_begin_result, _sll_sorted_merge(Node_get_next(left), right, type_compare_function, order));
+            Node_set_next(SLL_begin_result, _sll_sorted_merge(Node_get_next(left), right, __TYPE_COMPARE_FUNCTION_NAME__, order));
         } else {
             SLL_begin_result = right;
-            Node_set_next(SLL_begin_result, _sll_sorted_merge(left, Node_get_next(right), type_compare_function, order));
+            Node_set_next(SLL_begin_result, _sll_sorted_merge(left, Node_get_next(right), __TYPE_COMPARE_FUNCTION_NAME__, order));
         }
     }
 
     return SLL_begin_result;
 }
 
-void _sll_merge_sort(Node **SLL_begin_ref, int (*type_compare_function)(void *data1, void *data2), int order) {
+void _sll_merge_sort(Node **SLL_begin_ref, __TYPE_COMPARE_FUNCTION_SIGNATURE__, int order) {
     Node *SLL_begin = *SLL_begin_ref, *left, *right;
 
     if ((SLL_begin == NULL) || (Node_get_next(SLL_begin) == NULL)) {
         return;
     }
 
-    if (order != ASC && order != DESC) {
+    if (order != __ASC__ && order != __DESC__) {
         fprintf(stderr, "\nERROR: on function 'SinglyLinkedList_sort_*'.\n");
         fprintf(stderr, "ERROR: Invalid sort order.\n");
         exit(EXIT_FAILURE);
     }
 
     _sll_left_right_split(SLL_begin, &left, &right);
-    _sll_merge_sort(&left, type_compare_function, order);
-    _sll_merge_sort(&right, type_compare_function, order);
+    _sll_merge_sort(&left, __TYPE_COMPARE_FUNCTION_NAME__, order);
+    _sll_merge_sort(&right, __TYPE_COMPARE_FUNCTION_NAME__, order);
 
-    *SLL_begin_ref = _sll_sorted_merge(left, right, type_compare_function, order);
+    *SLL_begin_ref = _sll_sorted_merge(left, right, __TYPE_COMPARE_FUNCTION_NAME__, order);
 }
 
 Node *_get_node(const SinglyLinkedList *SLL, const size_t index) {
@@ -89,95 +85,95 @@ Node *_get_node(const SinglyLinkedList *SLL, const size_t index) {
 }
 
 SinglyLinkedList *SinglyLinkedList_create() {
-    SinglyLinkedList *SLL = (SinglyLinkedList *) calloc(1, sizeof(SinglyLinkedList));
-    SLL->end = SLL->begin = NULL;
-    SLL->size = 0;
-    SLL->sort_order = UNSORTED;
-    return  SLL;
+    SinglyLinkedList *SLL = (SinglyLinkedList *) calloc(1, size_of_singly_linked_list_type);
+    SLL->end = SLL->begin = __DEFAULT_PTR__;
+    SLL->size = __DEFAULT_LONG__;
+    SLL->sort_order = __UNSORTED__;
+    return SLL;
 }
 
 bool SinglyLinkedList_clean(SinglyLinkedList *SLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_clean", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_clean", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node = SLL->begin;
-    while (node != NULL) {
+    while (node != __DEFAULT_PTR__) {
         Node *node_next = Node_get_next(node);
         Node_destroy(&node);
         node = node_next;
     }
-    SLL->begin = NULL;
-    SLL->end = NULL;
-    SLL->size = 0;
-    SLL->sort_order = UNSORTED;
-    return true;
+    SLL->begin = __DEFAULT_PTR__;
+    SLL->end = __DEFAULT_PTR__;
+    SLL->size = __DEFAULT_LONG__;
+    SLL->sort_order = __UNSORTED__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool SinglyLinkedList_destroy(SinglyLinkedList **SLL_ref) {
     SinglyLinkedList *SLL = *SLL_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_destroy", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_destroy", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     SinglyLinkedList_clean(SLL);
     free(SLL);
-    *SLL_ref = NULL;
-    return true;
+    *SLL_ref = __DEFAULT_PTR__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool SinglyLinkedList_is_empty(void *SLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_is_empty", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_is_empty", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return true;
-    return (((SinglyLinkedList *) SLL)->begin == NULL && ((SinglyLinkedList *) SLL)->end == NULL);
+    ) return __NOT_DEFAULT_BOOL__;
+    return (((SinglyLinkedList *) SLL)->begin == __DEFAULT_PTR__ && ((SinglyLinkedList *) SLL)->end == __DEFAULT_PTR__);
 }
 
 bool SinglyLinkedList_is_sorted(void *SLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_is_sorted", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_is_sorted", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    return ((SinglyLinkedList *) SLL)->sort_order != UNSORTED;
+    ) return __DEFAULT_BOOL__;
+    return ((SinglyLinkedList *) SLL)->sort_order != __UNSORTED__;
 }
 
 int SinglyLinkedList_sort_order(const SinglyLinkedList *SLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_sort_order", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_sort_order", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     return SLL->sort_order;
 }
 
-void SinglyLinkedList_print(const SinglyLinkedList *SLL, void (*type_print_function)(void *data)) {
+void SinglyLinkedList_print(const SinglyLinkedList *SLL, __TYPE_PRINT_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_print", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_print", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
     ) return;
     Node *node = SLL->begin;
     printf("SLL -> ");
-    while (node != NULL) {
-        type_print_function(Node_get_data(node));
+    while (node != __DEFAULT_PTR__) {
+        __TYPE_PRINT_FUNCTION_NAME__(Node_get_data(node));
         printf(" -> ");
         node = Node_get_next(node);
     }
-    puts("NULL");
+    puts("__DEFAULT_PTR__");
 }
 
 bool SinglyLinkedList_add_first(SinglyLinkedList *SLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_add_first", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_add_first", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_add_first", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node_new = Node_create(data);
     Node_set_next(node_new, SLL->begin);
     if (SinglyLinkedList_is_empty(SLL)) {
@@ -185,17 +181,17 @@ bool SinglyLinkedList_add_first(SinglyLinkedList *SLL, void *data) {
     }
     SLL->begin = node_new;
     SLL->size++;
-    SLL->sort_order = UNSORTED;
-    return true;
+    SLL->sort_order = __UNSORTED__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool SinglyLinkedList_add_last(SinglyLinkedList *SLL, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_add_last", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_add_last", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_add_last", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node_new = Node_create(data);
     if (SinglyLinkedList_is_empty(SLL)) {
         SLL->begin = SLL->end = node_new;
@@ -204,17 +200,17 @@ bool SinglyLinkedList_add_last(SinglyLinkedList *SLL, void *data) {
         SLL->end = Node_get_next(SLL->end);
     }
     SLL->size++;
-    SLL->sort_order = UNSORTED;
-    return true;
+    SLL->sort_order = __UNSORTED__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 void *SinglyLinkedList_remove_first(SinglyLinkedList *SLL) {
     if (anyThrows(
          2,
-         ExceptionHandler_is_null("SinglyLinkedList_remove_first", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-         ExceptionHandler_is_empty("SinglyLinkedList_remove_first", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+         ExceptionHandler_is_null("SinglyLinkedList_remove_first", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+         ExceptionHandler_is_empty("SinglyLinkedList_remove_first", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Node *node = SLL->begin;
     void *data = Node_get_data(node);
     SLL->begin = Node_get_next(node);
@@ -226,10 +222,10 @@ void *SinglyLinkedList_remove_first(SinglyLinkedList *SLL) {
 void *SinglyLinkedList_remove_last(SinglyLinkedList *SLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_remove_last", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_remove_last", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_remove_last", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_remove_last", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     void *data = SinglyLinkedList_remove_at(SLL, SLL->size-1);
     return data;
 }
@@ -237,15 +233,15 @@ void *SinglyLinkedList_remove_last(SinglyLinkedList *SLL) {
 void *SinglyLinkedList_remove_at(SinglyLinkedList *SLL, const size_t index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_remove_at", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_remove_at", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_remove_at", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_remove_at", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_remove_at", "Index", index, SLL->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_remove_at", "Index", index, SLL->size-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    Node *node_prev = NULL;
+    ) return __DEFAULT_PTR__;
+    Node *node_prev = __DEFAULT_PTR__;
 
     if (index == 0) return SinglyLinkedList_remove_first(SLL);
 
@@ -264,21 +260,21 @@ void *SinglyLinkedList_remove_at(SinglyLinkedList *SLL, const size_t index) {
     return data;
 }
 
-bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("SinglyLinkedList_remove", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_remove", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_remove", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_remove", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_remove", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_remove", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    Node *node_prev = NULL;
+    ) return __DEFAULT_BOOL__;
+    Node *node_prev = __DEFAULT_PTR__;
     Node *node = SLL->begin;
-    while (node != NULL && type_compare_function(Node_get_data(node), data) != 0) {
+    while (node != __DEFAULT_PTR__ && __TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(node), data) != 0) {
         node_prev = node;
         node = Node_get_next(node);
     }
-    if (node != NULL) {
+    if (node != __DEFAULT_PTR__) {
         if (SLL->end == node) {
             SLL->end = node_prev;
         }
@@ -289,24 +285,24 @@ bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, int (*type_compa
         }
         Node_destroy(&node);
         SLL->size--;
-        return true;
+        return __NOT_DEFAULT_BOOL__;
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
-size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("SinglyLinkedList_remove_all", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_remove_all", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_remove_all", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_remove_all", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_remove_all", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_remove_all", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     Node *node_prev = SLL->begin;
     Node *node = Node_get_next(SLL->begin);
     size_t count = 0;
-    while (node != NULL) {
-        if (type_compare_function(Node_get_data(SLL->begin), data) == 0) {
+    while (node != __DEFAULT_PTR__) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(SLL->begin), data) == 0) {
             SLL->begin = Node_get_next(node_prev);
             Node_destroy(&node_prev);
             node_prev = SLL->begin;
@@ -314,7 +310,7 @@ size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type
             SLL->size--;
             count++;
         }
-        if (type_compare_function(Node_get_data(node), data) == 0) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(node), data) == 0) {
             Node_set_next(node_prev, Node_get_next(node));
             if (SLL->end == node) {
                 SLL->end = node_prev;
@@ -334,43 +330,43 @@ size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type
 size_t SinglyLinkedList_size(const SinglyLinkedList *SLL) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("SinglyLinkedList_size", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_size", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     return SLL->size;
 }
 
 void *SinglyLinkedList_first_element(const SinglyLinkedList *SLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_first_element", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_first_element", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_first_element", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_first_element", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return Node_get_data(SLL->begin);
 }
 
 void *SinglyLinkedList_last_element(const SinglyLinkedList *SLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_last_element", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_last_element", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_last_element", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_last_element", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return Node_get_data(SLL->end);
 }
 
 void *SinglyLinkedList_get(const SinglyLinkedList *SLL, const size_t index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_get", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_get", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_get", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_get", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_get", "Index", index, SLL->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_get", "Index", index, SLL->size-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Node *node = _get_node(SLL, index);
     return Node_get_data(node);
 }
@@ -378,14 +374,14 @@ void *SinglyLinkedList_get(const SinglyLinkedList *SLL, const size_t index) {
 size_t SinglyLinkedList_count(const SinglyLinkedList *SLL, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("SinglyLinkedList_count", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_count", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_count", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_count", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_count", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_count", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     Node *node = SLL->begin;
     int count = 0;
-    while (node != NULL) {
+    while (node != __DEFAULT_PTR__) {
         if (Node_get_data(node) == data) {
             count++;
         }
@@ -397,32 +393,32 @@ size_t SinglyLinkedList_count(const SinglyLinkedList *SLL, void *data) {
 bool SinglyLinkedList_contains(const SinglyLinkedList *SLL, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("SinglyLinkedList_contains", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_contains", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_contains", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_contains", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_contains", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_contains", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node = SLL->begin;
-    while (node != NULL) {
+    while (node != __DEFAULT_PTR__) {
         if (Node_get_data(node) == data) {
-            return true;
+            return __NOT_DEFAULT_BOOL__;
         }
         node = Node_get_next(node);
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
 bool SinglyLinkedList_insert_at(SinglyLinkedList *SLL, void *data, const size_t index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_insert_at", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_insert_at", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_insert_at", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_insert_at", "Data", data, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_insert_at", "Index", index, SLL->size, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("SinglyLinkedList_insert_at", "Index", index, SLL->size, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     if (index == 0) {
         return SinglyLinkedList_add_first(SLL, data);
     } else if (index == SLL->size) {
@@ -430,7 +426,7 @@ bool SinglyLinkedList_insert_at(SinglyLinkedList *SLL, void *data, const size_t 
     }
 
     Node *node_new = Node_create(data);
-    Node *node_prev = NULL;
+    Node *node_prev = __DEFAULT_PTR__;
     Node *node = SLL->begin;
     for (size_t i = 0; i != index; i++) {
         node_prev = node;
@@ -439,23 +435,23 @@ bool SinglyLinkedList_insert_at(SinglyLinkedList *SLL, void *data, const size_t 
     Node_set_next(node_new, Node_get_next(node_prev));
     Node_set_next(node_prev, node_new);
     SLL->size++;
-    SLL->sort_order = UNSORTED;
-    return true;
+    SLL->sort_order = __UNSORTED__;
+    return __NOT_DEFAULT_BOOL__;
 
 }
 
 SinglyLinkedList *SinglyLinkedList_clone(const SinglyLinkedList *SLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_clone", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_clone", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_clone", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_clone", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     SinglyLinkedList *clone = SinglyLinkedList_create();
     Node *node = Node_get_next(SLL->begin);
     SinglyLinkedList_add_first(clone, Node_get_data(SLL->begin));
     int count = 1;
-    while (node != NULL) {
+    while (node != __DEFAULT_PTR__) {
         SinglyLinkedList_insert_at(clone, Node_get_data(node), count);
         count++;
         node = Node_get_next(node);
@@ -467,10 +463,10 @@ SinglyLinkedList *SinglyLinkedList_clone(const SinglyLinkedList *SLL) {
 SinglyLinkedList *SinglyLinkedList_concat(SinglyLinkedList *SLL1, SinglyLinkedList *SLL2) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_concat", "Singly Linked List 1", (void *) SLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_concat", "Singly Linked List 2", (void *) SLL2, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_concat", "Singly Linked List 1", (void *) SLL1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_concat", "Singly Linked List 2", (void *) SLL2, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     if (SinglyLinkedList_is_empty(SLL1)) {
         return SinglyLinkedList_clone(SLL2);
     } else if (SinglyLinkedList_is_empty(SLL2)) {
@@ -478,26 +474,26 @@ SinglyLinkedList *SinglyLinkedList_concat(SinglyLinkedList *SLL1, SinglyLinkedLi
     }
     SinglyLinkedList *SLL_new = SinglyLinkedList_clone(SLL1);
     Node *node = SLL2->begin;
-    while (node != NULL) {
+    while (node != __DEFAULT_PTR__) {
         SinglyLinkedList_add_last(SLL_new, Node_get_data(node));
         node = Node_get_next(node);
     }
-    SLL_new->sort_order = UNSORTED;
+    SLL_new->sort_order = __UNSORTED__;
     return SLL_new;
 }
 
 SinglyLinkedList *SinglyLinkedList_reverse(SinglyLinkedList *SLL) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_reverse", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_reverse", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_reverse", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_reverse", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     SinglyLinkedList *SLL_new = SinglyLinkedList_clone(SLL);
     Node *node = SLL_new->begin;
     SLL_new->end = SLL_new->begin;
-    Node *node_prev = NULL, *node_next = NULL;
-    while (node != NULL) {
+    Node *node_prev = __DEFAULT_PTR__, *node_next = __DEFAULT_PTR__;
+    while (node != __DEFAULT_PTR__) {
         node_next = Node_get_next(node);
         Node_set_next(node, node_prev);
         node_prev = node;
@@ -511,17 +507,17 @@ SinglyLinkedList *SinglyLinkedList_reverse(SinglyLinkedList *SLL) {
 bool SinglyLinkedList_is_equals_strict(const SinglyLinkedList *SLL1, const SinglyLinkedList *SLL2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("SinglyLinkedList_is_equals_strict", "Singly Linked List 1", (void *) SLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_is_equals_strict", "Singly Linked List 2", (void *) SLL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_is_equals_strict", "Singly Linked List 1", (void *) SLL1, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_is_equals_strict", "Singly Linked List 2", (void *) SLL2, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_is_equals_strict", "Singly Linked List 1", (void *) SLL1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_is_equals_strict", "Singly Linked List 2", (void *) SLL2, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_is_equals_strict", "Singly Linked List 1", (void *) SLL1, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_is_equals_strict", "Singly Linked List 2", (void *) SLL2, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) || SLL1->size != SLL2->size
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node1 = SLL1->begin;
     Node *node2 = SLL2->begin;
-    while (node1 != NULL) {
+    while (node1 != __DEFAULT_PTR__) {
         if (Node_get_data(node1) != Node_get_data(node2)) {
-            return false;
+            return __DEFAULT_BOOL__;
         }
         node1 = Node_get_next(node1);
         node2 = Node_get_next(node2);
@@ -529,20 +525,20 @@ bool SinglyLinkedList_is_equals_strict(const SinglyLinkedList *SLL1, const Singl
     return SLL1->sort_order == SLL2->sort_order;
 }
 
-bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinkedList *SLL2, int (*type_compare_function)(void *data1, void *data2)) {
+bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinkedList *SLL2, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("SinglyLinkedList_is_equals'", "Singly Linked List 1", (void *) SLL1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_is_equals", "Singly Linked List 2", (void *) SLL2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_is_equals", "Singly Linked List 1", (void *) SLL1, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_is_equals", "Singly Linked List 2", (void *) SLL2, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_is_equals'", "Singly Linked List 1", (void *) SLL1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_is_equals", "Singly Linked List 2", (void *) SLL2, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_is_equals", "Singly Linked List 1", (void *) SLL1, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_is_equals", "Singly Linked List 2", (void *) SLL2, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) || SLL1->size != SLL2->size
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Node *node1 = SLL1->begin;
     Node *node2 = SLL2->begin;
-    while (node1 != NULL) {
-        if (type_compare_function(Node_get_data(node1), Node_get_data(node2)) != 0) {
-            return false;
+    while (node1 != __DEFAULT_PTR__) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(Node_get_data(node1), Node_get_data(node2)) != 0) {
+            return __DEFAULT_BOOL__;
         }
         node1 = Node_get_next(node1);
         node2 = Node_get_next(node2);
@@ -550,51 +546,51 @@ bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinked
     return SLL1->sort_order == SLL2->sort_order;
 }
 
-bool SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
+bool SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_sort_asc", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_sort_asc", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_sort_asc", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_sort_asc", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    _sll_merge_sort(&SLL->begin, type_compare_function, 1);
-    SLL->sort_order = ASC;
+    ) return __DEFAULT_BOOL__;
+    _sll_merge_sort(&SLL->begin, __TYPE_COMPARE_FUNCTION_NAME__, 1);
+    SLL->sort_order = __ASC__;
     SLL->end = _get_node(SLL, SLL->size-1);
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-bool SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
+bool SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_sort_desc", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_sort_desc", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_sort_desc", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_sort_desc", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    _sll_merge_sort(&SLL->begin, type_compare_function, -1);
-    SLL->sort_order = DESC;
+    ) return __DEFAULT_BOOL__;
+    _sll_merge_sort(&SLL->begin, __TYPE_COMPARE_FUNCTION_NAME__, -1);
+    SLL->sort_order = __DESC__;
     SLL->end = _get_node(SLL, SLL->size-1);
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("SinglyLinkedList_sorted_insert", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("SinglyLinkedList_sorted_insert", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_sorted_insert", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_not_sorted("SinglyLinkedList_sorted_insert", "Singly Linked List", (void*) SLL, SinglyLinkedList_is_sorted, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_sorted_insert", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("SinglyLinkedList_sorted_insert", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_sorted_insert", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_not_sorted("SinglyLinkedList_sorted_insert", "Singly Linked List", (void*) SLL, SinglyLinkedList_is_sorted, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
 
-    Node *node = SLL->begin, *node_prev = NULL, *node_new = Node_create(data);
+    Node *node = SLL->begin, *node_prev = __DEFAULT_PTR__, *node_new = Node_create(data);
 
-    if (SLL->sort_order == ASC) {
-        while (node != NULL && type_compare_function(data, Node_get_data(node)) <=  0) {
+    if (SLL->sort_order == __ASC__) {
+        while (node != __DEFAULT_PTR__ && __TYPE_COMPARE_FUNCTION_NAME__(data, Node_get_data(node)) <=  0) {
             node_prev = node;
             node = Node_get_next(node);
         }
     } else {
-        while (node != NULL && type_compare_function(data, Node_get_data(node)) >= 0) {
+        while (node != __DEFAULT_PTR__ && __TYPE_COMPARE_FUNCTION_NAME__(data, Node_get_data(node)) >= 0) {
             node_prev = node;
             node = Node_get_next(node);
         }
@@ -608,19 +604,19 @@ bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, int (*typ
         Node_set_next(node_prev, node_new);
     }
     SLL->size++;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-void *SinglyLinkedList_min(const SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
+void *SinglyLinkedList_min(const SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
 
     if (SinglyLinkedList_is_sorted((void *) SLL)) {
-        if (SLL->sort_order == ASC) {
+        if (SLL->sort_order == __ASC__) {
             return Node_get_data(SLL->begin);
         } else {
             return Node_get_data(SLL->end);
@@ -628,22 +624,22 @@ void *SinglyLinkedList_min(const SinglyLinkedList *SLL, int (*type_compare_funct
     }
 
     SinglyLinkedList *clone = SinglyLinkedList_clone(SLL);
-    SinglyLinkedList_sort_asc(clone, type_compare_function);
+    SinglyLinkedList_sort_asc(clone, __TYPE_COMPARE_FUNCTION_NAME__);
     void *data = Node_get_data(clone->begin);
     SinglyLinkedList_destroy(&clone);
     return data;
 }
 
-void *SinglyLinkedList_max(const SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2)) {
+void *SinglyLinkedList_max(const SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("SinglyLinkedList_min", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
 
     if (SinglyLinkedList_is_sorted((void *) SLL)) {
-        if (SLL->sort_order == ASC) {
+        if (SLL->sort_order == __ASC__) {
             return Node_get_data(SLL->end);
         } else {
             return Node_get_data(SLL->begin);
@@ -651,7 +647,7 @@ void *SinglyLinkedList_max(const SinglyLinkedList *SLL, int (*type_compare_funct
     }
 
     SinglyLinkedList *clone = SinglyLinkedList_clone(SLL);
-    SinglyLinkedList_sort_desc(clone, type_compare_function);
+    SinglyLinkedList_sort_desc(clone, __TYPE_COMPARE_FUNCTION_NAME__);
     void *data = Node_get_data(clone->begin);
     SinglyLinkedList_destroy(&clone);
     return data;

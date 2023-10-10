@@ -3,6 +3,24 @@
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+
+#define __DEFAULT_LONG__ -1
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+
 #define SIZE_OF_VERTEX_TYPE size_of_vertex_type
 
 extern const size_t size_of_vertex_type;

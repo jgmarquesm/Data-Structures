@@ -1,5 +1,17 @@
 #!/bin/zsh
 
+ADT_PATH='../'
+ADT_FOLDER='helpers'
+CUT_OFF=9
+
+for opt in "$@"; do
+    if [ "$opt" = "-ds" ]; then
+      ADT_PATH='../../resources/helpers/'
+      ADT_FOLDER='main'
+      CUT_OFF=6
+    fi
+done
+
 # shellcheck disable=SC2034
 GREY='\033[1;90m'
 RED='\033[1;91m'
@@ -16,8 +28,8 @@ PROTECTED='ptd'
 PRIVATE='pvt'
 H='hp'
 
-function _get_this_Helper() {
-  this="$(echo set -- "$(pwd)" | grep -P 'helpers\/(?:.+)$' -o | cut -c9-)"
+function _get_this() {
+  this="$(echo set -- "$(pwd)" | grep -P "${ADT_FOLDER}\/(?:.+)$" -o | cut -c${CUT_OFF}-)"
   echo "$this"
 }
 
@@ -26,15 +38,15 @@ function _title_case_to_snake_case() {
   sed 's/[A-Z]/_\l&/g' <<<"$1" | cut -c2-
 }
 
-function _is_this_Helper() {
-  if [[ "$(_get_this_Helper)" == "$1" ]]
+function _is_this() {
+  if [[ "$(_get_this)" == "$1" ]]
   then
     echo 'is'
   fi
 }
 
 function _is_already_there() {
-  PATTERN="^hp(?:|_DEP)_FOLDER_\d+(?:|_[\d]+) = ../${1}/\\$\(MAIN\)$"
+  PATTERN="^hp(?:|_DEP)_FOLDER_\d+(?:|_[\d]+) = ${ADT_PATH}${1}/\\$\(MAIN\)$"
   IS_ADDED="$(grep -P "$PATTERN" Makefile)"
   if [[ $IS_ADDED ]]
   then
@@ -45,9 +57,9 @@ function _is_already_there() {
 function _add_dep_with_type_and_access_modifier() {
   if [[ "${1}" == "$PUBLIC" ]]
   then
-    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(_title_case_to_snake_case "$(_get_this_Helper)")".h
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(_title_case_to_snake_case "$(_get_this)")".h
   else
-    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(_title_case_to_snake_case "$(_get_this_Helper)")".c
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"../include/$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/src/"$(_title_case_to_snake_case "$(_get_this)")".c
   fi
   echo "${1}_${2}_${3}" >> .info
 }
@@ -55,7 +67,7 @@ function _add_dep_with_type_and_access_modifier() {
 function _add_dep_deps_with_type_and_access_modifier() {
   if [[ "${1}" == "$PUBLIC" ]]
   then
-    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(_title_case_to_snake_case "$(_get_this_Helper)")".h
+    sed -i~ "s#//\#--ADD_TO_INCLUDE#\#include \"$(_title_case_to_snake_case "${3}").h\"\n//\#--ADD_TO_INCLUDE#" ./main/include/"$(_title_case_to_snake_case "$(_get_this)")".h
     echo "${1}_${2}_${3}" >> .info
   else
     echo "pvt_${2}_${3}" >> .info
@@ -79,7 +91,6 @@ function _get_Helpers_count() {
 function _set_new_deps() {
   TYPE=$H
   IS_DEP=$(grep -P 'DEP' <<< "${1}")
-  FULL_PATH='..'
   INDEX=${3}
   if [[ $IS_DEP ]]
   then
@@ -87,7 +98,7 @@ function _set_new_deps() {
     INDEX="$DEP_INDEX\_${3}"
   fi
 
-  sed -i~ "s#^\#--ADD_FOLDER_NEW_$TYPE#${1}_FOLDER_$INDEX = $FULL_PATH/${2}/\$(MAIN)\n\#--ADD_FOLDER_NEW_$TYPE#" Makefile
+  sed -i~ "s#^\#--ADD_FOLDER_NEW_$TYPE#${1}_FOLDER_$INDEX = $ADT_PATH${2}/\$(MAIN)\n\#--ADD_FOLDER_NEW_$TYPE#" Makefile
   sed -i~ "s#^\#--ADD_NEW_$TYPE#${1}_$INDEX = $(_title_case_to_snake_case "${2}")\n\#--ADD_NEW_$TYPE#" Makefile
   sed -i~ "s#^\#--ADD_GET_NEW_LIB#\tcp \$(${1}_FOLDER_$INDEX)/\$(SRC)/\$(${1}_$INDEX).c \$(MAIN)/\$(SRC)/\n\tcp \$(${1}_FOLDER_$INDEX)/\$(INCLUDE)/\$(${1}_$INDEX).h \$(MAIN)/\$(INCLUDE)/\n\#--ADD_GET_NEW_LIB#" Makefile
   sed -i~ "s#^\#--ADD_TO_PACK#\t\$(MAIN)/\$(OBJ)/\$(${1}_$INDEX).o \\\\\n\#--ADD_TO_PACK#" Makefile
@@ -112,7 +123,7 @@ function _add_Helper_deps () {
     DEP_MODIFIER=$(_get_dep_modifier "$dependency")
     DEP=$(_get_dep "$dependency")
 
-    if [[ "$(_is_this_Helper "$DEP")" == 'is' || "$(_is_already_there "$DEP")" == 'is' ]]
+    if [[ "$(_is_this "$DEP")" == 'is' || "$(_is_already_there "$DEP")" == 'is' ]]
     then
       echo "${YELLOW}SKIPPING: $DEP...${NO_COLOR}"
       continue
@@ -124,7 +135,7 @@ function _add_Helper_deps () {
     echo "${GREEN}$DEP successfully added.${NO_COLOR}"
     (( i++ ))
 
-    local infoContent=( "${(f)$(< ../"$DEP"/.info)}" )
+    local infoContent=( "${(f)$(< "$ADT_PATH""$DEP"/.info)}" )
     # shellcheck disable=SC2128
     if [[ -n "${infoContent}" ]]
     then
@@ -134,7 +145,7 @@ function _add_Helper_deps () {
 }
 
 function CheckIfCanAdd() {
-  if [[ "$(_is_this_Helper "${1}")" == 'is' ]]
+  if [[ "$(_is_this "${1}")" == 'is' ]]
   then
     # shellcheck disable=SC2028
     echo "${RED}Self dependency not allowed.\nFinishing...${NO_COLOR}"
@@ -155,7 +166,7 @@ function UpdateExtLibsLabel() {
 }
 
 function AddNewDependencies() {
-  local infoContent=( "${(f)$(< ../"${2}"/.info)}" )
+  local infoContent=( "${(f)$(< "$ADT_PATH""${2}"/.info)}" )
   _add_Helper "${2}" "${1}"
   # shellcheck disable=SC2128
   if [[ -n "${infoContent}" ]]; then
@@ -180,6 +191,12 @@ function SetDepAccessModifier() {
   esac
 }
 
+function CallTasks() {
+  UpdateExtLibsLabel
+  AddNewDependencies "${1}" "${2}"
+  EvalIndex
+}
+
 clear
 
 echo "${CYAN}Select a new dependency to add:${WHITE}
@@ -194,7 +211,7 @@ case ${SELECTION} in
     1 ) DEPENDENCY="ExceptionHandler";;
     2 ) DEPENDENCY="Node";;
     3 ) DEPENDENCY="Vertex";;
-#--ADD_NEW_HELPER_OPT
+#--ADD_NEW_OPT
     * )
       echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"
       exit 1
@@ -210,8 +227,6 @@ ${PURPLE}3 )${WHITE} Private
 ${NO_COLOR}"
 MODIFIER=$(SetDepAccessModifier)
 
-UpdateExtLibsLabel
-AddNewDependencies "$MODIFIER" "$DEPENDENCY"
-EvalIndex
+CallTasks "$MODIFIER" "$DEPENDENCY"
 
 echo "${GREEN}Finishing...${NO_COLOR}"

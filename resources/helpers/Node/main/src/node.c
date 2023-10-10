@@ -14,13 +14,13 @@ const size_t size_of_node_type = sizeof(Node);
 Node *Node_create(void *data) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_data", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_data", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    Node *node = (Node *) calloc(1, sizeof(Node));
+    ) return __DEFAULT_PTR__;
+    Node *node = (Node *) calloc(1, size_of_node_type);
     node->data = data;
-    node->prev = NULL;
-    node->next = NULL;
+    node->prev = __DEFAULT_PTR__;
+    node->next = __DEFAULT_PTR__;
     return node;
 }
 
@@ -28,76 +28,76 @@ bool Node_destroy(Node **node_ref) {
     Node *node = *node_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_destroy", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_destroy", "Node", node, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     free(node);
-    *node_ref = NULL;
-    return true;
+    *node_ref = __DEFAULT_PTR__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 Node *Node_get_next(Node* node) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_next", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_next", "Node", node, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_next", "Node::Next", node->next, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_next", "Node::Next", node->next, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return node->next;
 }
 
 bool Node_set_next(Node *node, Node *next) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_next", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_set_next", "Node", node, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     node->next = next;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 Node *Node_get_prev(Node* node) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_prev", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_prev", "Node", node, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_prev", "Node::Prev", node->prev, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_prev", "Node::Prev", node->prev, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return node->prev;
 }
 
 bool Node_set_prev(Node *node, Node *prev) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_set_prev", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_set_prev", "Node", node, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     node->prev = prev;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 void *Node_get_data(Node* node) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Node_get_data", "Node", node, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_get_data", "Node", node, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return node->data;
 }
 
 bool Node_set_data(Node *node, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Node_set_data", "Node", node, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Node_set_data", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Node_set_data", "Node", node, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Node_set_data", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     node->data = data;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }

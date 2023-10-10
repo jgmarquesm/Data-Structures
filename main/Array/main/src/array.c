@@ -1,14 +1,15 @@
+/**
+ * @author João Gabriel M. Mendes
+ * @date 2023
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 //#--ADD_TO_INCLUDE
 #include "../include/array.h"
 
-#define UNSORTED 0
-#define ASC 1
-#define DESC -1
-
-typedef struct _array{
+typedef struct _array {
     char *data;
     long capacity;
     long size;
@@ -22,7 +23,7 @@ void *_get(const Array *array, const long index) {
     return array->data + (index * array->size_of_type);
 }
 
-void _array_sorted_merge(Array *array, long first_index, long mid_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
+void _array_sorted_merge(Array *array, long first_index, long mid_index, long last_index, __TYPE_COMPARE_FUNCTION_SIGNATURE__, int sort_order) {
     long left_capacity = mid_index - first_index + 1;
     long right_capacity = last_index - mid_index;
 
@@ -41,22 +42,22 @@ void _array_sorted_merge(Array *array, long first_index, long mid_index, long la
     }
 
     long i = 0, j = 0, k = first_index;
-    void *array_index = NULL;
+    void *array_index = __DEFAULT_PTR__;
 
     while (i < left_capacity && j < right_capacity) {
         void *left_data = _get(left, i);
         void *right_data = _get(right, j);
-        array_index = Array_get_at(array, k);
-        if (sort_order == ASC) {
-            if (type_compare_function(left_data, right_data) >= 0) {
+        array_index = _get(array, k);
+        if (sort_order == __ASC__) {
+            if (__TYPE_COMPARE_FUNCTION_NAME__(left_data, right_data) >= 0) {
                 memcpy(array_index, left_data, array->size_of_type);
                 i++;
             } else {
                 memcpy(array_index, right_data, array->size_of_type);
                 j++;
             }
-        } else if (sort_order == DESC) {
-            if (type_compare_function(left_data, right_data) <= 0) {
+        } else if (sort_order == __DESC__) {
+            if (__TYPE_COMPARE_FUNCTION_NAME__(left_data, right_data) <= 0) {
                 memcpy(array_index, left_data, array->size_of_type);
                 i++;
             } else {
@@ -81,27 +82,27 @@ void _array_sorted_merge(Array *array, long first_index, long mid_index, long la
     }
 }
 
-void _array_merge_sort(Array *array, long first_index, long last_index, int (*type_compare_function)(void *data1, void *data2), int sort_order) {
+void _array_merge_sort(Array *array, long first_index, long last_index, __TYPE_COMPARE_FUNCTION_SIGNATURE__, int sort_order) {
     if (first_index < last_index) {
         long mid_index = first_index + (last_index - first_index) / 2;
-        _array_merge_sort(array, first_index, mid_index, type_compare_function, sort_order);
-        _array_merge_sort(array, mid_index + 1, last_index, type_compare_function, sort_order);
-        _array_sorted_merge(array, first_index, mid_index, last_index, type_compare_function, sort_order);
+        _array_merge_sort(array, first_index, mid_index, __TYPE_COMPARE_FUNCTION_NAME__, sort_order);
+        _array_merge_sort(array, mid_index + 1, last_index, __TYPE_COMPARE_FUNCTION_NAME__, sort_order);
+        _array_sorted_merge(array, first_index, mid_index, last_index, __TYPE_COMPARE_FUNCTION_NAME__, sort_order);
     }
 }
 
 Array *Array_create(long capacity, unsigned int size_of_type) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_non_positive("Array_create", "Capacity", capacity, false, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("Array_create", "Capacity", capacity, __DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    Array *array = (Array *) calloc(1, sizeof(Array));
+    ) return __DEFAULT_PTR__;
+    Array *array = (Array *) calloc(1, size_of_array_type);
     char *data = (char *) calloc(capacity, size_of_type);
     array->data = data;
     array->capacity = capacity;
     array->size = 0;
-    array->sort_order = UNSORTED;
+    array->sort_order = __UNSORTED__;
     array->size_of_type = size_of_type;
     return array;
 }
@@ -109,92 +110,92 @@ Array *Array_create(long capacity, unsigned int size_of_type) {
 bool Array_clean(Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_clean", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_clean", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     free(array->data);
-    array->data = NULL;
+    array->data = __DEFAULT_PTR__;
     array->size = 0;
-    array->sort_order = UNSORTED;
+    array->sort_order = __UNSORTED__;
     array->size_of_type = 0;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Array_delete(Array **array_ref) {
     Array *array = *array_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_delete", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_delete", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Array_clean(array);
     free(array);
-    *array_ref= NULL;
-    return true;
+    *array_ref= __DEFAULT_PTR__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 long Array_capacity(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_capacity", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_capacity", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return -1;
+    ) return __DEFAULT_LONG__;
     return array->capacity;
 }
 
 long Array_size(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_size", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_size", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return -1;
+    ) return __DEFAULT_LONG__;
     return array->size;
 }
 
 int Array_sort_order(const Array *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_sort_order", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_sort_order", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __UNSORTED__;
     return array->sort_order;
 }
 
 bool Array_is_empty(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_empty", "Array", array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_is_empty", "Array", array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return true;
+    ) return __NOT_DEFAULT_BOOL__;
     return ((Array *) array)->size == 0;
 }
 
 bool Array_is_full(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_full", "Array", array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_is_full", "Array", array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     return ((Array *) array)->size == ((Array *) array)->capacity;
 }
 
 bool Array_is_sorted(void *array) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_is_sorted", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_is_sorted", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    return ((Array *) array)->sort_order == ASC || ((Array *) array)->sort_order == DESC;
+    ) return __DEFAULT_BOOL__;
+    return ((Array *) array)->sort_order == __ASC__ || ((Array *) array)->sort_order == __DESC__;
 }
 
 bool Array_add_first(Array *array, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_add_first", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_full("Array_add_first", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_add_first", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_add_first", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_full("Array_add_first", "Array", (void *) array, Array_is_full, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_add_first", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (int i = array->size; i >= 0; i--) {
         void *index_dest_ptr = array->data + ((i + 1) * array->size_of_type);
         void *index_src_ptr = array->data + (i * array->size_of_type);
@@ -202,83 +203,83 @@ bool Array_add_first(Array *array, void *data) {
     }
     void *index_ptr = _get(array, 0);
     memcpy(index_ptr, data, sizeof(array->size_of_type));
-    array->sort_order = UNSORTED;
+    array->sort_order = __UNSORTED__;
     array->size++;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Array_add_last(Array *array, void *data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_add_last", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_full("Array_add_last", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_add_last", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_add_last", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_full("Array_add_last", "Array", (void *) array, Array_is_full, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_add_last", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     void *index_ptr = _get(array, array->size);
     memcpy(index_ptr, data, sizeof(array->size_of_type));
-    array->sort_order = UNSORTED;
+    array->sort_order = __UNSORTED__;
     array->size++;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 void *Array_first_element(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_first_element", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_first_element", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_first_element", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_first_element", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    return Array_get_at(array, 0);
+    ) return __DEFAULT_PTR__;
+    return _get(array, 0);
 }
 
 void *Array_last_element(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_last_element", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_last_element", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_last_element", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_last_element", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    return Array_get_at(array, array->size - 1);
+    ) return __DEFAULT_PTR__;
+    return _get(array, array->size - 1);
 }
 
 bool Array_remove_first(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_remove_first", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_remove_first", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_remove_first", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_remove_first", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (int i = 1; i <= array->size; i++) {
         void *index_dest_ptr = _get(array, i - 1);
         void *index_src_ptr = _get(array, i);
         memcpy(index_dest_ptr, index_src_ptr, sizeof(array->size_of_type));
     }
     array->size--;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Array_remove_last(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_remove_last", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_remove_last", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_remove_last", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_remove_last", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     array->size--;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Array_remove_at(Array *array, const long index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_remove_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_remove_at", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_remove_at", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_remove_at", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) || anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("Array_remove_at", "Index", index, array->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Array_remove_at", "Index", index, array->size-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     long range = array->size;
     for (int i = index; i <= range; i++) {
         void *index_dest_ptr = _get(array, i);
@@ -286,41 +287,41 @@ bool Array_remove_at(Array *array, const long index) {
         memcpy(index_dest_ptr, index_src_ptr, sizeof(array->size_of_type));
     }
     array->size--;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-bool Array_remove(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_remove(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_remove", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_remove", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_remove", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_remove", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_remove", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_remove", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     long range = array->size;
     for (int i = 0; i <= range; i++) {
         void *ith_data = _get(array, i);
-        if (type_compare_function(data, ith_data) == 0) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(data, ith_data) == 0) {
             Array_remove_at(array, i);
-            return true;
+            return __NOT_DEFAULT_BOOL__;
         }
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
-bool Array_remove_all(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_remove_all(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_remove_all", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_remove_all", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_remove_all", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_remove_all", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_remove_all", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_remove_all", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     long range = array->size;
     int count = 0;
     for (int i = 0; i <= range; i++) {
         void *ith_data = _get(array, i);
-        if (type_compare_function(data, ith_data) == 0) {
+        if (__TYPE_COMPARE_FUNCTION_NAME__(data, ith_data) == 0) {
             array->size = range;
             Array_remove_at(array, i);
             count++;
@@ -330,33 +331,33 @@ bool Array_remove_all(Array *array, void *data, int (*type_compare_function)(voi
     return count > 0;
 }
 
-void Array_print(Array *array, void (*type_print_function)(void * data)) {
+void Array_print(Array *array, __TYPE_PRINT_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Array_print", "Array", (void *) array, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_print", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__)
         )
     ) return;
     printf("[");
     for(long i = 0; i < array->size-1; i++) {
-        void *data = Array_get_at(array, i);
-        type_print_function(data);
+        void *data = _get(array, i);
+        __TYPE_PRINT_FUNCTION_NAME__(data);
         printf(", ");
     }
-    type_print_function(Array_get_at(array, array->size-1));
+    __TYPE_PRINT_FUNCTION_NAME__(_get(array, array->size-1));
     puts("]");
 }
 
 bool Array_insert_at(Array *array, void *data, const long index) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_insert_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_insert_at", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_full("Array_insert_at", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_insert_at", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_insert_at", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_full("Array_insert_at", "Array", (void *) array, Array_is_full, __SUPPRESS_PRINT_ERROR__)
         ) || anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("Array_insert_at", "Index", index, array->size, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Array_insert_at", "Index", index, array->size, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (int i = array->size; i >= index; i--) {
         void *index_dest_ptr = array->data + ((i + 1) * array->size_of_type);
         void *index_src_ptr = array->data + (i * array->size_of_type);
@@ -364,50 +365,50 @@ bool Array_insert_at(Array *array, void *data, const long index) {
     }
     void *ith_data = _get(array, index);
     memcpy(ith_data, data, array->size_of_type);
-    array->sort_order = UNSORTED;
+    array->sort_order = __UNSORTED__;
     array->size++;
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Array_set(Array *array, void *data, const long index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_set", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_set", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_set", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_set", "Data", data, __SUPPRESS_PRINT_ERROR__)
         ) || anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("Array_set", "Index", index, array->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Array_set", "Index", index, array->size-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     void *ith_data = _get(array, index);
     memcpy(ith_data, data, array->size_of_type);
-    array->sort_order = UNSORTED;
-    return true;
+    array->sort_order = __UNSORTED__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 void *Array_get_at(Array *array, const long index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_get_at", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_get_at", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_get_at", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_get_at", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) || anyThrows(
             1,
-            ExceptionHandler_is_out_of_bounds("Array_get_at", "Index", index, array->size-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Array_get_at", "Index", index, array->size-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     return _get(array, index);
 }
 
 Array *Array_clone(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_clone", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_clone", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_clone", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_clone", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Array *clone = Array_create(array->capacity, array->size_of_type);
     for (int i = 0; i < array->size; i++) {
-        void *data = Array_get_at(array, i);
+        void *data = _get(array, i);
         Array_add_last(clone, data);
     }
     clone->sort_order = array->sort_order;
@@ -417,20 +418,20 @@ Array *Array_clone(Array *array) {
 Array *Array_concat(Array *array1, Array *array2) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("Array_concat", "Array1", (void *) array1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_concat", "Array2", (void *) array2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_concat", "Array1", (void *) array1, Array_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_concat", "Array2", (void *) array2, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_concat", "Array1", (void *) array1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_concat", "Array2", (void *) array2, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_concat", "Array1", (void *) array1, Array_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_concat", "Array2", (void *) array2, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     long capacity = array1->capacity+array2->capacity;
     Array *concat = Array_create(capacity, array1->size_of_type);
     for (int i = 0; i < array1->size; i++) {
-        void *data = Array_get_at(array1, i);
+        void *data = _get(array1, i);
         Array_add_last(concat, data);
     }
     for (int j = 0; j < array2->size; j++) {
-        void *data = Array_get_at(array2, j);
+        void *data = _get(array2, j);
         Array_add_last(concat, data);
     }
     return concat;
@@ -439,18 +440,18 @@ Array *Array_concat(Array *array1, Array *array2) {
 Array *Array_sub(Array *array, const long initial_index, const long final_index) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_sub", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_sub", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_sub", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_sub", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         ) || anyThrows(
             2,
-            ExceptionHandler_is_out_of_bounds("Array_sub", "Final index", final_index, array->size-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Array_sub", "Initial index", initial_index, final_index-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Final index", final_index, array->size-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Array_sub", "Initial index", initial_index, final_index-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     long capacity = final_index - initial_index;
     Array *sub = Array_create(capacity, array->size_of_type);
     for (int i = initial_index; i < final_index; i++) {
-        void *data = Array_get_at(array, i);
+        void *data = _get(array, i);
         Array_add_last(sub, data);
     }
     sub->sort_order = array->sort_order;
@@ -460,236 +461,236 @@ Array *Array_sub(Array *array, const long initial_index, const long final_index)
 Array *Array_reverse(Array *array) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_reverse", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_reverse", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_reverse", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_reverse", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Array *reverse = Array_create(array->capacity, array->size_of_type);
     for (int i = (array->size - 1); i >= 0; i--) {
-        void *data = Array_get_at(array, i);
+        void *data = _get(array, i);
         Array_add_last(reverse, data);
     }
     reverse->sort_order = (-1)*array->sort_order;
     return reverse;
 }
 
-bool Array_contains(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_contains(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_contains", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_contains", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_contains", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_contains", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_contains", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_contains", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (int i = 0; i < array->size; i++) {
-        void *ith_data = Array_get_at(array, i);
-        if (type_compare_function(ith_data, data) == 0) {
-            return true;
+        void *ith_data = _get(array, i);
+        if (__TYPE_COMPARE_FUNCTION_NAME__(ith_data, data) == 0) {
+            return __NOT_DEFAULT_BOOL__;
         }
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
-long Array_count(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+long Array_count(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_count", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_count", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_count", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_count", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_count", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_count", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return -1;
+    ) return __DEFAULT_LONG__;
     long count = 0;
     for (int i = 0; i < array->size; i++) {
-        void *ith_data = Array_get_at(array, i);
-        if (type_compare_function(ith_data, data) == 0) {
+        void *ith_data = _get(array, i);
+        if (__TYPE_COMPARE_FUNCTION_NAME__(ith_data, data) == 0) {
             count++;
         }
     }
     return count;
 }
 
-bool Array_is_equals(Array *array1, Array *array2, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_is_equals(Array *array1, Array *array2, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             4,
-            ExceptionHandler_is_null("Array_is_equals", "Array1", (void *) array1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_is_equals", "Array2", (void *) array2, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_is_equals", "Array1", (void *) array1, Array_is_empty, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_is_equals", "Array2", (void *) array2, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_is_equals", "Array1", (void *) array1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_is_equals", "Array2", (void *) array2, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_is_equals", "Array1", (void *) array1, Array_is_empty, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_is_equals", "Array2", (void *) array2, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     if (array1->size_of_type != array2->size_of_type) {
-        return false;
+        return __DEFAULT_BOOL__;
     }
     if (array1->size != array2->size) {
-        return false;
+        return __DEFAULT_BOOL__;
     }
     if (array1->sort_order != array2->sort_order) {
-        return false;
+        return __DEFAULT_BOOL__;
     }
     for (int i = 0; i < array1->size; i++) {
-        void *data1 = Array_get_at(array1, i);
-        void *data2 = Array_get_at(array2, i);
-        if (type_compare_function(data1 ,data2) != 0) {
-            return false;
+        void *data1 = _get(array1, i);
+        void *data2 = _get(array2, i);
+        if (__TYPE_COMPARE_FUNCTION_NAME__(data1 ,data2) != 0) {
+            return __DEFAULT_BOOL__;
         }
     }
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-long Array_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+long Array_index_of(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_index_of", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_index_of", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_index_of", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_index_of", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_index_of", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_index_of", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return -1;
+    ) return __DEFAULT_LONG__;
     for (int i = 0; i < array->size; i++) {
-        void *ith_data = Array_get_at(array, i);
-        if (type_compare_function(ith_data ,data) == 0) {
+        void *ith_data = _get(array, i);
+        if (__TYPE_COMPARE_FUNCTION_NAME__(ith_data ,data) == 0) {
             return i;
         }
     }
-    return -1;
+    return __DEFAULT_LONG__;
 }
 
-long Array_last_index_of(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+long Array_last_index_of(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_last_index_of", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Array_last_index_of", "Data", data, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_last_index_of", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_last_index_of", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Array_last_index_of", "Data", data, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_last_index_of", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return -1;
+    ) return __DEFAULT_LONG__;
     for (int i = (array->size - 1); i >= 0; i--) {
-        void *ith_data = Array_get_at(array, i);
-        if (type_compare_function(ith_data ,data) == 0) {
+        void *ith_data = _get(array, i);
+        if (__TYPE_COMPARE_FUNCTION_NAME__(ith_data ,data) == 0) {
             return i;
         }
     }
-    return -1;
+    return __DEFAULT_LONG__;
 }
 
-bool Array_sort_asc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_sort_asc(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_sort_asc", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_sort_asc", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_sort_asc", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_sort_asc", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    if (array->sort_order == DESC) {
+    ) return __DEFAULT_BOOL__;
+    if (array->sort_order == __DESC__) {
         Array *reverse = Array_reverse(array);
         array->data = reverse->data;
         array->sort_order = reverse->sort_order;
-        return true;
+        return __NOT_DEFAULT_BOOL__;
     }
-    _array_merge_sort(array, 0, array->size-1, type_compare_function, 1);
-    array->sort_order = ASC;
-    return true;
+    _array_merge_sort(array, 0, array->size-1, __TYPE_COMPARE_FUNCTION_NAME__, 1);
+    array->sort_order = __ASC__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-bool Array_sort_desc(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_sort_desc(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_sort_desc", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_sort_desc", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_sort_desc", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_sort_desc", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
-    if (array->sort_order == ASC) {
+    ) return __DEFAULT_BOOL__;
+    if (array->sort_order == __ASC__) {
         Array *reverse = Array_reverse(array);
         array->data = reverse->data;
-        array->sort_order = DESC;
-        return true;
+        array->sort_order = __DESC__;
+        return __NOT_DEFAULT_BOOL__;
     }
-    _array_merge_sort(array, 0, array->size-1, type_compare_function, -1);
-    array->sort_order = DESC;
-    return true;
+    _array_merge_sort(array, 0, array->size-1, __TYPE_COMPARE_FUNCTION_NAME__, -1);
+    array->sort_order = __DESC__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-bool Array_sorted_insert(Array *array, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool Array_sorted_insert(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_null("Array_sorted_insert", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_full("Array_sorted_insert", "Array", (void *) array, Array_is_full, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_not_sorted("Array_sorted_insert", "Array", (void *) array, Array_is_sorted, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_sorted_insert", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_full("Array_sorted_insert", "Array", (void *) array, Array_is_full, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_not_sorted("Array_sorted_insert", "Array", (void *) array, Array_is_sorted, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
 
-    void *array_data = Array_get_at(array, array->size - 1);
-    int sort_order = array->sort_order, compare = type_compare_function(data, array_data);
+    void *array_data = _get(array, array->size - 1);
+    int sort_order = array->sort_order, compare = __TYPE_COMPARE_FUNCTION_NAME__(data, array_data);
 
-    if ((sort_order == ASC && compare < 0)) {
+    if ((sort_order == __ASC__ && compare < 0)) {
         Array_add_last(array, data);
-        array->sort_order = ASC;
-        return true;
+        array->sort_order = __ASC__;
+        return __NOT_DEFAULT_BOOL__;
     }
-    if ((sort_order == DESC && compare > 0)) {
+    if ((sort_order == __DESC__ && compare > 0)) {
         Array_add_last(array, data);
-        array->sort_order = DESC;
-        return true;
+        array->sort_order = __DESC__;
+        return __NOT_DEFAULT_BOOL__;
     }
 
     for (long i = 0; i < array->size; i++) {
-        array_data = Array_get_at(array, i);
-        compare = type_compare_function(data, array_data);
+        array_data = _get(array, i);
+        compare = __TYPE_COMPARE_FUNCTION_NAME__(data, array_data);
 
-        if (sort_order == ASC) {
+        if (sort_order == __ASC__) {
             if (compare > 0) {
                 Array_insert_at(array, data, i);
-                array->sort_order = ASC;
-                return true;
+                array->sort_order = __ASC__;
+                return __NOT_DEFAULT_BOOL__;
             }
         } else {
             if (compare < 0) {
                 Array_insert_at(array, data, i);
-                array->sort_order = DESC;
-                return true;
+                array->sort_order = __DESC__;
+                return __NOT_DEFAULT_BOOL__;
             }
         }
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
-void *Array_min(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+void *Array_min(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_min", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_min", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_min", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_min", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
 
     if (Array_is_sorted(array)) {
-        if (array->sort_order == ASC) {
-            return Array_get_at(array, 0);
+        if (array->sort_order == __ASC__) {
+            return _get(array, 0);
         } else {
-            return Array_get_at(array, array->size - 1);
+            return _get(array, array->size - 1);
         }
     }
 
     Array *clone = Array_clone(array);
-    Array_sort_asc(clone, type_compare_function);
-    void *data = Array_get_at(clone, 0);
+    Array_sort_asc(clone, __TYPE_COMPARE_FUNCTION_NAME__);
+    void *data = _get(clone, 0);
     return data;
 }
 
-void *Array_max(Array *array, int (*type_compare_function)(void *data1, void *data2)) {
+void *Array_max(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Array_max", "Array", (void *) array, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_empty("Array_max", "Array", (void *) array, Array_is_empty, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Array_max", "Array", (void *) array, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_empty("Array_max", "Array", (void *) array, Array_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
 
     if (Array_is_sorted(array)) {
-        if (array->sort_order == ASC) {
-            return Array_get_at(array, array->size - 1);
+        if (array->sort_order == __ASC__) {
+            return _get(array, array->size - 1);
         } else {
-            return Array_get_at(array, 0);
+            return _get(array, 0);
         }
     }
 
     Array *clone = Array_clone(array);
-    Array_sort_asc(clone, type_compare_function);
-    void *data = Array_get_at(clone, array->size - 1);
+    Array_sort_asc(clone, __TYPE_COMPARE_FUNCTION_NAME__);
+    void *data = _get(clone, array->size - 1);
     return data;
 }

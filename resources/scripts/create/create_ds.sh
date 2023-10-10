@@ -1,8 +1,5 @@
 #!/bin/zsh
 
-# shellcheck disable=SC2034
-GREY='\033[1;90m'
-RED='\033[1;91m'
 GREEN='\033[1;92m'
 YELLOW='\033[1;93m'
 BLUE='\033[1;94m'
@@ -76,10 +73,18 @@ echo "#ifndef ${3}_H
 #define ${3}_H
 //#--ADD_TO_INCLUDE
 
-#ifdef SUPPRESS_PRINT_ERROR
-    #undef SUPPRESS_PRINT_ERROR
-#endif
-#define SUPPRESS_PRINT_ERROR false
+#define __UNSORTED__ 0
+#define __ASC__ 1
+#define __DESC__ -1
+#define __DEFAULT_LONG__ -1
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_${3}_TYPE size_of_${2}_type
 
 extern const size_t size_of_${2}_type;
@@ -121,10 +126,6 @@ void setUp(){}
 
 void tearDown(){}
 
-// define a print function like: void (*type_print_function)(void * data)
-// define a conversion function like: type (*type_convert_function)(void * data)
-// define a comparison function like: int (*type_compare_function)(void *data1, void *data2)
-
 void test_1() {
     TEST_MESSAGE(\"Please, write the tests.\");
     TEST_ASSERT_EQUAL(1, 0);
@@ -161,6 +162,7 @@ DS = ${2}
 TEST_DS = ${2}.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
+INSTALL = install.sh
 #--ADD_NEW_hp
 #--ADD_NEW_ds
 #ds0
@@ -201,11 +203,14 @@ run_tests: clean_all pack compile_test
 	\$(TEST)/\$(BIN)/\$(TEST_DS)
 	make clean_all
 
-add_deps:
-	\$(DEPS)/add_deps.sh
+install_ds:
+	\$(DEPS)/\$(INSTALL) -ds
 
-get_deps:
-	\$(DEPS)/get_deps.sh
+install_helper:
+	\$(DEPS)/\$(INSTALL) -h
+
+install:
+	\$(DEPS)/\$(INSTALL) -\$(filter-out \$@,\$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_apps clean_test clean_unity
 
@@ -246,8 +251,8 @@ function SetNewDS() {
   LIB=$(_get_lib_name "${1}")
   DIR=$(_get_dir_name "${1}")
   TITLE=$(_title_case_converter "${1}")
-  sed -i~ "s#^\(\${NO_COLOR}\" \#--DS\)#\${PURPLE}$INDEX\)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--DS#" ./resources/scripts/dependencies/add_deps.sh
-  sed -i~ "s#^\#--ADD_NEW_OPT#\t\t\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_OPT#" ./resources/scripts/dependencies/add_deps.sh
+  sed -i~ "s#^\(\${NO_COLOR}\" \#--DS\)#\${PURPLE}$INDEX\)\${WHITE} $TITLE\n\${NO_COLOR}\" \#--DS#" ./resources/scripts/dependencies/install_ds.sh
+  sed -i~ "s#^\#--ADD_NEW_OPT#\t\t\t\t$INDEX \) DEPENDENCY=\"$DIR\";;\n\#--ADD_NEW_OPT#" ./resources/scripts/dependencies/install_ds.sh
   sed -i~ "s#^\(\#--NEW_DS_DIR\)#$LIB = \$\(MAIN\)\/$DIR\n\#--NEW_DS_DIR#" Makefile
   sed -i~ "s#^\(\#--ADD_NEW_DS\)#ED$INDEX = $LOWER\n\#--ADD_NEW_DS#" Makefile
   sed -i~ "s#^\#DS$INDEX#\#DS$(( INDEX + 1 ))#" Makefile

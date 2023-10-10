@@ -2,9 +2,6 @@
 #include "../../main/include/doubly_linked_list.h"
 
 #define TYPE int
-#define UNSORTED 0
-#define ASC 1
-#define DESC -1
 #define NEW_DLL DoublyLinkedList_create()
 
 void setUp(){}
@@ -21,14 +18,14 @@ int _compare_TYPE(void *data1, void *data2){
 }
 
 void test_DoublyLinkedList_create_1() {
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     DLL = NEW_DLL;
     TEST_ASSERT_NOT_NULL(DLL);
     TEST_ASSERT_TRUE(DoublyLinkedList_is_empty(DLL));
     TEST_ASSERT_EQUAL(0, DoublyLinkedList_size(DLL));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_clean_1() {
@@ -51,7 +48,7 @@ void test_DoublyLinkedList_clean_1() {
 
 void test_DoublyLinkedList_clean_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool cleaned = DoublyLinkedList_clean(DLL);
     TEST_ASSERT_FALSE(cleaned);
@@ -76,7 +73,7 @@ void test_DoublyLinkedList_destroy_1() {
 
 void test_DoublyLinkedList_destroy_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool destroyed = DoublyLinkedList_destroy(&DLL);
     TEST_ASSERT_FALSE(destroyed);
@@ -101,14 +98,14 @@ void test_DoublyLinkedList_is_empty_2() {
 
 void test_DoublyLinkedList_is_empty_3() {
     TEST_MESSAGE("Case 3--> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_TRUE(DoublyLinkedList_is_empty(DLL));
 }
 
 void test_DoublyLinkedList_is_sorted_1() {
     TEST_MESSAGE("Case 1--> Unsorted DoublyLinkedList:");
-    TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4, d5 = 5;
+    TYPE d1, d2, d3, d4, d5;
     DoublyLinkedList *DLL = NEW_DLL;
     DoublyLinkedList_add_last(DLL, &d4);
     DoublyLinkedList_add_last(DLL, &d5);
@@ -117,7 +114,7 @@ void test_DoublyLinkedList_is_sorted_1() {
     DoublyLinkedList_add_last(DLL, &d3);
 
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_is_sorted_2() {
@@ -132,7 +129,7 @@ void test_DoublyLinkedList_is_sorted_2() {
     DoublyLinkedList_sort_asc(DLL, _compare_TYPE);
 
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(ASC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_is_sorted_3() {
@@ -147,19 +144,19 @@ void test_DoublyLinkedList_is_sorted_3() {
     DoublyLinkedList_sort_desc(DLL, _compare_TYPE);
 
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(DESC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__DESC__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_is_sorted_4() {
     TEST_MESSAGE("Case 4--> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
 }
 
 void test_DoublyLinkedList_sort_order_1() {
     TEST_MESSAGE("Case 1--> Unsorted DoublyLinkedList:");
-    TYPE d1 = 1, d2 = 2, d3 = 3, d4 = 4, d5 = 5;
+    TYPE d1, d2, d3, d4, d5;
     DoublyLinkedList *DLL = NEW_DLL;
     DoublyLinkedList_add_last(DLL, &d4);
     DoublyLinkedList_add_last(DLL, &d5);
@@ -167,7 +164,7 @@ void test_DoublyLinkedList_sort_order_1() {
     DoublyLinkedList_add_last(DLL, &d2);
     DoublyLinkedList_add_last(DLL, &d3);
 
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_sort_order_2() {
@@ -181,7 +178,7 @@ void test_DoublyLinkedList_sort_order_2() {
     DoublyLinkedList_add_last(DLL, &d3);
     DoublyLinkedList_sort_asc(DLL, _compare_TYPE);
 
-    TEST_ASSERT_EQUAL(ASC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_sort_order_3() {
@@ -195,14 +192,14 @@ void test_DoublyLinkedList_sort_order_3() {
     DoublyLinkedList_add_last(DLL, &d3);
     DoublyLinkedList_sort_desc(DLL, _compare_TYPE);
 
-    TEST_ASSERT_EQUAL(DESC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__DESC__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_sort_order_4() {
     TEST_MESSAGE("Case 4--> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_first_1() {
@@ -213,7 +210,7 @@ void test_DoublyLinkedList_add_first_1() {
     DoublyLinkedList_add_first(DLL, &d2);
 
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_first_element(DLL));
-    TEST_ASSERT_EQUAL(0,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_first_2() {
@@ -227,13 +224,13 @@ void test_DoublyLinkedList_add_first_2() {
     bool added = DoublyLinkedList_add_first(DLL, &d3);
     TEST_ASSERT_TRUE(added);
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_first_element(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_first_3() {
     TEST_MESSAGE("Case 3 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool added = DoublyLinkedList_add_first(DLL, &d1);
     TEST_ASSERT_FALSE(added);
@@ -260,7 +257,7 @@ void test_DoublyLinkedList_add_first_5() {
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, DoublyLinkedList_size(DLL));
     TEST_ASSERT_EQUAL(&d1, DoublyLinkedList_first_element(DLL));
-    TEST_ASSERT_EQUAL(ASC,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_last_1() {
@@ -271,7 +268,7 @@ void test_DoublyLinkedList_add_last_1() {
     DoublyLinkedList_add_last(DLL, &d2);
 
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_last_element(DLL));
-    TEST_ASSERT_EQUAL(0,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_last_2() {
@@ -285,13 +282,13 @@ void test_DoublyLinkedList_add_last_2() {
     bool added = DoublyLinkedList_add_last(DLL, &d3);
     TEST_ASSERT_TRUE(added);
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_last_element(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_add_last_3() {
     TEST_MESSAGE("Case 3 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool added = DoublyLinkedList_add_last(DLL, &d1);
     TEST_ASSERT_FALSE(added);
@@ -318,7 +315,7 @@ void test_DoublyLinkedList_add_last_5() {
     TEST_ASSERT_FALSE(added);
     TEST_ASSERT_EQUAL(2, DoublyLinkedList_size(DLL));
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_last_element(DLL));
-    TEST_ASSERT_EQUAL(ASC,  DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__,  DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_remove_first_1() {
@@ -340,7 +337,7 @@ void test_DoublyLinkedList_remove_first_1() {
 
 void test_DoublyLinkedList_remove_first_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     void *removed = DoublyLinkedList_remove_first(DLL);
     TEST_ASSERT_NULL(removed);
@@ -373,7 +370,7 @@ void test_DoublyLinkedList_remove_last_1() {
 
 void test_DoublyLinkedList_remove_last_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     void *removed = DoublyLinkedList_remove_last(DLL);
     TEST_ASSERT_NULL(removed);
@@ -407,7 +404,7 @@ void test_DoublyLinkedList_remove_at_1() {
 
 void test_DoublyLinkedList_remove_at_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     void *removed = DoublyLinkedList_remove_at(DLL, 1);
     TEST_ASSERT_NULL(removed);
@@ -478,7 +475,7 @@ void test_DoublyLinkedList_remove_1() {
 void test_DoublyLinkedList_remove_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool removed = DoublyLinkedList_remove(DLL, &d1, _compare_TYPE);
     TEST_ASSERT_FALSE(removed);
@@ -544,7 +541,7 @@ void test_DoublyLinkedList_remove_all_1() {
 void test_DoublyLinkedList_remove_all_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     size_t removed = DoublyLinkedList_remove_all(DLL, &d1, _compare_TYPE);
     TEST_ASSERT_EQUAL(0, removed);
@@ -599,7 +596,7 @@ void test_DoublyLinkedList_size_1() {
 
 void test_DoublyLinkedList_size_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
     TEST_ASSERT_EQUAL(0, DoublyLinkedList_size(DLL));
 }
 
@@ -621,7 +618,7 @@ void test_DoublyLinkedList_first_element_1() {
 
 void test_DoublyLinkedList_first_element_2() {
     TEST_MESSAGE("Case 2: NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_NULL(DoublyLinkedList_first_element(DLL));
 }
@@ -645,7 +642,7 @@ void test_DoublyLinkedList_last_element_1() {
 
 void test_DoublyLinkedList_last_element_2() {
     TEST_MESSAGE("Case 2: NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_NULL(DoublyLinkedList_last_element(DLL));
 }
@@ -674,7 +671,7 @@ void test_DoublyLinkedList_get_1() {
 
 void test_DoublyLinkedList_get_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_NULL(DoublyLinkedList_get(DLL, 0));
 }
@@ -748,7 +745,7 @@ void test_DoublyLinkedList_count_1() {
 void test_DoublyLinkedList_count_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TYPE count = DoublyLinkedList_count(DLL, &d1);
     TEST_ASSERT_EQUAL(0, count);
@@ -797,7 +794,7 @@ void test_DoublyLinkedList_contains_1() {
 void test_DoublyLinkedList_contains_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool contains = DoublyLinkedList_contains(DLL, &d1);
     TEST_ASSERT_FALSE(contains);
@@ -868,7 +865,7 @@ void test_DoublyLinkedList_insert_at_2() {
     TEST_ASSERT_FALSE(DoublyLinkedList_contains(DLL, &d3));
     TEST_ASSERT_EQUAL(&d4, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(ASC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__, DoublyLinkedList_sort_order(DLL));
 
     bool added = DoublyLinkedList_insert_at(DLL, &d3, 2);
     TEST_ASSERT_TRUE(added);
@@ -877,7 +874,7 @@ void test_DoublyLinkedList_insert_at_2() {
     TEST_ASSERT_NOT_EQUAL(&d4, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_insert_at_3() {
@@ -895,7 +892,7 @@ void test_DoublyLinkedList_insert_at_3() {
     TEST_ASSERT_FALSE(DoublyLinkedList_contains(DLL, &d3));
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(DESC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__DESC__, DoublyLinkedList_sort_order(DLL));
 
     bool added = DoublyLinkedList_insert_at(DLL, &d3, 2);
     TEST_ASSERT_TRUE(added);
@@ -904,7 +901,7 @@ void test_DoublyLinkedList_insert_at_3() {
     TEST_ASSERT_NOT_EQUAL(&d2, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_get(DLL, 2));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 }
 
 void test_DoublyLinkedList_insert_at_4() {
@@ -946,7 +943,7 @@ void test_DoublyLinkedList_insert_at_5() {
 void test_DoublyLinkedList_insert_at_6() {
     TEST_MESSAGE("Case 6 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool added = DoublyLinkedList_insert_at(DLL, &d1, 0);
     TEST_ASSERT_FALSE(added);
@@ -1028,7 +1025,7 @@ void test_DoublyLinkedList_clone_1() {
 
 void test_DoublyLinkedList_clone_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     DoublyLinkedList *clone = DoublyLinkedList_clone(DLL);
 
@@ -1151,28 +1148,28 @@ void test_DoublyLinkedList_concat_8() {
     TEST_ASSERT_EQUAL(&d1, DoublyLinkedList_first_element(concatenated));
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_last_element(concatenated));
     TEST_ASSERT_EQUAL(concatenated_size, DoublyLinkedList_size(concatenated));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(concatenated));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(concatenated));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(concatenated));
 
     DoublyLinkedList *concatenated_2 = DoublyLinkedList_concat(DLL2, DLL1);
     TEST_ASSERT_EQUAL(&d4, DoublyLinkedList_first_element(concatenated_2));
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_last_element(concatenated_2));
     TEST_ASSERT_EQUAL(concatenated_size, DoublyLinkedList_size(concatenated_2));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(concatenated_2));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(concatenated_2));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(concatenated_2));
 
     DoublyLinkedList *concatenated_3 = DoublyLinkedList_concat(DLL1, DLL1);
     TEST_ASSERT_EQUAL(&d1, DoublyLinkedList_first_element(concatenated_3));
     TEST_ASSERT_EQUAL(&d2, DoublyLinkedList_last_element(concatenated_3));
     TEST_ASSERT_EQUAL(concatenated_size, DoublyLinkedList_size(concatenated_3));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(concatenated_3));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(concatenated_3));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(concatenated_3));
 
     DoublyLinkedList *concatenated_4 = DoublyLinkedList_concat(DLL2, DLL2);
     TEST_ASSERT_EQUAL(&d4, DoublyLinkedList_first_element(concatenated_4));
     TEST_ASSERT_EQUAL(&d3, DoublyLinkedList_last_element(concatenated_4));
     TEST_ASSERT_EQUAL(concatenated_size, DoublyLinkedList_size(concatenated_4));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(concatenated_4));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(concatenated_4));
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(concatenated_4));
 }
 
@@ -1195,7 +1192,7 @@ void test_DoublyLinkedList_reverse_1() {
 
 void test_DoublyLinkedList_reverse_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     DoublyLinkedList *reversed = DoublyLinkedList_reverse(DLL);
     TEST_ASSERT_NULL(reversed);
@@ -1504,12 +1501,12 @@ void test_DoublyLinkedList_sort_asc_1() {
     DoublyLinkedList_add_last(DLL, &d2);
 
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 
     bool sorted = DoublyLinkedList_sort_asc(DLL, _compare_TYPE);
     TEST_ASSERT_TRUE(sorted);
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(ASC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__ASC__, DoublyLinkedList_sort_order(DLL));
     for (long i = 0; i < DoublyLinkedList_size(DLL); i++) {
         TEST_ASSERT_EQUAL(i+1, _convert_to_TYPE(DoublyLinkedList_get(DLL, i)));
     }
@@ -1517,7 +1514,7 @@ void test_DoublyLinkedList_sort_asc_1() {
 
 void test_DoublyLinkedList_sort_asc_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool sorted = DoublyLinkedList_sort_asc(DLL, _compare_TYPE);
     TEST_ASSERT_FALSE(sorted);
@@ -1543,12 +1540,12 @@ void test_DoublyLinkedList_sort_desc_1() {
     size_t  size = DoublyLinkedList_size(DLL);
 
     TEST_ASSERT_FALSE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(UNSORTED, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__UNSORTED__, DoublyLinkedList_sort_order(DLL));
 
     bool sorted = DoublyLinkedList_sort_desc(DLL, _compare_TYPE);
     TEST_ASSERT_TRUE(sorted);
     TEST_ASSERT_TRUE(DoublyLinkedList_is_sorted(DLL));
-    TEST_ASSERT_EQUAL(DESC, DoublyLinkedList_sort_order(DLL));
+    TEST_ASSERT_EQUAL(__DESC__, DoublyLinkedList_sort_order(DLL));
     for (long i = 0, j = size; i < size && j > 0; i++, j--) {
         TEST_ASSERT_EQUAL(j, _convert_to_TYPE(DoublyLinkedList_get(DLL, i)));
     }
@@ -1556,7 +1553,7 @@ void test_DoublyLinkedList_sort_desc_1() {
 
 void test_DoublyLinkedList_sort_desc_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool sorted = DoublyLinkedList_sort_desc(DLL, _compare_TYPE);
     TEST_ASSERT_FALSE(sorted);
@@ -1593,7 +1590,7 @@ void test_DoublyLinkedList_sorted_insert_1() {
 void test_DoublyLinkedList_sorted_insert_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
     TYPE d1;
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     bool inserted = DoublyLinkedList_sorted_insert(DLL, &d1, _compare_TYPE);
     TEST_ASSERT_FALSE(inserted);
@@ -1644,7 +1641,7 @@ void test_DoublyLinkedList_min_1() {
 
 void test_DoublyLinkedList_min_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_NULL(DoublyLinkedList_min(DLL, _compare_TYPE));
 }
@@ -1677,7 +1674,7 @@ void test_DoublyLinkedList_max_1() {
 
 void test_DoublyLinkedList_max_2() {
     TEST_MESSAGE("Case 2 --> NULL DoublyLinkedList:");
-    DoublyLinkedList *DLL = NULL;
+    DoublyLinkedList *DLL = __DEFAULT_PTR__;
 
     TEST_ASSERT_NULL(DoublyLinkedList_max(DLL, _compare_TYPE));
 }

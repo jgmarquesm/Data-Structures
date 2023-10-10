@@ -67,7 +67,7 @@ void test_StaticQueue_is_empty_2() {
     StaticQueue *queue = NEW_QUEUE;
 
     TEST_ASSERT_TRUE(StaticQueue_is_empty(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_is_empty_3() {
@@ -75,7 +75,7 @@ void test_StaticQueue_is_empty_3() {
     StaticQueue *queue = NULL;
 
     TEST_ASSERT_TRUE(StaticQueue_is_empty(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_is_full_1() {
@@ -108,7 +108,7 @@ void test_StaticQueue_is_full_3() {
     StaticQueue *queue = NEW_QUEUE;
 
     TEST_ASSERT_FALSE(StaticQueue_is_full(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_is_full_4() {
@@ -116,7 +116,7 @@ void test_StaticQueue_is_full_4() {
     StaticQueue *queue = NULL;
 
     TEST_ASSERT_FALSE(StaticQueue_is_full(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_enqueue_1() {
@@ -126,12 +126,12 @@ void test_StaticQueue_enqueue_1() {
 
     bool enqueued = StaticQueue_enqueue(queue, &d1);
     TEST_ASSERT_TRUE(enqueued);
-    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d1, *((TYPE *) StaticQueue_peek(queue)));
     TEST_ASSERT_EQUAL(1, StaticQueue_size(queue));
 
     bool enqueued_2 = StaticQueue_enqueue(queue, &d2);
     TEST_ASSERT_TRUE(enqueued_2);
-    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d1, *((TYPE *) StaticQueue_peek(queue)));
     TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
 }
 
@@ -143,7 +143,7 @@ void test_StaticQueue_enqueue_2() {
     bool enqueued = StaticQueue_enqueue(queue, &d1);
     TEST_ASSERT_FALSE(enqueued);
     TEST_ASSERT_NULL(StaticQueue_peek(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_enqueue_3() {
@@ -153,7 +153,7 @@ void test_StaticQueue_enqueue_3() {
     bool enqueued = StaticQueue_enqueue(queue, NULL);
     TEST_ASSERT_FALSE(enqueued);
     TEST_ASSERT_NULL(StaticQueue_peek(queue));
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_peek_1() {
@@ -162,14 +162,14 @@ void test_StaticQueue_peek_1() {
     StaticQueue *queue = NEW_QUEUE;
 
     StaticQueue_enqueue(queue, &d1);
-    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d1, *((TYPE *) StaticQueue_peek(queue)));
     TEST_ASSERT_EQUAL(1, StaticQueue_size(queue));
 
     StaticQueue_enqueue(queue, &d2);
     StaticQueue_enqueue(queue, &d3);
     StaticQueue_enqueue(queue, &d4);
     TEST_ASSERT_EQUAL(4, StaticQueue_size(queue));
-    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d1, *((TYPE *) StaticQueue_peek(queue)));
 }
 
 void test_StaticQueue_peek_2() {
@@ -195,12 +195,12 @@ void test_StaticQueue_dequeue_1() {
     StaticQueue_enqueue(queue, &d3);
 
     TEST_ASSERT_EQUAL(3, StaticQueue_size(queue));
-    TEST_ASSERT_EQUAL(d1, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d1, *((TYPE *) StaticQueue_peek(queue)));
 
     bool dequeued = StaticQueue_dequeue(queue);
     TEST_ASSERT_TRUE(dequeued);
     TEST_ASSERT_EQUAL(2, StaticQueue_size(queue));
-    TEST_ASSERT_EQUAL(d2, *((int *) StaticQueue_peek(queue)));
+    TEST_ASSERT_EQUAL(d2, *((TYPE *) StaticQueue_peek(queue)));
 }
 
 void test_StaticQueue_dequeue_2() {
@@ -239,14 +239,14 @@ void test_StaticQueue_size_2() {
     TEST_MESSAGE("Case 2 --> NULL StaticQueue:");
     StaticQueue *queue = NULL;
 
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 void test_StaticQueue_size_3() {
     TEST_MESSAGE("Case 3 --> Empty StaticQueue:");
     StaticQueue *queue = NULL;
 
-    TEST_ASSERT_EQUAL(0, StaticQueue_size(queue));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, StaticQueue_size(queue));
 }
 
 int main() {

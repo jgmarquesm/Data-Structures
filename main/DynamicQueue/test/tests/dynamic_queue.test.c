@@ -2,6 +2,7 @@
 #include "../../main/include/dynamic_queue.h"
 
 #define TYPE int
+#define NEW_QUEUE DynamicQueue_create()
 
 void setUp(){}
 
@@ -10,13 +11,13 @@ void tearDown(){}
 void test_DynamicQueue_create() {
     DynamicQueue *queue = NULL;
     TEST_ASSERT_NULL(queue);
-    queue = DynamicQueue_create();
+    queue = NEW_QUEUE;
     TEST_ASSERT_NOT_NULL(queue);
 }
 
 void test_DynamicQueue_clean_1() {
     TEST_MESSAGE("Case --> 1 Queue != NULL:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     bool cleaned = DynamicQueue_clean(queue);
     TEST_ASSERT_TRUE(cleaned);
@@ -32,7 +33,7 @@ void test_DynamicQueue_clean_2() {
 
 void test_DynamicQueue_destroy_1() {
     TEST_MESSAGE("Case --> 1 Queue != NULL:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     TEST_ASSERT_NOT_NULL(queue);
     bool destroyed = DynamicQueue_destroy(&queue);
@@ -51,7 +52,7 @@ void test_DynamicQueue_destroy_2() {
 void test_DynamicQueue_is_empty_1() {
     TEST_MESSAGE("Case 1 --> Non Empty DynamicQueue:");
     TYPE d1, d2;
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
     DynamicQueue_enqueue(queue, &d1);
     DynamicQueue_enqueue(queue, &d2);
 
@@ -61,7 +62,7 @@ void test_DynamicQueue_is_empty_1() {
 
 void test_DynamicQueue_is_empty_2() {
     TEST_MESSAGE("Case 2 --> Empty DynamicQueue:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     TEST_ASSERT_TRUE(DynamicQueue_is_empty(queue));
     TEST_ASSERT_EQUAL(0, DynamicQueue_size(queue));
@@ -78,7 +79,7 @@ void test_DynamicQueue_is_empty_3() {
 void test_DynamicQueue_enqueue_1() {
     TEST_MESSAGE("Case 1 --> Non NULL DynamicQueue and Non NULL Data:");
     TYPE d1, d2;
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     bool enqueued = DynamicQueue_enqueue(queue, &d1);
     TEST_ASSERT_TRUE(enqueued);
@@ -104,7 +105,7 @@ void test_DynamicQueue_enqueue_2() {
 
 void test_DynamicQueue_enqueue_3() {
     TEST_MESSAGE("Case 3 --> NULL Data:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     bool enqueued = DynamicQueue_enqueue(queue, NULL);
     TEST_ASSERT_FALSE(enqueued);
@@ -115,7 +116,7 @@ void test_DynamicQueue_enqueue_3() {
 void test_DynamicQueue_peek_1() {
     TEST_MESSAGE("Case 1 --> Non NULL Non Empty DynamicQueue:");
     TYPE d1, d2, d3, d4;
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     DynamicQueue_enqueue(queue, &d1);
     TEST_ASSERT_EQUAL(&d1, DynamicQueue_peek(queue));
@@ -137,7 +138,7 @@ void test_DynamicQueue_peek_2() {
 
 void test_DynamicQueue_peek_3() {
     TEST_MESSAGE("Case 3 --> Empty DynamicQueue:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     TEST_ASSERT_NULL(DynamicQueue_peek(queue));
 }
@@ -145,7 +146,7 @@ void test_DynamicQueue_peek_3() {
 void test_DynamicQueue_dequeue_1() {
     TEST_MESSAGE("Case 1 --> Non NULL Non Empty DynamicQueue:");
     TYPE d1, d2, d3;
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
     DynamicQueue_enqueue(queue, &d1);
     DynamicQueue_enqueue(queue, &d2);
     DynamicQueue_enqueue(queue, &d3);
@@ -161,7 +162,7 @@ void test_DynamicQueue_dequeue_1() {
 
 void test_DynamicQueue_dequeue_2() {
     TEST_MESSAGE("Case 2 --> NULL DynamicQueue:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     void *data = DynamicQueue_dequeue(queue);
     TEST_ASSERT_NULL(data);
@@ -169,7 +170,7 @@ void test_DynamicQueue_dequeue_2() {
 
 void test_DynamicQueue_dequeue_3() {
     TEST_MESSAGE("Case 3 --> Empty DynamicQueue:");
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     void *data = DynamicQueue_dequeue(queue);
     TEST_ASSERT_NULL(data);
@@ -178,7 +179,7 @@ void test_DynamicQueue_dequeue_3() {
 void test_DynamicQueue_size_1() {
     TEST_MESSAGE("Case 1 --> Non NULL Non Empty DynamicQueue:");
     TYPE d1, d2, d3, d4;
-    DynamicQueue *queue = DynamicQueue_create();
+    DynamicQueue *queue = NEW_QUEUE;
 
     DynamicQueue_enqueue(queue, &d1);
     DynamicQueue_enqueue(queue, &d2);

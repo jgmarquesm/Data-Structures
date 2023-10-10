@@ -4,10 +4,46 @@
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
+#include <stddef.h>
 
-#define DEFAULT_INITIAL_WEIGHT 0.0
-#define DEFAULT_NULL_EDGE_VALUE 0
-#define DEFAULT_EDGE_VALUE 1
+#ifdef __DEFAULT_INITIAL_WEIGHT__
+    #undef __DEFAULT_INITIAL_WEIGHT__
+#endif
+#ifdef __DEFAULT_NULL_EDGE_VALUE__
+    #undef __DEFAULT_NULL_EDGE_VALUE__
+#endif
+#ifdef __DEFAULT_EDGE_VALUE__
+    #undef __DEFAULT_EDGE_VALUE__
+#endif
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
+
+#define __DEFAULT_INITIAL_WEIGHT__ 0.0
+#define __DEFAULT_NULL_EDGE_VALUE__ 0
+#define __DEFAULT_EDGE_VALUE__ 1
+#define __DEFAULT_LONG__ -1
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
 
 #define SIZE_OF_UNDIRECTED_WEIGHTED_GRAPH_TYPE size_of_undirected_weighted_graph_type
 
@@ -137,6 +173,6 @@ bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *d
  * @param uwg -> Undirected Weighted Graph to be printed.
  * @param type_print_function -> like: void (*type_print_function)(void *data).
  */
-void UndirectedWeightedGraph_print_full_graph(UndirectedWeightedGraph *uwg, void (*type_print_function)(void *data));
+void UndirectedWeightedGraph_print_full_graph(UndirectedWeightedGraph *uwg, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 
 #endif

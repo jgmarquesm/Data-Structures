@@ -1,3 +1,4 @@
+#helper
 # Directories
 MAIN = main
 TEST = test
@@ -15,6 +16,7 @@ HELPER = exception_handler
 TEST_HELPER = exception_handler.test
 UNITY = ../../unity
 DEPS = ../../scripts/dependencies
+INSTALL = install.sh
 #--ADD_NEW_hp
 #hp0
 
@@ -46,11 +48,11 @@ run_tests: clean_all pack compile_test
 	$(TEST)/$(BIN)/$(TEST_HELPER)
 	make clean_all
 
-add_deps:
-	$(DEPS)/add_deps_to_helper.sh
+install_helper:
+	$(DEPS)/$(INSTALL) -h
 
-get_deps:
-	$(DEPS)/get_deps.sh
+install:
+	$(DEPS)/$(INSTALL) -$(filter-out $@,$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_test clean_unity
 
