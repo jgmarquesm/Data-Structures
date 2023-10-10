@@ -27,13 +27,13 @@ function _title_case_to_snake_case() {
 }
 
 function set_suppress_print_error_on() {
-  helper=${HELPERS[1]}
+  helper=${HELPERS[0]}
   header_file=$(_title_case_to_snake_case "${helper}")
   sed -i~ 's#^\#define __SUPPRESS_PRINT_ERROR__ false#\#define __SUPPRESS_PRINT_ERROR__ true#' ./resources/helpers/"${helper}"/main/include/"${header_file}".h
 }
 
 function set_suppress_print_error_off() {
-  helper=${HELPERS[1]}
+  helper=${HELPERS[0]}
   header_file=$(_title_case_to_snake_case "${helper}")
   sed -i~ 's#^\#define __SUPPRESS_PRINT_ERROR__ false#\#define __SUPPRESS_PRINT_ERROR__ true#' ../resources/helpers/"${helper}"/main/include/"${header_file}".h
 }
