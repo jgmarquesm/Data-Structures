@@ -6,6 +6,52 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __UNSORTED__
+    #undef __UNSORTED__
+#endif
+#ifdef __ASC__
+    #undef __ASC__
+#endif
+#ifdef __DESC__
+    #undef __DESC__
+#endif
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_NAME__
+    #undef __TYPE_COMPARE_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+    #undef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
+#define __UNSORTED__ 0
+#define __ASC__ 1
+#define __DESC__ -1
+#define __DEFAULT_LONG__ 0
+#define __DEFAULT_BOOL__ false
+#define __NOT_DEFAULT_BOOL__ true
+#define __DEFAULT_PTR__ NULL
+#define __TYPE_COMPARE_FUNCTION_NAME__ type_compare_func
+#define __TYPE_COMPARE_FUNCTION_SIGNATURE__ int (*__TYPE_COMPARE_FUNCTION_NAME__)(void *data1, void *data2)
+#define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
+#define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
+
 #define SIZE_OF_SINGLY_LINKED_LIST_TYPE size_of_singly_linked_list_type
 
 extern const size_t size_of_singly_linked_list_type;
@@ -56,7 +102,7 @@ int SinglyLinkedList_sort_order(const SinglyLinkedList *SLL);
  * @param SLL -> SinglyLinkedList to be printed
  * @param type_print_function -> like: void (*type_print_function)(void *data)
  */
-void SinglyLinkedList_print(const SinglyLinkedList *SLL, void (*type_print_function)(void *data));
+void SinglyLinkedList_print(const SinglyLinkedList *SLL, __TYPE_PRINT_FUNCTION_SIGNATURE__);
 /**
  * When calling this functions it will add data to the first SinglyLinkedList node.
  * @param SLL -> SinglyLinkedList to add data
@@ -93,13 +139,13 @@ void *SinglyLinkedList_remove_at(SinglyLinkedList *SLL, const size_t index);
  * @param SLL -> SinglyLinkedList to remove data
  * @param data -> data to be removed
  */
-bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_remove(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will remove all occurrences of data in the SinglyLinkedList.
  * @param SLL -> SinglyLinkedList to remove data
  * @param data -> data to be removed
  */
-size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param SLL -> SinglyLinkedList to check its size
@@ -179,39 +225,39 @@ bool SinglyLinkedList_is_equals_strict(const SinglyLinkedList *SLL1, const Singl
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return true if SLL1 == SLL2;\n false if SLL1 != SLL2
  */
-bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinkedList *SLL2, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_is_equals(const SinglyLinkedList *SLL1, const SinglyLinkedList *SLL2, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the SinglyLinkedList in ascending order
  * @param SLL -> SinglyLinkedList to sort in ascending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sort_asc(SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will sort the SinglyLinkedList in descending order
  * @param SLL -> SinglyLinkedList to sort in descending order
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sort_desc(SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  * When calling this function it will add data to SinglyLinkedList following the order sort
  * @param SLL -> SinglyLinkedList to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  */
-bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, int (*type_compare_function)(void *data1, void *data2));
+bool SinglyLinkedList_sorted_insert(SinglyLinkedList *SLL, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param SLL -> SinglyLinkedList to get the smaller data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The smaller data in SinglyLinkedList
  */
-void *SinglyLinkedList_min(const SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+void *SinglyLinkedList_min(const SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
  *
  * @param SLL -> SinglyLinkedList to get the bigger data
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
  * @return The bigger data in SinglyLinkedList
  */
-void *SinglyLinkedList_max(const SinglyLinkedList *SLL, int (*type_compare_function)(void *data1, void *data2));
+void *SinglyLinkedList_max(const SinglyLinkedList *SLL, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 
 #endif
