@@ -11,6 +11,40 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#ifdef __UNSORTED__
+    #undef __UNSORTED__
+#endif
+#ifdef __ASC__
+    #undef __ASC__
+#endif
+#ifdef __DESC__
+    #undef __DESC__
+#endif
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_NAME__
+    #undef __TYPE_COMPARE_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+    #undef __TYPE_COMPARE_FUNCTION_SIGNATURE__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
 #define __UNSORTED__ 0
 #define __ASC__ 1
 #define __DESC__ -1

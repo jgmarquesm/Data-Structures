@@ -21,6 +21,7 @@ DS = matrix
 TEST_DS = matrix.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
+INSTALL = install.sh
 hp_0 = exception_handler
 #--ADD_NEW_hp
 ds_0 = array
@@ -71,11 +72,14 @@ run_tests: clean_all pack compile_test
 	$(TEST)/$(BIN)/$(TEST_DS)
 	make clean_all
 
-add_deps:
-	$(DEPS)/add_deps.sh
+install_ds:
+	$(DEPS)/$(INSTALL) -ds
 
-get_deps:
-	$(DEPS)/get_deps.sh
+install_helper:
+	$(DEPS)/$(INSTALL) -h
+
+install:
+	$(DEPS)/$(INSTALL) -$(filter-out $@,$(MAKECMDGOALS))
 
 clean_all: clean_libs clean_apps clean_test clean_external
 

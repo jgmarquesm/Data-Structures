@@ -3,6 +3,16 @@
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+
 #define __DEFAULT_BOOL__ false
 #define __NOT_DEFAULT_BOOL__ true
 #define __DEFAULT_PTR__ NULL

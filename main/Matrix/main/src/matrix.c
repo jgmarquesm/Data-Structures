@@ -17,12 +17,12 @@ const size_t size_of_matrix_type = sizeof(Matrix);
 Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_type, void *default_data) {
     if (anyThrows(
             3,
-            ExceptionHandler_is_non_positive("Matrix_create", "Rows", rows, false, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_non_positive("Matrix_create", "Columns", cols, false, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Matrix_create", "Default Data", default_data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_non_positive("Matrix_create", "Rows", rows, false, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_non_positive("Matrix_create", "Columns", cols, false, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Matrix_create", "Default Data", default_data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
-    Matrix *matrix = (Matrix *) calloc(1, sizeof(Matrix));
+    ) return __DEFAULT_PTR__;
+    Matrix *matrix = (Matrix *) calloc(1, size_of_matrix_type);
 
     Array *data = Array_create(rows, SIZE_OF_ARRAY_TYPE);
 
@@ -45,59 +45,59 @@ Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_typ
 bool Matrix_clean(Matrix *matrix) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_clean", "Matrix", matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_clean", "Matrix", matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (long i = 0; i < matrix->number_of_rows; i++) {
         for (long j = 0; j < matrix->number_of_cols; j++) {
             Matrix_set_at(matrix, i, j, matrix->default_data);
         }
     }
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 bool Matrix_delete(Matrix **matrix_ref) {
     Matrix *matrix = *matrix_ref;
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_delete", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_delete", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Array_delete(&(matrix->data));
     free(matrix);
-    *matrix_ref= NULL;
-    return true;
+    *matrix_ref= __DEFAULT_PTR__;
+    return __NOT_DEFAULT_BOOL__;
 }
 
 long Matrix_rows(const Matrix *matrix) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_rows", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_rows", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     return matrix->number_of_rows;
 }
 
 long Matrix_cols(const Matrix *matrix) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_cols", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_cols", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     return matrix->number_of_cols;
 }
 
 void *Matrix_get_at(const Matrix *matrix, const long row, const long col) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_get_at", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_get_at", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             2,
-            ExceptionHandler_is_out_of_bounds("Matrix_get_at", "Row", row, matrix->number_of_rows-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_get_at", "Column", col, matrix->number_of_cols-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Matrix_get_at", "Row", row, matrix->number_of_rows-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Matrix_get_at", "Column", col, matrix->number_of_cols-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Array *row_ = Array_get_at(matrix->data, row);
     return Array_get_at(row_, col);
 }
@@ -105,30 +105,30 @@ void *Matrix_get_at(const Matrix *matrix, const long row, const long col) {
 bool Matrix_set_at(Matrix *matrix, const long row, const long col, void *data) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Matrix_set", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Matrix_set", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_set", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Matrix_set", "Data", data, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             2,
-            ExceptionHandler_is_out_of_bounds("Matrix_set", "Row", row, matrix->number_of_rows-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_set", "Column", col, matrix->number_of_cols-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Matrix_set", "Row", row, matrix->number_of_rows-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Matrix_set", "Column", col, matrix->number_of_cols-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     Array *row_ = Array_get_at(matrix->data, row);
     Array_set(row_, data, col);
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }
 
-void Matrix_print(const Matrix *matrix, void (*type_print_function)(void * data)) {
+void Matrix_print(const Matrix *matrix, __TYPE_PRINT_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_print", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_print", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         )
     ) return;
     puts("[");
     for (long i = 0; i < matrix->number_of_rows; i++) {
         Array *col_ = Array_get_at(matrix->data, i);
-        Array_print(col_, type_print_function);
+        Array_print(col_, __TYPE_PRINT_FUNCTION_NAME__);
     }
     puts("]");
 }
@@ -136,9 +136,9 @@ void Matrix_print(const Matrix *matrix, void (*type_print_function)(void * data)
 Matrix *Matrix_clone(const Matrix *matrix) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_clone", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_clone", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     Matrix *clone = Matrix_create(matrix->number_of_rows, matrix->number_of_cols, matrix->size_of_type, matrix->default_data);
     for (int i = 0; i < matrix->number_of_rows; i++) {
         for (long j = 0; j < matrix->number_of_cols; j++) {
@@ -152,16 +152,16 @@ Matrix *Matrix_clone(const Matrix *matrix) {
 Matrix *Matrix_sub(const Matrix *matrix, const long initial_row, const long initial_col, const long final_row, const long final_col) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Matrix_sub", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_sub", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__)
         ) ||
         anyThrows(
             4,
-            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Row", final_row, matrix->number_of_rows-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Column", final_col, matrix->number_of_cols-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Row", initial_row, final_row-1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Column", initial_col, final_col-1, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Row", final_row, matrix->number_of_rows-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Final Column", final_col, matrix->number_of_cols-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Row", initial_row, final_row-1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_out_of_bounds("Matrix_sub", "Initial Column", initial_col, final_col-1, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return NULL;
+    ) return __DEFAULT_PTR__;
     long rows = final_row - initial_row + 1;
     long cols = final_col - initial_col + 1;
     Matrix *sub = Matrix_create(rows, cols, matrix->size_of_type, matrix->default_data);
@@ -174,36 +174,36 @@ Matrix *Matrix_sub(const Matrix *matrix, const long initial_row, const long init
     return sub;
 }
 
-bool Matrix_contains(const Matrix *matrix, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+bool Matrix_contains(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Matrix_contains", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Matrix_contains", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_contains", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Matrix_contains", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (long i = 0; i < matrix->number_of_rows; i++) {
         for (long j = 0; j < matrix->number_of_cols; j++){
             void *ij_data = Matrix_get_at(matrix, i, j);
-            if (type_compare_function(ij_data, data) == 0) {
-                return true;
+            if (__TYPE_COMPARE_FUNCTION_NAME__(ij_data, data) == 0) {
+                return __NOT_DEFAULT_BOOL__;
             }
         }
     }
-    return false;
+    return __DEFAULT_BOOL__;
 }
 
-long Matrix_count(const Matrix *matrix, void *data, int (*type_compare_function)(void *data1, void *data2)) {
+long Matrix_count(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Matrix_count", "Matrix", (void *) matrix, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Matrix_count", "Data", data, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_count", "Matrix", (void *) matrix, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Matrix_count", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return __DEFAULT_LONG__;
     long count = 0;
     for (long i = 0; i < matrix->number_of_rows; i++) {
         for (long j = 0; j < matrix->number_of_cols; j++) {
             void *ij_data = Matrix_get_at(matrix, i, j);
-            if (type_compare_function(ij_data, data) == 0) {
+            if (__TYPE_COMPARE_FUNCTION_NAME__(ij_data, data) == 0) {
                 count++;
             }
         }
@@ -211,24 +211,24 @@ long Matrix_count(const Matrix *matrix, void *data, int (*type_compare_function)
     return count;
 }
 
-bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, int (*type_compare_function)(void *data1, void *data2)) {
+bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, __TYPE_COMPARE_FUNCTION_SIGNATURE__) {
     if (anyThrows(
             2,
-            ExceptionHandler_is_null("Matrix_is_equals", "Matrix 1", (void *) matrix1, SUPPRESS_PRINT_ERROR),
-            ExceptionHandler_is_null("Matrix_is_equals", "Matrix 2", (void *) matrix2, SUPPRESS_PRINT_ERROR)
+            ExceptionHandler_is_null("Matrix_is_equals", "Matrix 1", (void *) matrix1, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_null("Matrix_is_equals", "Matrix 2", (void *) matrix2, __SUPPRESS_PRINT_ERROR__)
         )
         || matrix1->number_of_rows != matrix2->number_of_rows
         || matrix1->number_of_cols != matrix2->number_of_cols
         || matrix1->size_of_type != matrix2->size_of_type
-    ) return false;
+    ) return __DEFAULT_BOOL__;
     for (long i = 0; i < matrix1->number_of_rows; i++) {
         for (long j = 0; j< matrix1->number_of_cols; j++) {
             void *data1 = Matrix_get_at(matrix1, i, j);
             void *data2 = Matrix_get_at(matrix2, i, j);
-            if (type_compare_function(data1 ,data2) != 0) {
-                return false;
+            if (__TYPE_COMPARE_FUNCTION_NAME__(data1 ,data2) != 0) {
+                return __DEFAULT_BOOL__;
             }
         }
     }
-    return true;
+    return __NOT_DEFAULT_BOOL__;
 }

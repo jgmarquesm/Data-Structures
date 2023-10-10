@@ -80,7 +80,7 @@ void test_Matrix_clean_1() {
     _verify_Matrix_values(new_value, matrix);
 
     bool cleaned = Matrix_clean(matrix);
-    TEST_ASSERT_EQUAL(true, cleaned);
+    TEST_ASSERT_TRUE(cleaned);
     _verify_Matrix_values(default_data, matrix);
 }
 
@@ -89,7 +89,7 @@ void test_Matrix_clean_2() {
     Matrix *matrix = NULL;
 
     bool cleaned = Matrix_clean(matrix);
-    TEST_ASSERT_EQUAL(false, cleaned);
+    TEST_ASSERT_FALSE(cleaned);
 }
 
 void test_Matrix_delete_1() {
@@ -100,7 +100,7 @@ void test_Matrix_delete_1() {
     _verify_Matrix_values(default_data, matrix);
 
     bool deleted = Matrix_delete(&matrix);
-    TEST_ASSERT_EQUAL(true, deleted);
+    TEST_ASSERT_TRUE(deleted);
     TEST_ASSERT_NULL(matrix);
     _verify_Matrix_values_ptr(NULL, matrix);
 }
@@ -110,7 +110,7 @@ void test_Matrix_delete_2() {
     Matrix *matrix = NULL;
 
     bool deleted = Matrix_delete(&matrix);
-    TEST_ASSERT_EQUAL(false, deleted);
+    TEST_ASSERT_FALSE(deleted);
 }
 
 void test_Matrix_rows_1() {
@@ -123,7 +123,7 @@ void test_Matrix_rows_1() {
 void test_Matrix_rows_2() {
     TEST_MESSAGE("Case 2 --> Matrix = NULL:");
     Matrix *matrix = NULL;
-    TEST_ASSERT_EQUAL(0, Matrix_rows(matrix));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, Matrix_rows(matrix));
 }
 
 void test_Matrix_cols_1() {
@@ -136,7 +136,7 @@ void test_Matrix_cols_1() {
 void test_Matrix_cols_2() {
     TEST_MESSAGE("Case 2 --> Matrix = NULL:");
     Matrix *matrix = NULL;
-    TEST_ASSERT_EQUAL(0, Matrix_cols(matrix));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, Matrix_cols(matrix));
 }
 
 void test_Matrix_get_at_1() {
@@ -544,7 +544,7 @@ void test_Matrix_count_3() {
     TYPE default_data = default_value;
     Matrix *matrix = NULL;
 
-    TEST_ASSERT_EQUAL(0, Matrix_count(matrix, &default_data, _compare_TYPE));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, Matrix_count(matrix, &default_data, _compare_TYPE));
 }
 
 void test_Matrix_count_4() {
@@ -552,7 +552,7 @@ void test_Matrix_count_4() {
     TYPE default_data = default_value;
     Matrix *matrix = Matrix_create(ROWS, COLS, SIZE_OF_TYPE, &default_data);
 
-    TEST_ASSERT_EQUAL(0, Matrix_count(matrix, NULL, _compare_TYPE));
+    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, Matrix_count(matrix, NULL, _compare_TYPE));
 
 }
 

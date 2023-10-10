@@ -4,6 +4,36 @@
 //#--ADD_TO_INCLUDE
 
 #include <stdbool.h>
+#include <stddef.h>
+
+#ifdef __DEFAULT_INITIAL_WEIGHT__
+    #undef __DEFAULT_INITIAL_WEIGHT__
+#endif
+#ifdef __DEFAULT_NULL_EDGE_VALUE__
+    #undef __DEFAULT_NULL_EDGE_VALUE__
+#endif
+#ifdef __DEFAULT_EDGE_VALUE__
+    #undef __DEFAULT_EDGE_VALUE__
+#endif
+#ifdef __DEFAULT_LONG__
+    #undef __DEFAULT_LONG__
+#endif
+#ifdef __DEFAULT_BOOL__
+    #undef __DEFAULT_BOOL__
+#endif
+#ifdef __NOT_DEFAULT_BOOL__
+    #undef __NOT_DEFAULT_BOOL__
+#endif
+#ifdef __DEFAULT_PTR__
+    #undef __DEFAULT_PTR__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_NAME__
+    #undef __TYPE_PRINT_FUNCTION_NAME__
+#endif
+#ifdef __TYPE_PRINT_FUNCTION_SIGNATURE__
+    #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
+#endif
+
 
 #define __DEFAULT_INITIAL_WEIGHT__ 0.0
 #define __DEFAULT_NULL_EDGE_VALUE__ 0
