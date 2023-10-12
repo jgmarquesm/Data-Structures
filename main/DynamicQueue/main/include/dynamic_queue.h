@@ -59,13 +59,13 @@ DynamicQueue *DynamicQueue_create();
 /**
  * When calling this function it will clean all data from DynamicQueue
  * @param queue -> The DynamicQueue to be clean
- * @return true if: Dynamic Queue was successfully cleaned;\n false if (DynamicQueue == NULL).
+ * @return true if: Dynamic Queue was successfully cleaned;\n false if (queue == NULL).
  */
 bool DynamicQueue_clean(DynamicQueue *queue);
 /**
  * When calling this function, it will clean all data from DynamicQueue and it will be deallocated
  * @param queue_ref -> The pointer of the DynamicQueue to be deleted
- * @return true if: Dynamic Queue was successfully destroyed;\n false if (DynamicQueue == NULL).
+ * @return true if: Dynamic Queue was successfully destroyed;\n false if (queue == NULL).
  */
 bool DynamicQueue_destroy(DynamicQueue **queue_ref);
 /**
@@ -90,7 +90,7 @@ void *DynamicQueue_peek(const DynamicQueue *queue);
 /**
  * When calling this function it will remove data from head of the DynamicQueue;
  * @param queue -> DynamicQueue to remove last element;
- * @return true if: Data was successfully dequeued;\n false if (queue == NULL || Data == NULL).
+ * @return The data (void *) on head of the DynamicQueue is it was successfully dequeued;\n NULL if (queue == NULL || queue is empty).
  */
 void *DynamicQueue_dequeue(DynamicQueue *queue);
 /**
