@@ -110,7 +110,7 @@ int Array_sort_order(const Array *array);
 /**
  *
  * @param array -> Array to check emptiness;
- * @return true if: Array is empty (size == 0) or Array == NULL;\n false if: Array not empty (size > 0) or Array == NULL.
+ * @return true if: Array is empty (size == 0) or Array == NULL;\n false if: Array not empty (size > 0).
  */
 bool Array_is_empty(void *array);
 /**
@@ -142,13 +142,13 @@ bool Array_add_last(Array *array, void *data);
 /**
  *
  * @param array -> Array to get first element;
- * @return The first element of Array;\n NULL if Array == NULL.
+ * @return The first element of Array;\n NULL if Array == NULL or Array is empty.
  */
 void *Array_first_element(Array *array);
 /**
  *
  * @param array -> Array to get last element;
- * @return The last element of Array;\n NULL if Array == NULL.
+ * @return The last element of Array;\n NULL if Array == NULL or Array is empty.
  */
 void *Array_last_element(Array *array);
 /**
@@ -197,7 +197,7 @@ void Array_print(Array *array, __TYPE_PRINT_FUNCTION_SIGNATURE__);
  * @param array -> Array add data
  * @param data -> Data to be added
  * @param index -> Index to add data at
- * @return true if: Data was successfully added;\n false if (Array == NULL || Array is empty || Data == NULL || index is out of bounds).
+ * @return true if: Data was successfully added;\n false if (Array == NULL || Array is empty || Data == NULL || index is out of bounds || Array is full).
  */
 bool Array_insert_at(Array *array, void *data, const long index);
 /**
@@ -300,7 +300,7 @@ bool Array_sort_desc(Array *array, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
  * @param array -> Array to add data
  * @param data -> Data to be added
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return true if: Data was successfully inserted;\n false if (Array == NULL || Array is empty || Data == NULL || Array is not sorted).
+ * @return true if: Data was successfully inserted;\n false if (Array == NULL || Array is full || Data == NULL || Array is not sorted).
  */
 bool Array_sorted_insert(Array *array, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
