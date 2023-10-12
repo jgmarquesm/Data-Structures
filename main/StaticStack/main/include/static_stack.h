@@ -78,7 +78,7 @@ bool StaticStack_is_empty(void *stack);
 /**
  *
  * @param stack -> Stack to check fullness
- * @return true if: stack is full (size == capacity);\n false if: stack is not full (size <= capacity) or stack == NULL.
+ * @return true if: stack is full (size == capacity);\n false if: stack is not full (size \<= capacity) or stack == NULL.
  */
 bool StaticStack_is_full(void *stack);
 /**

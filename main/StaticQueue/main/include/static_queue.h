@@ -78,7 +78,7 @@ bool StaticQueue_is_empty(void *queue);
 /**
  *
  * @param queue -> Queue to check fullness
- * @return true if: queue is full (size == capacity);\n false if: queue is not full (size <= capacity) or queue == NULL.
+ * @return true if: queue is full (size == capacity);\n false if: queue is not full (size \<= capacity) or queue == NULL.
  */
 bool StaticQueue_is_full(void *queue);
 /**

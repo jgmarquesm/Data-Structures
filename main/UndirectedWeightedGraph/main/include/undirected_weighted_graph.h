@@ -66,7 +66,7 @@ typedef struct _undirected_weighted_graph UndirectedWeightedGraph;
 /**
  *
  * @param max_of_vertices -> Max number of vertices that could be stored in the Graph.
- * @return A new Undirected Weighted Graph with capacity to store max_of_vertices vertices;\n NULL if max_of_vertices <= 0
+ * @return A new Undirected Weighted Graph with capacity to store max_of_vertices vertices;\n NULL if max_of_vertices \<= 0
  */
 UndirectedWeightedGraph *UndirectedWeightedGraph_create(const long max_of_vertices);
 /**
@@ -98,7 +98,7 @@ bool UndirectedWeightedGraph_is_empty(void *uwg);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to check fullness.
- * @return true if: UWG is full (size == max_of_vertices);\n false if: UWG is not full (size <= max_of_vertices) or UWG == NULL.
+ * @return true if: UWG is full (size == max_of_vertices);\n false if: UWG is not full (size \<= max_of_vertices) or UWG == NULL.
  */
 bool UndirectedWeightedGraph_is_full(void *uwg);
 /**

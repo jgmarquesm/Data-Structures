@@ -116,7 +116,7 @@ bool Array_is_empty(void *array);
 /**
  *
  * @param array -> Array to check the fullness;
- * @return true if: Array is full (size == capacity);\n false if: Array is not full (size <= capacity) or Array == NULL.
+ * @return true if: Array is full (size == capacity);\n false if: Array is not full (size \<= capacity) or Array == NULL.
  */
 bool Array_is_full(void *array);
 /**
