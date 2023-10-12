@@ -87,7 +87,7 @@ Node *_get_node(const SinglyLinkedList *SLL, const size_t index) {
 SinglyLinkedList *SinglyLinkedList_create() {
     SinglyLinkedList *SLL = (SinglyLinkedList *) calloc(1, size_of_singly_linked_list_type);
     SLL->end = SLL->begin = __DEFAULT_PTR__;
-    SLL->size = __DEFAULT_LONG__;
+    SLL->size = __DEFAULT_SIZE_T__;
     SLL->sort_order = __UNSORTED__;
     return SLL;
 }
@@ -106,7 +106,7 @@ bool SinglyLinkedList_clean(SinglyLinkedList *SLL) {
     }
     SLL->begin = __DEFAULT_PTR__;
     SLL->end = __DEFAULT_PTR__;
-    SLL->size = __DEFAULT_LONG__;
+    SLL->size = __DEFAULT_SIZE_T__;
     SLL->sort_order = __UNSORTED__;
     return __NOT_DEFAULT_BOOL__;
 }
@@ -147,7 +147,7 @@ int SinglyLinkedList_sort_order(const SinglyLinkedList *SLL) {
             1,
             ExceptionHandler_is_null("SinglyLinkedList_sort_order", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return __DEFAULT_LONG__;
+    ) return __DEFAULT_SIZE_T__;
     return SLL->sort_order;
 }
 
@@ -297,7 +297,7 @@ size_t SinglyLinkedList_remove_all(SinglyLinkedList *SLL, void *data, __TYPE_COM
             ExceptionHandler_is_empty("SinglyLinkedList_remove_all", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__),
             ExceptionHandler_is_null("SinglyLinkedList_remove_all", "Data", data, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return __DEFAULT_LONG__;
+    ) return __DEFAULT_SIZE_T__;
     Node *node_prev = SLL->begin;
     Node *node = Node_get_next(SLL->begin);
     size_t count = 0;
@@ -332,7 +332,7 @@ size_t SinglyLinkedList_size(const SinglyLinkedList *SLL) {
             1,
             ExceptionHandler_is_null("SinglyLinkedList_size", "Singly Linked List", (void *) SLL, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return __DEFAULT_LONG__;
+    ) return __DEFAULT_SIZE_T__;
     return SLL->size;
 }
 
@@ -378,7 +378,7 @@ size_t SinglyLinkedList_count(const SinglyLinkedList *SLL, void *data) {
             ExceptionHandler_is_null("SinglyLinkedList_count", "Data", data, __SUPPRESS_PRINT_ERROR__),
             ExceptionHandler_is_empty("SinglyLinkedList_count", "Singly Linked List", (void *) SLL, SinglyLinkedList_is_empty, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return __DEFAULT_LONG__;
+    ) return __DEFAULT_SIZE_T__;
     Node *node = SLL->begin;
     int count = 0;
     while (node != __DEFAULT_PTR__) {

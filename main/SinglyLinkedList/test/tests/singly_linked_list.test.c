@@ -23,7 +23,7 @@ void test_SinglyLinkedList_create_1() {
     SLL = NEW_SLL;
     TEST_ASSERT_NOT_NULL(SLL);
     TEST_ASSERT_TRUE(SinglyLinkedList_is_empty(SLL));
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, SinglyLinkedList_size(SLL));
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, SinglyLinkedList_size(SLL));
     TEST_ASSERT_FALSE(SinglyLinkedList_is_sorted(SLL));
     TEST_ASSERT_EQUAL(__UNSORTED__, SinglyLinkedList_sort_order(SLL));
 }
@@ -544,7 +544,7 @@ void test_SinglyLinkedList_remove_all_2() {
     SinglyLinkedList *SLL = NULL;
 
     size_t removed = SinglyLinkedList_remove_all(SLL, &d1, _compare_TYPE);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, removed);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, removed);
 }
 
 void test_SinglyLinkedList_remove_all_3() {
@@ -553,7 +553,7 @@ void test_SinglyLinkedList_remove_all_3() {
     SinglyLinkedList *SLL = NEW_SLL;
 
     size_t removed = SinglyLinkedList_remove_all(SLL, &d1, _compare_TYPE);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, removed);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, removed);
 }
 
 void test_SinglyLinkedList_remove_all_4() {
@@ -565,7 +565,7 @@ void test_SinglyLinkedList_remove_all_4() {
     TEST_ASSERT_EQUAL(1, SinglyLinkedList_size(SLL));
 
     size_t removed = SinglyLinkedList_remove_all(SLL, NULL, _compare_TYPE);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, removed);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, removed);
     TEST_ASSERT_EQUAL(1, SinglyLinkedList_size(SLL));
 }
 
@@ -580,7 +580,7 @@ void test_SinglyLinkedList_remove_all_5() {
     TEST_ASSERT_FALSE(SinglyLinkedList_contains(SLL, &d3));
 
     size_t removed = SinglyLinkedList_remove_all(SLL, &d3, _compare_TYPE);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, removed);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, removed);
     TEST_ASSERT_EQUAL(2, SinglyLinkedList_size(SLL));
 }
 
@@ -597,13 +597,13 @@ void test_SinglyLinkedList_size_1() {
 void test_SinglyLinkedList_size_2() {
     TEST_MESSAGE("Case 2 --> NULL SinglyLinkedList:");
     SinglyLinkedList *SLL = NULL;
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, SinglyLinkedList_size(SLL));
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, SinglyLinkedList_size(SLL));
 }
 
 void test_SinglyLinkedList_size_3() {
     TEST_MESSAGE("Case 3 --> Empty SinglyLinkedList:");
     SinglyLinkedList *SLL = NEW_SLL;
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, SinglyLinkedList_size(SLL));
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, SinglyLinkedList_size(SLL));
 }
 
 void test_SinglyLinkedList_first_element_1() {
@@ -748,7 +748,7 @@ void test_SinglyLinkedList_count_2() {
     SinglyLinkedList *SLL = NULL;
 
     TYPE count = SinglyLinkedList_count(SLL, &d1);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, count);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, count);
 }
 
 void test_SinglyLinkedList_count_3() {
@@ -757,7 +757,7 @@ void test_SinglyLinkedList_count_3() {
     SinglyLinkedList *SLL = NEW_SLL;
 
     TYPE count = SinglyLinkedList_count(SLL, &d1);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, count);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, count);
 }
 
 void test_SinglyLinkedList_count_4() {
@@ -767,7 +767,7 @@ void test_SinglyLinkedList_count_4() {
     SinglyLinkedList_add_last(SLL, &d1);
 
     TYPE count = SinglyLinkedList_count(SLL, NULL);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, count);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, count);
 }
 
 void test_SinglyLinkedList_count_5() {
@@ -777,7 +777,7 @@ void test_SinglyLinkedList_count_5() {
     SinglyLinkedList_add_last(SLL, &d1);
 
     TYPE count = SinglyLinkedList_count(SLL, &d2);
-    TEST_ASSERT_EQUAL(__DEFAULT_LONG__, count);
+    TEST_ASSERT_EQUAL(__DEFAULT_SIZE_T__, count);
 }
 
 void test_SinglyLinkedList_contains_1() {

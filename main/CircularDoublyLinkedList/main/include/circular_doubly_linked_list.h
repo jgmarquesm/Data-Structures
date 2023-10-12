@@ -15,8 +15,8 @@
 #ifdef __DESC__
     #undef __DESC__
 #endif
-#ifdef __DEFAULT_LONG__
-    #undef __DEFAULT_LONG__
+#ifdef __DEFAULT_SIZE_T__
+    #undef __DEFAULT_SIZE_T__
 #endif
 #ifdef __DEFAULT_BOOL__
     #undef __DEFAULT_BOOL__
