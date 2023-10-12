@@ -27,7 +27,7 @@ extern const size_t size_of_node_type;
 typedef struct _node Node;
 /**
  *
- * @param data-> Data to create a Node with;
+ * @param data -> Data to create a Node with;
  * @return If Data != NULL, a new Node with data.\n NULL: Otherwise.
  */
 Node *Node_create(void *data);
