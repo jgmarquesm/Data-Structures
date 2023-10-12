@@ -116,7 +116,7 @@ function_declaration(ExceptionResponse *, ExceptionHandler_is_empty) {
     void *value = args.value;
     bool (* function_to_apply)(void *) = args.function_to_apply;
     bool set_var(suppress, false)
-    return f3(function, field, value, function_to_apply ,suppress);
+    return f3(function, field, value, function_to_apply, suppress);
 }
 
 function_declaration(ExceptionResponse *, ExceptionHandler_is_full) {
@@ -125,7 +125,7 @@ function_declaration(ExceptionResponse *, ExceptionHandler_is_full) {
     void *value = args.value;
     bool (* function_to_apply)(void *) = args.function_to_apply;
     bool set_var(suppress, false)
-    return f4(function, field, value, function_to_apply ,suppress);
+    return f4(function, field, value, function_to_apply, suppress);
 }
 
 function_declaration(ExceptionResponse *, ExceptionHandler_is_not_sorted) {
@@ -134,7 +134,7 @@ function_declaration(ExceptionResponse *, ExceptionHandler_is_not_sorted) {
     void *value = args.value;
     bool (* function_to_apply)(void *) = args.function_to_apply;
     bool set_var(suppress, false)
-    return f5(function, field, value, function_to_apply ,suppress);
+    return f5(function, field, value, function_to_apply, suppress);
 }
 
 function_declaration(ExceptionResponse *, ExceptionHandler_is_out_of_bounds) {
