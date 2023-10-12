@@ -79,13 +79,13 @@ DoublyLinkedList *DoublyLinkedList_create();
  * This function is responsible for clearing all data from a DoublyLinkedList. After calling this function, all data era
  * erased and the the DoublyLinkedList is empty.
  * @param DLL -> The DoublyLinkedList to clean up
- * @return true if:  Doubly Linked List was successfully cleaned;\n false if (Doubly Linked List == NULL).
+ * @return true if: Doubly Linked List was successfully cleaned;\n false if (Doubly Linked List == NULL).
  */
 bool DoublyLinkedList_clean(DoublyLinkedList *DLL);
 /**
  * When calling this function it will clean up and free all nodes and free the (Doubly)DoublyLinkedList.
  * @param DLL_ref -> The DoublyLinkedList reference
- * @return true if:  Doubly Linked List was successfully destroyed;\n false if (Doubly Linked List == NULL).
+ * @return true if: Doubly Linked List was successfully destroyed;\n false if (Doubly Linked List == NULL).
  */
 bool DoublyLinkedList_destroy(DoublyLinkedList **DLL_ref);
 /**
