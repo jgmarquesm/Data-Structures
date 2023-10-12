@@ -25,7 +25,6 @@
     #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
 #endif
 
-
 #define __DEFAULT_LONG__ 0
 #define __DEFAULT_BOOL__ false
 #define __NOT_DEFAULT_BOOL__ true
@@ -86,7 +85,7 @@ bool StaticQueue_is_full(void *queue);
  * When calling this function it will add the data on tail of Static Queue
  * @param queue -> Static Queue to add data
  * @param data -> Data to be add in Static Queue
- * @return true if: Data was successfully enqueued;\n false if (queue == NULL || Data == NULL).
+ * @return true if: Data was successfully enqueued;\n false if (queue == NULL || Data == NULL || queue is not full).
  */
 bool StaticQueue_enqueue(StaticQueue *queue, void *data);
 /**

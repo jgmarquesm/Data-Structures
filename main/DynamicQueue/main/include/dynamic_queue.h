@@ -90,7 +90,7 @@ void *DynamicQueue_peek(const DynamicQueue *queue);
 /**
  * When calling this function it will remove data from head of the DynamicQueue;
  * @param queue -> DynamicQueue to remove last element;
- * @return The data (void *) on head of the DynamicQueue is it was successfully dequeued;\n NULL if (queue == NULL || queue is empty).
+ * @return The data (void *) on head of the DynamicQueue if it was successfully dequeued;\n NULL if (queue == NULL || queue is empty).
  */
 void *DynamicQueue_dequeue(DynamicQueue *queue);
 /**

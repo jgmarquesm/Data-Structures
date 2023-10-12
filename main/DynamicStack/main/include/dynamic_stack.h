@@ -88,7 +88,7 @@ void *DynamicStack_peek(const DynamicStack *stack);
 /**
  * When calling this function it will remove data from top of the DynamicStack;
  * @param stack -> DynamicStack to remove last element;
- * @return The data (void *) on top of the DynamicStack is it was successfully popped;\n NULL if (stack == NULL || stack is empty).
+ * @return The data (void *) on top of the DynamicStack if it was successfully popped;\n NULL if (stack == NULL || stack is empty).
  */
 void *DynamicStack_pop(DynamicStack *stack);
 /**
