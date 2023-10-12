@@ -306,7 +306,7 @@ float UndirectedWeightedGraph_get_weight(UndirectedWeightedGraph *uwg, void *exi
             1,
             ExceptionHandler_is_null("UndirectedWeightedGraph_get_weight", "Undirected Weighted Graph::Weight Matrix", (void *) uwg->weight_matrix, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return (float) __DEFAULT_INITIAL_WEIGHT__;
 
     long exit_index = UndirectedWeightedGraph_index_of(uwg, exit_data);
     long entry_index = UndirectedWeightedGraph_index_of(uwg, entry_data);
@@ -315,7 +315,7 @@ float UndirectedWeightedGraph_get_weight(UndirectedWeightedGraph *uwg, void *exi
             ExceptionHandler_is_non_positive("UndirectedWeightedGraph_get_weight", "Exit index", exit_index, true, __SUPPRESS_PRINT_ERROR__),
             ExceptionHandler_is_non_positive("UndirectedWeightedGraph_get_weight", "Entry index", entry_index, true, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return 0;
+    ) return (float) __DEFAULT_INITIAL_WEIGHT__;
 
     return *((float *) Matrix_get_at(uwg->weight_matrix, exit_index, entry_index));
 }

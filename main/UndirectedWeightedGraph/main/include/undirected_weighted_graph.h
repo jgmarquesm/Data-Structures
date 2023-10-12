@@ -44,53 +44,68 @@
 #define __DEFAULT_PTR__ NULL
 #define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
 #define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
-
 #define SIZE_OF_UNDIRECTED_WEIGHTED_GRAPH_TYPE size_of_undirected_weighted_graph_type
 
 extern const size_t size_of_undirected_weighted_graph_type;
 
+/**
+ * @remark
+ * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
+ *
+ * 1 - Type printing function: To print data correctly.\n
+ * @example void (*type_print_function)(void *data)
+ *
+ * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type.\n
+ * @example type (*type_convert_function)(void * data)
+ *
+ * 3 - Type comparison function: To compare data correctly.\n
+ * @example int (*type_compare_function)(void *data1, void *data2)
+ */
 typedef struct _undirected_weighted_graph UndirectedWeightedGraph;
 
 /**
  *
  * @param max_of_vertices -> Max number of vertices that could be stored in the Graph.
- * @return A new Undirected Weighted Graph with capacity to store max_of_vertices vertices.
+ * @return A new Undirected Weighted Graph with capacity to store max_of_vertices vertices;\n NULL if max_of_vertices \<= 0
  */
 UndirectedWeightedGraph *UndirectedWeightedGraph_create(const long max_of_vertices);
 /**
  * When calling this function, it will clean all data from the Undirected Weighted Graph and restore it to the same state it was created in.
  * It's like a shortcut to: destroy and create a new Undirected Weighted Graph with same capacity of vertices.
  * @param uwg -> Undirected Weighted Graph to be cleaned.
+ * @return true if: Undirected Weighted Graph was successfully cleaned;\n false if (Undirected Weighted Graph == NULL).
  */
 bool UndirectedWeightedGraph_clean(UndirectedWeightedGraph *uwg);
 /**
  * When calling this function, it will free all data that was allocated to store the Undirected Weighted Graph.
  * @param uwg_ref  -> Undirected Weighted Graph reference to be destroyed.
+ * @return true if: Undirected Weighted Graph was successfully destroyed;\n false if (Undirected Weighted Graph == NULL).
  */
 bool UndirectedWeightedGraph_destroy(UndirectedWeightedGraph **uwg_ref);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get index of Data passed in.
  * @param data -> Data to get index of.
- * @return Index of the Data if Data is present in Undirected Weighted Graph, otherwise -1;
+ * @return First index of Data in Undirected Weighted Graph;\n -1 if (UWG does not contain the Data || UWG == NULL || UWG is empty || Data == NULL).
  */
 long UndirectedWeightedGraph_index_of(UndirectedWeightedGraph *uwg, void *data);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to check emptiness.
- * @return true if Undirected Weighted Graph is empty, false otherwise.
+ * @return true if: UWG is empty (size == 0) or UWG == NULL;\n false if: UWG not empty (size > 0).
  */
 bool UndirectedWeightedGraph_is_empty(void *uwg);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to check fullness.
- * @return true if Undirected Weighted Graph is full, false otherwise.
+ * @return true if: UWG is full (size == max_of_vertices);\n false if: UWG is not full (size \<= max_of_vertices) or UWG == NULL.
  */
 bool UndirectedWeightedGraph_is_full(void *uwg);
 /**
  * When calling this function it will add a new vertex with the passed data (only if there isn't already a vertex with the same data reference)
  * @param uwg -> Undirected Weighted Graph to add data.
  * @param data -> Data to be added in the Undirected Weighted Graph.
+ * @return true if: Vertex was successfully inserted;\n false if (UWG == NULL || UWG is full || Data == NULL).
  */
 bool UndirectedWeightedGraph_insert_vertex(UndirectedWeightedGraph *uwg, void *data);
 /**
@@ -101,6 +116,7 @@ bool UndirectedWeightedGraph_insert_vertex(UndirectedWeightedGraph *uwg, void *d
  * @param exit_data
  * @param entry_data
  * @param weight -> Weight of edge.
+ * @return true if: Edge was successfully inserted;\n false if (UWG == NULL || UWG is empty || Exit Vertex == NULL || Entry Vertex == NULL || Exit Vertex not in UWG || Exit Vertex not in UWG).
  */
 bool UndirectedWeightedGraph_insert_edge(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data, float weight);
 /**
@@ -110,6 +126,7 @@ bool UndirectedWeightedGraph_insert_edge(UndirectedWeightedGraph *uwg, void *exi
  * @param exit_data
  * @param entry_data
  * @param new_weight -> New Weight of edge.
+ * @return true if: Weight was successfully changed;\n false if (UWG == NULL || UWG is empty || Exit Vertex == NULL || Entry Vertex == NULL || Exit Vertex not in UWG || Exit Vertex not in UWG).
  */
 bool UndirectedWeightedGraph_change_weight(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data, float new_weight);
 /**
@@ -117,18 +134,19 @@ bool UndirectedWeightedGraph_change_weight(UndirectedWeightedGraph *uwg, void *e
  * @param uwg -> Undirected Weighted Graph to change the data of a vertex.
  * @param old_data -> Old vertex data.
  * @param new_data -> New data of the vertex.
+ * @return true if: Data was successfully changed;\n false if (UWG == NULL || UWG is empty || New Data == NULL || Old Data == NULL || Old Data not in UWG)
  */
 bool UndirectedWeightedGraph_change_data(UndirectedWeightedGraph *uwg, void *old_data, void *new_data);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get capacity.
- * @return Max number of vertices that Undirected Weighted Graph supports.
+ * @return Max number of vertices that Undirected Weighted Graph supports;\n -1 if UWG == NULL.
  */
 long UndirectedWeightedGraph_get_capacity(UndirectedWeightedGraph *uwg);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get size.
- * @return Actual size of Undirected Weighted Graph.
+ * @return Actual size of Undirected Weighted Graph;\n -1 if UWG == NULL.
  */
 long UndirectedWeightedGraph_get_size(UndirectedWeightedGraph *uwg);
 /**
@@ -137,21 +155,21 @@ long UndirectedWeightedGraph_get_size(UndirectedWeightedGraph *uwg);
  * @param uwg -> Undirected Weighted Graph to get weight between two vertices.
  * @param exit_data
  * @param entry_data
- * @return -> The Weight of the Edge between the vertices passed.
+ * @return -> The Weight of the Edge between the vertices passed;\n 0 if (UWG == NULL || UWG is empty || Exit Vertex == NULL || Entry Vertex == NULL || Exit Vertex not in UWG || Exit Vertex not in UWG).
  */
 float UndirectedWeightedGraph_get_weight(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get data from vertex on index.
  * @param index -> index to get data from.
- * @return Data from vertex at index.
+ * @return Data from vertex at index;\n NULL if (UWG == NULL || UWG is empty || index is out of bounds).
  */
 void *UndirectedWeightedGraph_get_data(UndirectedWeightedGraph *uwg, long index);
 /**
  *
  * @param uwg -> Undirected Weighted Graph to get valency of the vertex.
  * @param data -> Vertex to get the valency.
- * @return Valency (Degree) of the vertex.
+ * @return Valency (Degree) of the vertex;\n -1 if (UWG == NULL || UWG is empty || Data == NULL).
  */
 long UndirectedWeightedGraph_get_valency(UndirectedWeightedGraph *uwg, void *data);
 /**
@@ -160,12 +178,14 @@ long UndirectedWeightedGraph_get_valency(UndirectedWeightedGraph *uwg, void *dat
  * @param uwg
  * @param exit_data
  * @param entry_data
+ * @return true if: Edge was successfully removed;\n false if (UWG == NULL || UWG is empty || Exit Vertex == NULL || Entry Vertex == NULL || Exit Vertex not in UWG || Exit Vertex not in UWG).
  */
 bool UndirectedWeightedGraph_remove_edge(UndirectedWeightedGraph *uwg, void *exit_data, void *entry_data);
 /**
  * When calling this function, it will remove the vertex of Undirected Weighted Graph.
  * @param uwg -> Undirected Weighted Graph to remove the vertex.
  * @param data -> Vertex to be removed.
+ * @return true if: Vertex was successfully removed;\n false if (UWG == NULL || UWG is empty || Data == NULL || Data not in UWG).
  */
 bool UndirectedWeightedGraph_remove_vertex(UndirectedWeightedGraph *uwg, void *data);
 /**

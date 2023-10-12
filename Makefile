@@ -3,7 +3,7 @@ HELPERS = resources/helpers
 ARRAY = $(MAIN)/Array
 SLL = $(MAIN)/SinglyLinkedList
 DLL = $(MAIN)/DoublyLinkedList
-CLL = $(MAIN)/CircularDoublyLinkedList
+CDLL = $(MAIN)/CircularDoublyLinkedList
 SS = $(MAIN)/StaticStack
 DS = $(MAIN)/DynamicStack
 SQ = $(MAIN)/StaticQueue
@@ -65,7 +65,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(ARRAY)/$(MAIN)/$(SRC)/$(ED1).c $(APP)/$(AUX)/$(SRC)
 	cp $(SLL)/$(MAIN)/$(SRC)/$(ED2).c $(APP)/$(AUX)/$(SRC)
 	cp $(DLL)/$(MAIN)/$(SRC)/$(ED3).c $(APP)/$(AUX)/$(SRC)
-	cp $(CLL)/$(MAIN)/$(SRC)/$(ED4).c $(APP)/$(AUX)/$(SRC)
+	cp $(CDLL)/$(MAIN)/$(SRC)/$(ED4).c $(APP)/$(AUX)/$(SRC)
 	cp $(SS)/$(MAIN)/$(SRC)/$(ED5).c $(APP)/$(AUX)/$(SRC)
 	cp $(DS)/$(MAIN)/$(SRC)/$(ED6).c $(APP)/$(AUX)/$(SRC)
 	cp $(SQ)/$(MAIN)/$(SRC)/$(ED7).c $(APP)/$(AUX)/$(SRC)
@@ -81,7 +81,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(ARRAY)/$(MAIN)/$(INCLUDE)/$(ED1).h $(APP)/$(INCLUDE)
 	cp $(SLL)/$(MAIN)/$(INCLUDE)/$(ED2).h $(APP)/$(INCLUDE)
 	cp $(DLL)/$(MAIN)/$(INCLUDE)/$(ED3).h $(APP)/$(INCLUDE)
-	cp $(CLL)/$(MAIN)/$(INCLUDE)/$(ED4).h $(APP)/$(INCLUDE)
+	cp $(CDLL)/$(MAIN)/$(INCLUDE)/$(ED4).h $(APP)/$(INCLUDE)
 	cp $(SS)/$(MAIN)/$(INCLUDE)/$(ED5).h $(APP)/$(INCLUDE)
 	cp $(DS)/$(MAIN)/$(INCLUDE)/$(ED6).h $(APP)/$(INCLUDE)
 	cp $(SQ)/$(MAIN)/$(INCLUDE)/$(ED7).h $(APP)/$(INCLUDE)

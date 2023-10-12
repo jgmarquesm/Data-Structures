@@ -45,22 +45,29 @@
 extern const size_t size_of_matrix_type;
 
 /**
+ * @remark
  * As it is a generic Data Structure, to use some of its features, one must implement three auxiliary functions:\n
+ *
  * 1 - Type printing function: To print data correctly.\n
- * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type*.\n
- * 3 - Type comparison function: To compare correctly data.
+ * @example void (*type_print_function)(void *data)
+ *
+ * 2 - Type convert function: As some functions returns void*, one must use a function to convert void* to type.\n
+ * @example type (*type_convert_function)(void * data)
+ *
+ * 3 - Type comparison function: To compare data correctly.\n
+ * @example int (*type_compare_function)(void *data1, void *data2)
  */
 typedef struct _matrix Matrix;
 /**
  *
  * @param matrix -> Matrix to get the number of rows;
- * @return Matrix Number of rows.
+ * @return Matrix Number of rows;\n 0 if Matrix == NULL.
  */
 long Matrix_rows(const Matrix *matrix);
 /**
  *
  * @param matrix -> Matrix to get the number of columns;
- * @return Matrix Number of cols.
+ * @return Matrix Number of cols;\n 0 if Matrix == NULL.
  */
 long Matrix_cols(const Matrix *matrix);
 /**
@@ -68,13 +75,13 @@ long Matrix_cols(const Matrix *matrix);
  * @param rows -> number of rows to be allocated
  * @param cols -> number of cols to be allocated
  * @param size_of_type -> size of data type to be allocated
- * @return A new Matrix with thw number of rows and cols passed and max number of elements equals to rows * cols
+ * @return If (rows > 0 && rows > 0 && Default Data != NULL), a new Matrix of type and max number of elements equals to rows * cols.\n NULL: Otherwise.
  */
 Matrix *Matrix_create(const long rows, const long cols, unsigned int size_of_type, void *default_data);
 /**
  *
  * @param matrix -> Matrix to be cloned
- * @return A clone of Array
+ * @return A clone of Matrix;\n NULL if (Matrix == NULL).
  */
 Matrix *Matrix_clone(const Matrix *matrix);
 /**
@@ -84,17 +91,19 @@ Matrix *Matrix_clone(const Matrix *matrix);
  * @param initial_col -> column that will be the column-0 of new Matrix
  * @param final_row -> row that will be the last row of new Matrix
  * @param final_col -> column that will be the last column of new Matrix
- * @return A sub-Array of Array
+ * @return A sub-Matrix of Matrix;\n NULL if (Matrix == NULL || initial row is out of bounds || initial col is out of bounds || final row is out of bounds || final col is out of bounds)
  */
 Matrix *Matrix_sub(const Matrix *matrix, const long initial_row, const long initial_col, const long final_row, const long final_col);
 /**
  * When calling this function it will clean all data from Matrix;
  * @param matrix -> The Matrix to be clean;
+ * @return true if: Matrix was successfully cleaned;\n false if (Matrix == NULL).
  */
 bool Matrix_clean(Matrix *matrix);
 /**
  * When calling this function, it will clean all data from Matrix and it will be deallocated;
  * @param matrix_ref -> The pointer of the Matrix to be deleted;
+ * @return true if: Matrix was successfully deleted;\n false if (Matrix == NULL).
  */
 bool Matrix_delete(Matrix **matrix_ref);
 /**
@@ -102,7 +111,7 @@ bool Matrix_delete(Matrix **matrix_ref);
  * @param matrix -> Matrix to get data from position (row, col)
  * @param row -> row of data to be got
  * @param col -> col of data to be got
- * @return The data (void *) of position (row, col) of Matrix
+ * @return The data (void *) of position (row, col) of Matrix;\n NULL if (Matrix == NULL || Row is out of bounds || Col is out of bounds).
  */
 void *Matrix_get_at(const Matrix *matrix, const long row, const long col);
 /**
@@ -111,6 +120,7 @@ void *Matrix_get_at(const Matrix *matrix, const long row, const long col);
  * @param row -> Row to update data at
  * @param col -> Column to update data at
  * @param data -> Data to be set
+ * @return true if: Data was successfully set;\n false if (Matrix == NULL || Data == NULL || Row is out of bounds || Col is out of bounds).
  */
 bool Matrix_set_at(Matrix *matrix, const long row, const long col, void *data);
 /**
@@ -124,7 +134,7 @@ void Matrix_print(const Matrix *matrix, __TYPE_PRINT_FUNCTION_SIGNATURE__);
  * @param matrix -> Matrix to check if data is contained
  * @param data -> Data that will be checked if it is contained in Matrix
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return true if Array contains the data, false otherwise
+ * @return true if Matrix contains the data;\n false if (Matrix does not contain the Data || Matrix == NULL || Data == NULL).
  */
 bool Matrix_contains(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
@@ -132,7 +142,7 @@ bool Matrix_contains(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_S
  * @param matrix -> Matrix to count number os occurrences of data
  * @param data -> Data that the number of occurrences will be returned
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return The number of occurrences of data in the Matrix
+ * @return The number of occurrences of data in the Matrix;\n 0 if (Matrix does not contain the Data || Matrix == NULL || Data == NULL).
  */
 long Matrix_count(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 /**
@@ -140,7 +150,7 @@ long Matrix_count(const Matrix *matrix, void *data, __TYPE_COMPARE_FUNCTION_SIGN
  * @param matrix1 -> First Matrix to check equality
  * @param matrix2 -> Second Matrix to check equality
  * @param type_compare_function -> like: int (*type_compare_function)(void *data1, void *data2)
- * @return true if matrix1 == matrix2;\n false if matrix1 != matrix2
+ * @return true if Matrix1 == Matrix2;\n false if (Matrix1 == NULL || Matrix2 == NULL || Matrix1 != Matrix2).
  */
 bool Matrix_is_equals(const Matrix *matrix1, Matrix *matrix2, __TYPE_COMPARE_FUNCTION_SIGNATURE__);
 
