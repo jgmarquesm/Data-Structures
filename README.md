@@ -22,19 +22,21 @@
     2. [Node](#node)
     3. [Vertex](#vertex)
 3. [Build Tool Guide](#build-tool-guide)
-   1. [Create](#create)
+   1. [Creating](#creating)
       1. [New Data Structure](#new-data-structure)
       2. [New Helper](#new-helper)
    2. [Adding Dependency](#adding-dependency)
       1. [To Data Structure](#to-data-structure)
       2. [To Helper](#to-helper)
       3. [Get Dependencies Already Added](#get-dependencies-already-added)
+      4. [Access Modifier](#access-modifier)
+      5. [.info File](#info-file)
    3. [Testing](#testing)
       1. [Just one Data Structure Or Helper](#just-one-data-structure-or-helper)
       2. [Test Suite](#test-suite)
-         1. [test](#test)
-         2. [check](#check)
-         3. [test-debug](#test-debug)
+         1. [test](#make-test)
+         2. [test-debug](#make-test-debug)
+         3. [check](#make-check)
    4. [Building](#building)
    5. [Packing](#packing)
 4. [Remarks](#remarks)
@@ -205,7 +207,7 @@ To abstract some repetitive steps in the process of implementing new _Data Struc
 running tests, compiling, building the library, among other things, a _Build Tool_ was created using **Makefile** and 
 **Shell** scripts.
 
-## Create
+## Creating
 Is possible to create a new [_Data Structure_](#data-structures) or a new [_Helper_](#helpers) directly in CLI instead 
 create each directory manually.
 
@@ -282,6 +284,30 @@ its directory run:
 make install 
 ```
 
+
+### Access Modifier
+Each dependency has a access modifier that rule where it will be added during Adding a new dependency. There are 3 access
+modifiers: Public, Protected and Private.
+
+1. Public (pub): The dependency include will be on header of the parent, it means that everyone with access on header can see
+   how this dependency is used.
+2. Protected (ptd): The dependency include will be on source code of parent, it means that only who can access source code is
+   able to see how the dependency is used.
+3. Private (pvt): The dependency include will not be put anywhere, just on **.info** file. It means that it is not a direct dependency
+   and will be used only during compile time.
+
+### .info File
+The .info File is list of the Dependencies of a [_Data Structure_](#data-structures) or [_Helper_](#helpers) during.
+It is used to verify if the dependency is already added during adding a new Dependency. The pattern of element of this 
+list is: modifier_type_NameOfDependency, or modifier is the [Access Modifier](#access-modifier), type is about being a
+[_Data Structure_](#data-structures) (ds) or [_Helper_](#helpers) (hp).
+
+For example:
+
+1. Adding the [_Exception Handler_](#exception-handler) as a public dependency: `pub_hp_ExceptionHandler`
+2. Adding the [_Undirected Weighted Graph_](#undirected-weighted-graph) as a protected dependency: `ptd_ds_UndirectedWeightedGraph`
+3. Adding the [_Array_](#array) as a private dependency: `pvt_ds_Array`
+
 ## Testing
 
 ### Just one Data Structure or Helper
@@ -299,12 +325,40 @@ cd main/Array && make run_tests
 ```
 
 ### Test Suite
+To maintain a high level of quality, there are a lot of unit test for each [_Data Structure_](#data-structures) and 
+[_Helper_](#helpers). If one want to run all tests at once, there are 3 modes and one can choose which is better for each
+situation.
 
-#### test
+#### make test
+It runs quicly and silent. During execution, it shows only which [_Data Structure_](#data-structures) or
+[_Helper_](#Helpers) are executing, time spent of executed [_Data Structure_](#data-structures) and [_Helper_](#Helpers).
+At final of execution, it shows how many test was executed, how many tests passes or fail and total time of execution. 
 
-#### check
+One can execute test suite in this mode by running the following command in the root of project:
 
-#### test-debug
+```shell
+make test
+```
+
+#### make test-debug
+This mode is used to debug the test suite, and it runs slowly when compared with `make test`.
+It shows the same as when execute `make test`, in addiction it shows each test executed (description and result).
+
+One can execute test suite in this mode by running the following command in the root of project:
+
+```shell
+make test-debug
+```
+
+#### make check
+The third is a more restrictive mode and always runs before `make build` or `make pack`, ensuring that if any test fails
+the entire build or pack process is interrupted.
+
+One can execute test suite in this mode by running the following command in the root of project:
+
+```shell
+make check
+```
 
 ## Building
 The _Build Command_ is used to generate and compile the Library headers `.h` and Static Lib `libds.a`
@@ -318,7 +372,7 @@ or
 make b
 ```
 
-it runs [check command](#check) and if all tests passes, it will create some directories:
+it runs [check command](#make-check) and if all tests passes, it will create some directories:
 * `LIBDS`
 * `LIBDS/include`
 * `LIBDS/lib`
@@ -339,7 +393,6 @@ make p
 ```
 
 if any tests fail, the process is interrupted.
-
 
 # Remarks
 
@@ -419,3 +472,4 @@ data, without specifying how those operations are implemented.
 * GCC: 9.4.0
 * C: C17 (201710L)
 * Unity Framework: 2.5.2
+* Make: 4.2.1
