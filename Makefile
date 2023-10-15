@@ -131,11 +131,15 @@ build: --private-test-build-mode --private-get_eds
 	make compile
 
 .SILENT:
+create:
+	$(SCRIPTS)/$(CREATE_SCRIPT) --$(filter-out $@,$(MAKECMDGOALS))
+
+.SILENT:
 create-ds:
 	$(SCRIPTS)/$(CREATE_SCRIPT) -ds
 
 .SILENT:
-create-helper:
+create-h:
 	$(SCRIPTS)/$(CREATE_SCRIPT) -h
 
 .SILENT:
@@ -154,13 +158,7 @@ check: --private-test-build-mode
 
 b: build
 
-c: create-ds
-
-ch: create-helper
-
 p: pack
-
-t: test
 
 $(APP)/$(AUX)/$(OBJ)/%.o: $(APP)/$(AUX)/$(SRC)/%.c $(APP)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(APP)/$(INCLUDE) -o $@
