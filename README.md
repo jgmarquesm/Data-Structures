@@ -15,8 +15,8 @@
       2. [Dynamic Queue](#dynamic-queue)
    6. [Graph](#graph)
       1. [Undirected Weighted Graph](#undirected-weighted-graph)
-         1. [Version 1](#version-1)
-         2. [Version 2](#version-2)
+         1. [Adjacency Matrix Version](#adjacency-matrix-version)
+         2. [Adjacency Linked List Version](#adjacency-linked-list-version)
 2. [Helpers](#helpers)
     1. [Exception Handler](#exception-handler)
     2. [Node](#node)
@@ -163,16 +163,16 @@ the same ease. This property reflects a symmetric relationship between connected
 Each edge in the graph has an associated weight, which is a numerical value. These weights represent some measure or 
 value associated with the relationship between the vertices connected by the edge.
 
-#### Version 1
+#### Adjacency Matrix Version
 Here _Undirected Weighted Graph_ were implemented with an adjacency matrix and [_Array_](#array) of [_Vertex_](#vertex),
 where the rows and columns correspond to the vertices of the graph, and the values in the matrix represent the 
 weights of the edges between those vertices.
 
-[Click here to see its Spec.](main/UndirectedWeightedGraph/main/include/undirected_weighted_graph.h)
+[Click here to see its Spec.](main/UndirectedWeightedGraph1/main/include/undirected_weighted_graph_1.h)
 
-[Click here to see its implementation.](main/UndirectedWeightedGraph/main/src/undirected_weighted_graph.c)
+[Click here to see its implementation.](main/UndirectedWeightedGraph1/main/src/undirected_weighted_graph_1.c)
 
-#### Version 2
+#### Adjacency Linked List Version
 
 
 # Helpers
@@ -286,7 +286,7 @@ make install
 
 
 ### Access Modifier
-Each dependency has a access modifier that rule where it will be added during Adding a new dependency. There are 3 access
+Each dependency has an access modifier that rule where it will be added during Adding a new dependency. There are 3 access
 modifiers: Public, Protected and Private.
 
 1. Public (pub): The dependency include will be on header of the parent, it means that everyone with access on header can see
@@ -305,7 +305,7 @@ list is: modifier_type_NameOfDependency, or modifier is the [Access Modifier](#a
 For example:
 
 1. Adding the [_Exception Handler_](#exception-handler) as a public dependency: `pub_hp_ExceptionHandler`
-2. Adding the [_Undirected Weighted Graph_](#undirected-weighted-graph) as a protected dependency: `ptd_ds_UndirectedWeightedGraph`
+2. Adding the [_Undirected Weighted Graph version 1_](#adjacency-matrix-version) as a protected dependency: `ptd_ds_UndirectedWeightedGraph1`
 3. Adding the [_Array_](#array) as a private dependency: `pvt_ds_Array`
 
 ## Testing

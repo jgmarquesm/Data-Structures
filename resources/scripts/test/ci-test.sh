@@ -18,7 +18,7 @@ DynamicStack
 StaticQueue
 DynamicQueue
 Matrix
-UndirectedWeightedGraph
+UndirectedWeightedGraph1
 ) #--DS
 
 function _title_case_to_snake_case() {
