@@ -9,28 +9,26 @@ INCLUDE = include
 LIB = lib
 OBJ = obj
 SRC = src
-hp_FOLDER_0 = ../../resources/helpers/Vertex/$(MAIN)
+hp_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
 hp_DEP_FOLDER_0_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
 #--ADD_FOLDER_NEW_hp
-ds_FOLDER_0 = ../Matrix/$(MAIN)
-ds_FOLDER_1 = ../Array/$(MAIN)
+ds_FOLDER_0 = ../CircularDoublyLinkedList/$(MAIN)
 #--ADD_FOLDER_NEW_ds
 
 # Names Definition
-APP_NAME = app_undirected_weighted_graph1
-LIB_NAME = UWG1
-DS = undirected_weighted_graph1
-TEST_DS = undirected_weighted_graph1.test
+APP_NAME = app_undirected_weighted_graph2
+LIB_NAME = UWG2
+DS = undirected_weighted_graph2
+TEST_DS = undirected_weighted_graph2.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
 INSTALL = install.sh
-hp_0 = vertex
+hp_0 = node
 hp_DEP_0_1 = exception_handler
 #--ADD_NEW_hp
-ds_0 = matrix
-ds_1 = array
+ds_0 = circular_doubly_linked_list
 #--ADD_NEW_ds
-#ds2
+#ds1
 #hp1
 
 # Compilation Flags
@@ -44,36 +42,32 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	mkdir $(TEST)/$(BIN)
 
 --private-get_external_lib:
+	cp $(ds_FOLDER_0)/$(SRC)/$(ds_0).c $(MAIN)/$(SRC)/
+	cp $(ds_FOLDER_0)/$(INCLUDE)/$(ds_0).h $(MAIN)/$(INCLUDE)/
 	cp $(hp_FOLDER_0)/$(SRC)/$(hp_0).c $(MAIN)/$(SRC)/
 	cp $(hp_FOLDER_0)/$(INCLUDE)/$(hp_0).h $(MAIN)/$(INCLUDE)/
 	cp $(hp_DEP_FOLDER_0_1)/$(SRC)/$(hp_DEP_0_1).c $(MAIN)/$(SRC)/
 	cp $(hp_DEP_FOLDER_0_1)/$(INCLUDE)/$(hp_DEP_0_1).h $(MAIN)/$(INCLUDE)/
-	cp $(ds_FOLDER_0)/$(SRC)/$(ds_0).c $(MAIN)/$(SRC)/
-	cp $(ds_FOLDER_0)/$(INCLUDE)/$(ds_0).h $(MAIN)/$(INCLUDE)/
-	cp $(ds_FOLDER_1)/$(SRC)/$(ds_1).c $(MAIN)/$(SRC)/
-	cp $(ds_FOLDER_1)/$(INCLUDE)/$(ds_1).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
 
 pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(DS).o \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
 	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
-	$(MAIN)/$(OBJ)/$(ds_0).o \
-	$(MAIN)/$(OBJ)/$(ds_1).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
 compile_apps: $(MAIN)/$(BIN)/$(APP_NAME)
 
 compile_test: $(MAIN)/$(OBJ)/$(DS).o \
-	$(MAIN)/$(OBJ)/unity.o  \
-	$(TEST)/$(BIN)/$(TEST_DS) \
+  $(MAIN)/$(OBJ)/unity.o \
+  $(TEST)/$(BIN)/$(TEST_DS) \
+	$(MAIN)/$(OBJ)/$(ds_0).o \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
 	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
-	$(MAIN)/$(OBJ)/$(ds_0).o \
-	$(MAIN)/$(OBJ)/$(ds_1).o \
 #--ADD_TO_COMPILE_TEST
 
 run_apps: pack compile_apps
@@ -105,14 +99,12 @@ clean_test:
 	rm -rf $(TEST)/$(BIN)
 
 clean_external:
+	rm -rf $(MAIN)/$(SRC)/$(ds_0).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(ds_0).h
 	rm -rf $(MAIN)/$(SRC)/$(hp_0).c
 	rm -rf $(MAIN)/$(INCLUDE)/$(hp_0).h
 	rm -rf $(MAIN)/$(SRC)/$(hp_DEP_0_1).c
 	rm -rf $(MAIN)/$(INCLUDE)/$(hp_DEP_0_1).h
-	rm -rf $(MAIN)/$(SRC)/$(ds_0).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(ds_0).h
-	rm -rf $(MAIN)/$(SRC)/$(ds_1).c
-	rm -rf $(MAIN)/$(INCLUDE)/$(ds_1).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h
