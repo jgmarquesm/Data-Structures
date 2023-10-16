@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 RED='\033[1;91m'
+YELLOW='\033[1;93m'
 NO_COLOR='\033[0m'
 
 CREATE_DS='f'
@@ -20,6 +21,7 @@ if [[ "$CREATE_DS" == 't' ]]; then
 elif [[ "$CREATE_H" == 't' ]]; then
   exec "${DEPS_PATH}"/create_helper.sh
 else
-  echo "${RED}Option Required: -ds or -h.${NO_COLOR}"
+  echo "${YELLOW}Option: ${1}.${NO_COLOR}"
+  echo "${RED}Option Required: --datastructure or --helper.${NO_COLOR}"
   exit 1
 fi

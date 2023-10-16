@@ -268,7 +268,7 @@ ${PURPLE}6 )${WHITE} Dynamic Stack
 ${PURPLE}7 )${WHITE} Static Queue
 ${PURPLE}8 )${WHITE} Dynamic Queue
 ${PURPLE}9 )${WHITE} Matrix
-${PURPLE}10)${WHITE} Undirected Weighted Graph
+${PURPLE}10)${WHITE} Undirected Weighted Graph 1 (Adjacency Matrix)
 ${NO_COLOR}" #--DS
 
 read -r SELECTION
@@ -283,7 +283,7 @@ case ${SELECTION} in
     7 ) DEPENDENCY="StaticQueue";;
     8 ) DEPENDENCY="DynamicQueue";;
     9 ) DEPENDENCY="Matrix";;
-    10 ) DEPENDENCY="UndirectedWeightedGraph";;
+    10 ) DEPENDENCY="UndirectedWeightedGraph1";;
 #--ADD_NEW_OPT
     * )
       echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"

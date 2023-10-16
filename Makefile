@@ -9,7 +9,7 @@ DS = $(MAIN)/DynamicStack
 SQ = $(MAIN)/StaticQueue
 DQ = $(MAIN)/DynamicQueue
 MAT = $(MAIN)/Matrix
-UWG = $(MAIN)/UndirectedWeightedGraph
+UWG1 = $(MAIN)/UndirectedWeightedGraph1
 #--NEW_DS_DIR
 EH = $(HELPERS)/ExceptionHandler
 N = $(HELPERS)/Node
@@ -40,7 +40,7 @@ ED6 = dynamic_stack
 ED7 = static_queue
 ED8 = dynamic_queue
 ED9 = matrix
-ED10 = undirected_weighted_graph
+ED10 = undirected_weighted_graph_1
 #--ADD_NEW_DS
 #DS11
 H1 = exception_handler
@@ -71,7 +71,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(SQ)/$(MAIN)/$(SRC)/$(ED7).c $(APP)/$(AUX)/$(SRC)
 	cp $(DQ)/$(MAIN)/$(SRC)/$(ED8).c $(APP)/$(AUX)/$(SRC)
 	cp $(MAT)/$(MAIN)/$(SRC)/$(ED9).c $(APP)/$(AUX)/$(SRC)
-	cp $(UWG)/$(MAIN)/$(SRC)/$(ED10).c $(APP)/$(AUX)/$(SRC)
+	cp $(UWG1)/$(MAIN)/$(SRC)/$(ED10).c $(APP)/$(AUX)/$(SRC)
 	cp $(EH)/$(MAIN)/$(SRC)/$(H1).c $(APP)/$(AUX)/$(SRC)
 	cp $(N)/$(MAIN)/$(SRC)/$(H2).c $(APP)/$(AUX)/$(SRC)
 	cp $(V)/$(MAIN)/$(SRC)/$(H3).c $(APP)/$(AUX)/$(SRC)
@@ -87,7 +87,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(SQ)/$(MAIN)/$(INCLUDE)/$(ED7).h $(APP)/$(INCLUDE)
 	cp $(DQ)/$(MAIN)/$(INCLUDE)/$(ED8).h $(APP)/$(INCLUDE)
 	cp $(MAT)/$(MAIN)/$(INCLUDE)/$(ED9).h $(APP)/$(INCLUDE)
-	cp $(UWG)/$(MAIN)/$(INCLUDE)/$(ED10).h $(APP)/$(INCLUDE)
+	cp $(UWG1)/$(MAIN)/$(INCLUDE)/$(ED10).h $(APP)/$(INCLUDE)
 	cp $(EH)/$(MAIN)/$(INCLUDE)/$(H1).h $(APP)/$(INCLUDE)
 	cp $(N)/$(MAIN)/$(INCLUDE)/$(H2).h $(APP)/$(INCLUDE)
 	cp $(V)/$(MAIN)/$(INCLUDE)/$(H3).h $(APP)/$(INCLUDE)
@@ -131,11 +131,15 @@ build: --private-test-build-mode --private-get_eds
 	make compile
 
 .SILENT:
+create:
+	$(SCRIPTS)/$(CREATE_SCRIPT) --$(filter-out $@,$(MAKECMDGOALS))
+
+.SILENT:
 create-ds:
 	$(SCRIPTS)/$(CREATE_SCRIPT) -ds
 
 .SILENT:
-create-helper:
+create-h:
 	$(SCRIPTS)/$(CREATE_SCRIPT) -h
 
 .SILENT:
@@ -154,13 +158,7 @@ check: --private-test-build-mode
 
 b: build
 
-c: create-ds
-
-ch: create-helper
-
 p: pack
-
-t: test
 
 $(APP)/$(AUX)/$(OBJ)/%.o: $(APP)/$(AUX)/$(SRC)/%.c $(APP)/$(INCLUDE)/%.h
 	gcc $(FLAGS) -c $< -I $(APP)/$(INCLUDE) -o $@
