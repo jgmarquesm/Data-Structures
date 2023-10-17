@@ -42,9 +42,9 @@
 #define __DEFAULT_PTR__ NULL
 #define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
 #define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
-#define SIZE_OF_UNDIRECTED_WEIGHTED_GRAPH_1_TYPE size_of_undirected_weighted_graph_1_type
+#define SIZE_OF_UNDIRECTED_WEIGHTED_GRAPH1_TYPE size_of_undirected_weighted_graph1_type
 
-extern const size_t size_of_undirected_weighted_graph_1_type;
+extern const size_t size_of_undirected_weighted_graph1_type;
 
 /**
  * @remark
@@ -59,7 +59,7 @@ extern const size_t size_of_undirected_weighted_graph_1_type;
  * 3 - Type comparison function: To compare data correctly.\n
  * @example int (*type_compare_function)(void *data1, void *data2)
  */
-typedef struct _undirected_weighted_graph_1 UndirectedWeightedGraph1;
+typedef struct _undirected_weighted_graph1 UndirectedWeightedGraph1;
 
 /**
  *

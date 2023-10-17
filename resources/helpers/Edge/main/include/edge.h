@@ -1,5 +1,5 @@
-#ifndef UNDIRECTED_WEIGHTED_GRAPH2_H
-#define UNDIRECTED_WEIGHTED_GRAPH2_H
+#ifndef EDGE_H
+#define EDGE_H
 #include "exception_handler.h"
 //#--ADD_TO_INCLUDE
 
@@ -44,16 +44,14 @@
 #define __TYPE_PRINT_FUNCTION_NAME__ type_print_func
 #define __TYPE_PRINT_FUNCTION_SIGNATURE__ void (*__TYPE_PRINT_FUNCTION_NAME__)(void *data)
 
-#define SIZE_OF_UNDIRECTED_WEIGHTED_GRAPH2_TYPE size_of_undirected_weighted_graph2_type
+#define SIZE_OF_EDGE_TYPE size_of_edge_type
 
-extern const size_t size_of_undirected_weighted_graph2_type;
+extern const size_t size_of_edge_type;
 
-typedef struct _undirected_weighted_graph2 UndirectedWeightedGraph2;
+typedef struct _edge Edge;
 
-UndirectedWeightedGraph2 *UndirectedWeightedGraph2_create();
+Edge *Edge_create(size_t src_vertex, size_t dest_vertex, float weight);
 
-bool UndirectedWeightedGraph2_insert_Vertex(UndirectedWeightedGraph2 *uwg, void *data);
-
-bool UndirectedWeightedGraph2_add_Edge(UndirectedWeightedGraph2 *uwg, size_t src_vertex, size_t dest_vertex, float weight);
+bool Edge_add(Edge *edge, size_t src_vertex, size_t dest_vertex, float weight);
 
 #endif

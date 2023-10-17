@@ -11,6 +11,7 @@ OBJ = obj
 SRC = src
 hp_FOLDER_0 = ../../resources/helpers/Node/$(MAIN)
 hp_DEP_FOLDER_0_1 = ../../resources/helpers/ExceptionHandler/$(MAIN)
+hp_FOLDER_1 = ../../resources/helpers/Edge/$(MAIN)
 #--ADD_FOLDER_NEW_hp
 ds_FOLDER_0 = ../CircularDoublyLinkedList/$(MAIN)
 #--ADD_FOLDER_NEW_ds
@@ -25,11 +26,12 @@ DEPS = ../../resources/scripts/dependencies
 INSTALL = install.sh
 hp_0 = node
 hp_DEP_0_1 = exception_handler
+hp_1 = edge
 #--ADD_NEW_hp
 ds_0 = circular_doubly_linked_list
 #--ADD_NEW_ds
 #ds1
-#hp1
+#hp2
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -48,6 +50,8 @@ LIBS = -l$(LIB_NAME) -L $(MAIN)/$(LIB)
 	cp $(hp_FOLDER_0)/$(INCLUDE)/$(hp_0).h $(MAIN)/$(INCLUDE)/
 	cp $(hp_DEP_FOLDER_0_1)/$(SRC)/$(hp_DEP_0_1).c $(MAIN)/$(SRC)/
 	cp $(hp_DEP_FOLDER_0_1)/$(INCLUDE)/$(hp_DEP_0_1).h $(MAIN)/$(INCLUDE)/
+	cp $(hp_FOLDER_1)/$(SRC)/$(hp_1).c $(MAIN)/$(SRC)/
+	cp $(hp_FOLDER_1)/$(INCLUDE)/$(hp_1).h $(MAIN)/$(INCLUDE)/
 #--ADD_GET_NEW_LIB
 	cp $(UNITY)/$(INCLUDE)/* $(MAIN)/$(INCLUDE)/
 	cp $(UNITY)/$(SRC)/* $(MAIN)/$(SRC)/
@@ -57,6 +61,7 @@ pack: clean_all --private-create_folders --private-get_external_lib \
 	$(MAIN)/$(OBJ)/$(ds_0).o \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
 	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
+	$(MAIN)/$(OBJ)/$(hp_1).o \
 #--ADD_TO_PACK
 	ar -rcs $(MAIN)/$(LIB)/lib$(LIB_NAME).a $(MAIN)/$(OBJ)/*.o
 
@@ -68,6 +73,7 @@ compile_test: $(MAIN)/$(OBJ)/$(DS).o \
 	$(MAIN)/$(OBJ)/$(ds_0).o \
 	$(MAIN)/$(OBJ)/$(hp_0).o \
 	$(MAIN)/$(OBJ)/$(hp_DEP_0_1).o \
+	$(MAIN)/$(OBJ)/$(hp_1).o \
 #--ADD_TO_COMPILE_TEST
 
 run_apps: pack compile_apps
@@ -105,6 +111,8 @@ clean_external:
 	rm -rf $(MAIN)/$(INCLUDE)/$(hp_0).h
 	rm -rf $(MAIN)/$(SRC)/$(hp_DEP_0_1).c
 	rm -rf $(MAIN)/$(INCLUDE)/$(hp_DEP_0_1).h
+	rm -rf $(MAIN)/$(SRC)/$(hp_1).c
+	rm -rf $(MAIN)/$(INCLUDE)/$(hp_1).h
 #--ADD_TO_CLEAN
 	rm -rf $(MAIN)/$(SRC)/unity.c
 	rm -rf $(MAIN)/$(INCLUDE)/unity.h

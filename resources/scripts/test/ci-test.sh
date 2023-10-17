@@ -6,6 +6,7 @@ HELPERS=(
 ExceptionHandler
 Node
 Vertex
+Edge
 ) #--H
 
 DS=(

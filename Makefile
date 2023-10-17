@@ -15,6 +15,7 @@ UWG2 = $(MAIN)/UndirectedWeightedGraph2
 EH = $(HELPERS)/ExceptionHandler
 N = $(HELPERS)/Node
 V = $(HELPERS)/Vertex
+E = $(HELPERS)/Edge
 #--NEW_HELPER_DIR
 
 APP = LIBDS
@@ -48,8 +49,9 @@ ED11 = undirected_weighted_graph2
 H1 = exception_handler
 H2 = node
 H3 = vertex
+H4 = edge
 #--ADD_NEW_HELPER
-#H4
+#H5
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -78,6 +80,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(N)/$(MAIN)/$(SRC)/$(H2).c $(APP)/$(AUX)/$(SRC)
 	cp $(V)/$(MAIN)/$(SRC)/$(H3).c $(APP)/$(AUX)/$(SRC)
 	cp $(UWG2)/$(MAIN)/$(SRC)/$(ED11).c $(APP)/$(AUX)/$(SRC)
+	cp $(E)/$(HELPERS)/$(SRC)/$(H4).c $(APP)/$(AUX)/$(SRC)
 #--GET_SRC
 
 --private-get_headers:
@@ -95,6 +98,7 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(N)/$(MAIN)/$(INCLUDE)/$(H2).h $(APP)/$(INCLUDE)
 	cp $(V)/$(MAIN)/$(INCLUDE)/$(H3).h $(APP)/$(INCLUDE)
 	cp $(UWG2)/$(MAIN)/$(INCLUDE)/$(ED11).h $(APP)/$(INCLUDE)
+	cp $(E)/$(HELPERS)/$(INCLUDE)/$(H4).h $(APP)/$(INCLUDE)
 #--GET_H
 
 --private-get_eds: --private-create_lib --private-get_srcs --private-get_headers
@@ -127,6 +131,7 @@ compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(H2).o \
 	$(APP)/$(AUX)/$(OBJ)/$(H3).o \
 	$(APP)/$(AUX)/$(OBJ)/$(ED11).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H4).o \
 #--ADD_TO_COMPILE
 	ar -rcs $(APP)/$(LIB)/lib$(LIB_NAME).a $(APP)/$(AUX)/$(OBJ)/*.o
 	rm -rf $(APP)/$(AUX)
