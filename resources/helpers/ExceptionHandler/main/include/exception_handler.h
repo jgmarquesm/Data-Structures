@@ -28,6 +28,22 @@ typedef struct _exception_response {
 
 /**
  *
+ * @param throws
+ * @param error_message
+ * @param suppress
+ * @return
+ */
+ExceptionResponse *ExceptionHandler_create(bool throws, char *error_message, bool suppress);
+/**
+ *
+ * @param function_name
+ * @param field_name
+ * @param error_message_core
+ * @return The error message
+ */
+char *ExceptionHandler_build_error_message(const char *function_name, const char* field_name, const char *error_message_core);
+/**
+ *
  * @param function -> Function that throws (or not) the Exception.
  * @param field -> Field Name to verify the condition of throw.
  * @param value -> Value of the Field to verify the condition of throw.
@@ -121,7 +137,6 @@ variadic_declare(ExceptionResponse *, ExceptionHandler_is_not_sorted, char *func
 ExceptionResponse *ExceptionHandler_is_out_of_bounds(char *function, char *field, long value, long max_index, bool suppress);
 variadic_declare(ExceptionResponse *, ExceptionHandler_is_out_of_bounds, char *function; char *field; long value; long max_index; bool suppress;)
 #define ExceptionHandler_is_out_of_bounds(...) function_link(ExceptionHandler_is_out_of_bounds, __VA_ARGS__)
-
 /**
  *
  * @param argc -> Number of ExceptionHandlers to verify if throws.

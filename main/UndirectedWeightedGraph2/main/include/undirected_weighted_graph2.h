@@ -6,8 +6,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#ifdef __DEFAULT_LONG__
-    #undef __DEFAULT_LONG__
+#ifdef __DEFAULT_FLOAT__
+    #undef __DEFAULT_FLOAT__
 #endif
 #ifdef __DEFAULT_SIZE_T__
     #undef __DEFAULT_SIZE_T__
@@ -34,7 +34,7 @@
     #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
 #endif
 
-#define __DEFAULT_LONG__ -1
+#define __DEFAULT_FLOAT__ 0.0
 #define __DEFAULT_SIZE_T__ 0
 #define __DEFAULT_BOOL__ false
 #define __NOT_DEFAULT_BOOL__ true
@@ -54,6 +54,8 @@ UndirectedWeightedGraph2 *UndirectedWeightedGraph2_create();
 
 bool UndirectedWeightedGraph2_insert_Vertex(UndirectedWeightedGraph2 *uwg, void *data);
 
-bool UndirectedWeightedGraph2_add_Edge(UndirectedWeightedGraph2 *uwg, size_t src_vertex, size_t dest_vertex, float weight);
+bool UndirectedWeightedGraph2_add_Edge(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index, float weight);
+
+float UndirectedWeightedGraph2_edge_weight(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index);
 
 #endif

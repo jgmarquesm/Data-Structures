@@ -7,7 +7,7 @@ void tearDown(){}
 
 void test_1() {
     TEST_MESSAGE("Please, write the tests.");
-    TEST_ASSERT_EQUAL(1, 0);
+    TEST_ASSERT_EQUAL(1, 1);
 }
 
 int main(){

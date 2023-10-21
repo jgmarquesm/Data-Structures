@@ -6,8 +6,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 
-#ifdef __DEFAULT_LONG__
-    #undef __DEFAULT_LONG__
+#ifdef __DEFAULT_FLOAT__
+    #undef __DEFAULT_FLOAT__
 #endif
 #ifdef __DEFAULT_SIZE_T__
     #undef __DEFAULT_SIZE_T__
@@ -34,7 +34,7 @@
     #undef __TYPE_PRINT_FUNCTION_SIGNATURE__
 #endif
 
-#define __DEFAULT_LONG__ -1
+#define __DEFAULT_FLOAT__ 0.0
 #define __DEFAULT_SIZE_T__ 0
 #define __DEFAULT_BOOL__ false
 #define __NOT_DEFAULT_BOOL__ true
@@ -53,5 +53,13 @@ typedef struct _edge Edge;
 Edge *Edge_create(size_t src_vertex, size_t dest_vertex, float weight);
 
 bool Edge_add(Edge *edge, size_t src_vertex, size_t dest_vertex, float weight);
+
+Edge *Edge_get_at(Edge *edge, size_t src_index, size_t dest_index);
+
+float Edge_get_weight(Edge *edge);
+
+bool Edge_exists(Edge *edge, size_t src_index, size_t dest_index);
+
+Edge *Edge_get_next(Edge *edge);
 
 #endif
