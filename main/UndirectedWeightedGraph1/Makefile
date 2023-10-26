@@ -17,10 +17,10 @@ ds_FOLDER_1 = ../Array/$(MAIN)
 #--ADD_FOLDER_NEW_ds
 
 # Names Definition
-APP_NAME = app_undirected_weighted_graph_1
-LIB_NAME = uwg
-DS = undirected_weighted_graph_1
-TEST_DS = undirected_weighted_graph_1.test
+APP_NAME = app_undirected_weighted_graph1
+LIB_NAME = UWG1
+DS = undirected_weighted_graph1
+TEST_DS = undirected_weighted_graph1.test
 UNITY = ../../resources/unity
 DEPS = ../../resources/scripts/dependencies
 INSTALL = install.sh

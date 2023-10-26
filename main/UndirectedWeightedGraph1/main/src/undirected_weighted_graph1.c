@@ -4,20 +4,20 @@
 #include "../include/matrix.h"
 #include "../include/array.h"
 //#--ADD_TO_INCLUDE
-#include "../include/undirected_weighted_graph_1.h"
+#include "../include/undirected_weighted_graph1.h"
 
 void _print_adjacency(void *value) {
     printf("%.2f", *((float *) value));
 }
 
-typedef struct _undirected_weighted_graph_1 {
+typedef struct _undirected_weighted_graph1 {
     long capacity;
     long size;
     Array *vertices;
     Matrix *adjacency_matrix;
 } UndirectedWeightedGraph1;
 
-const size_t size_of_undirected_weighted_graph_type = sizeof(UndirectedWeightedGraph1);
+const size_t size_of_undirected_weighted_graph1_type = sizeof(UndirectedWeightedGraph1);
 
 long _vertex_index(UndirectedWeightedGraph1 *uwg, void *data) {
     for (long i = 0; i < uwg->size; i++) {
@@ -86,7 +86,7 @@ UndirectedWeightedGraph1 *UndirectedWeightedGraph1_create(const long max_of_vert
         )
     ) return NULL;
 
-    UndirectedWeightedGraph1 *uwg = (UndirectedWeightedGraph1 *) calloc(1, size_of_undirected_weighted_graph_type);
+    UndirectedWeightedGraph1 *uwg = (UndirectedWeightedGraph1 *) calloc(1, size_of_undirected_weighted_graph1_type);
     uwg->capacity = max_of_vertices;
     uwg->size = 0;
 

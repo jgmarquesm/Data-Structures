@@ -1,5 +1,5 @@
 #include "../../main/include/unity.h"
-#include "../../main/include/undirected_weighted_graph_1.h"
+#include "../../main/include/undirected_weighted_graph1.h"
 #include <stdio.h>
 
 #define TYPE int

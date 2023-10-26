@@ -168,9 +168,9 @@ Here _Undirected Weighted Graph_ were implemented with an adjacency matrix and [
 where the rows and columns correspond to the vertices of the graph, and the values in the matrix represent the 
 weights of the edges between those vertices.
 
-[Click here to see its Spec.](main/UndirectedWeightedGraph1/main/include/undirected_weighted_graph_1.h)
+[Click here to see its Spec.](main/UndirectedWeightedGraph1/main/include/undirected_weighted_graph1.h)
 
-[Click here to see its implementation.](main/UndirectedWeightedGraph1/main/src/undirected_weighted_graph_1.c)
+[Click here to see its implementation.](main/UndirectedWeightedGraph1/main/src/undirected_weighted_graph1.c)
 
 #### Adjacency Linked List Version
 
