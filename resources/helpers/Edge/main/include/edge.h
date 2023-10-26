@@ -58,8 +58,14 @@ Edge *Edge_get_at(Edge *edge, size_t src_index, size_t dest_index);
 
 float Edge_get_weight(Edge *edge);
 
+bool Edge_set_weight(Edge *edge, float new_weight);
+
 bool Edge_exists(Edge *edge, size_t src_index, size_t dest_index);
 
-Edge *Edge_get_next(Edge *edge);
+bool Edge_remove(Edge *edge);
+
+bool Edge_remove_at(Edge *edge, size_t src_index, size_t dest_index);
+
+bool Edge_remove_edges_with_index(Edge *edge, size_t vertex_index);
 
 #endif

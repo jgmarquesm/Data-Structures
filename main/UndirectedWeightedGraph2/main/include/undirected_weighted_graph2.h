@@ -56,6 +56,14 @@ bool UndirectedWeightedGraph2_insert_Vertex(UndirectedWeightedGraph2 *uwg, void 
 
 bool UndirectedWeightedGraph2_add_Edge(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index, float weight);
 
-float UndirectedWeightedGraph2_edge_weight(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index);
+float UndirectedWeightedGraph2_get_weight(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index);
+
+bool UndirectedWeightedGraph2_set_weight(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index, float new_weight);
+
+bool UndirectedWeightedGraph2_is_empty(void *uwg);
+
+bool UndirectedWeightedGraph2_remove_Vertex(UndirectedWeightedGraph2 *uwg, size_t vertex_index);
+
+bool UndirectedWeightedGraph2_remove_Edge(UndirectedWeightedGraph2 *uwg, size_t source_vertex_index, size_t destination_vertex_index);
 
 #endif

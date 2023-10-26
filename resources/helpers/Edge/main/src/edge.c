@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <stdio.h>
 //#--ADD_TO_INCLUDE
 #include "../include/edge.h"
 
@@ -6,6 +8,7 @@ typedef struct _edge {
     size_t destination_index;
     float weight;
     struct _edge *next;
+    struct _edge *prev;
 } Edge;
 
 const size_t size_of_edge_type = sizeof(Edge);
@@ -22,6 +25,7 @@ Edge *Edge_create(size_t src_index, size_t dest_index, float weight) {
     edge->destination_index = dest_index;
     edge->weight = weight;
     edge->next = __DEFAULT_PTR__;
+    edge->prev = __DEFAULT_PTR__;
     return edge;
 }
 
@@ -34,6 +38,7 @@ bool Edge_add(Edge *edge, size_t src_index, size_t dest_index, float weight) {
         )
     ) return __DEFAULT_BOOL__;
     Edge *next = Edge_create(src_index, dest_index, weight);
+    next->prev = edge;
     Edge *temp_edge = edge;
     while (temp_edge->next != __DEFAULT_PTR__) {
         temp_edge = temp_edge->next;
@@ -69,10 +74,20 @@ float Edge_get_weight(Edge *edge) {
     return edge->weight;
 }
 
+bool Edge_set_weight(Edge *edge, float new_weight) {
+    if (anyThrows(
+            1,
+            ExceptionHandler_is_null("Edge_set_weight", "Edge", edge, __SUPPRESS_PRINT_ERROR__)
+        )
+    ) return __DEFAULT_BOOL__;
+    edge->weight = new_weight;
+    return edge->weight == new_weight;
+}
+
 bool Edge_exists(Edge *edge, size_t src_index, size_t dest_index) {
-    if (edge == NULL
-        || anyThrows(
-            2,
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Edge_exists", "Edge", edge, __NOT_DEFAULT_BOOL__),
             ExceptionHandler_is_non_positive("Edge_exists", "Source Index", src_index, __NOT_DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__),
             ExceptionHandler_is_non_positive("Edge_exists", "Destination Index", dest_index, __NOT_DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__)
         )
@@ -87,11 +102,43 @@ bool Edge_exists(Edge *edge, size_t src_index, size_t dest_index) {
     return __DEFAULT_BOOL__;
 }
 
-Edge *Edge_get_next(Edge *edge) {
+bool Edge_remove(Edge *edge) {
     if (anyThrows(
             1,
-            ExceptionHandler_is_null("Edge_get_next", "Edge", edge, __SUPPRESS_PRINT_ERROR__)
+            ExceptionHandler_is_null("Edge_remove", "Edge", edge, __SUPPRESS_PRINT_ERROR__)
         )
-    ) return __DEFAULT_PTR__;
-    return edge->next;
+    ) return __DEFAULT_BOOL__;
+    if (edge->prev != __DEFAULT_PTR__) edge->prev->next = edge->next;
+    if (edge->next != __DEFAULT_PTR__) edge->next->prev = edge->prev;
+    free(edge);
+    return __NOT_DEFAULT_BOOL__;
+}
+
+bool Edge_remove_at(Edge *edge, size_t src_index, size_t dest_index) {
+    if (anyThrows(
+            3,
+            ExceptionHandler_is_null("Edge_remove_at", "Edge", edge, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_non_positive("Edge_remove_at", "Source Index", src_index, __NOT_DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_non_positive("Edge_remove_at", "Destination Index", dest_index, __NOT_DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__)
+        )
+    ) return __DEFAULT_BOOL__;
+    Edge *edge_to_remove = Edge_get_at(edge, src_index, dest_index);
+    return Edge_remove(edge_to_remove);
+}
+
+bool Edge_remove_edges_with_index(Edge *edge, size_t vertex_index) {
+    if (anyThrows(
+            2,
+            ExceptionHandler_is_null("Edge_remove_edges_with_index", "Edge", edge, __SUPPRESS_PRINT_ERROR__),
+            ExceptionHandler_is_non_positive("Edge_remove_edges_with_index", "Vertex index", vertex_index, __NOT_DEFAULT_BOOL__, __SUPPRESS_PRINT_ERROR__)
+        )
+    ) return __DEFAULT_BOOL__;
+    Edge *temp_edge = edge;
+    while (temp_edge != __DEFAULT_BOOL__) {
+        if (temp_edge->source_index == vertex_index || temp_edge->destination_index == vertex_index) {
+            if (!Edge_remove(temp_edge)) return __DEFAULT_BOOL__;
+        }
+        temp_edge = temp_edge->next;
+    }
+    return __NOT_DEFAULT_BOOL__;
 }
