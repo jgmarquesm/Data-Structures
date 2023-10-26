@@ -24,6 +24,7 @@ HELPERS=(
 ExceptionHandler
 Node
 Vertex
+Edge
 ) #--H
 
 DS=(
@@ -37,6 +38,7 @@ StaticQueue
 DynamicQueue
 Matrix
 UndirectedWeightedGraph1
+UndirectedWeightedGraph2
 ) #--DS
 
 function _delta_T_in_ms() {
