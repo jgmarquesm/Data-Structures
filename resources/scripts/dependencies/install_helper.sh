@@ -203,6 +203,8 @@ echo "${CYAN}Select a new dependency to add:${WHITE}
 ${PURPLE}1 )${WHITE} Exception Handler
 ${PURPLE}2 )${WHITE} Node
 ${PURPLE}3 )${WHITE} Vertex
+${PURPLE}4 )${WHITE} Edge
+${PURPLE}5 )${WHITE} Full Vertex
 ${NO_COLOR}" #--H
 
 read -r SELECTION
@@ -211,6 +213,8 @@ case ${SELECTION} in
     1 ) DEPENDENCY="ExceptionHandler";;
     2 ) DEPENDENCY="Node";;
     3 ) DEPENDENCY="Vertex";;
+		4 ) DEPENDENCY="Edge";;
+    5 ) DEPENDENCY="FullVertex";;
 #--ADD_NEW_OPT
     * )
       echo "${YELLOW}Invalid selection: ${RED}${SELECTION}.${NO_COLOR}"

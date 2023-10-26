@@ -10,10 +10,13 @@ SQ = $(MAIN)/StaticQueue
 DQ = $(MAIN)/DynamicQueue
 MAT = $(MAIN)/Matrix
 UWG1 = $(MAIN)/UndirectedWeightedGraph1
+UWG2 = $(MAIN)/UndirectedWeightedGraph2
 #--NEW_DS_DIR
 EH = $(HELPERS)/ExceptionHandler
 N = $(HELPERS)/Node
 V = $(HELPERS)/Vertex
+E = $(HELPERS)/Edge
+FV = $(HELPERS)/FullVertex
 #--NEW_HELPER_DIR
 
 APP = LIBDS
@@ -41,13 +44,16 @@ ED7 = static_queue
 ED8 = dynamic_queue
 ED9 = matrix
 ED10 = undirected_weighted_graph_1
+ED11 = undirected_weighted_graph2
 #--ADD_NEW_DS
-#DS11
+#DS12
 H1 = exception_handler
 H2 = node
 H3 = vertex
+H4 = edge
+H5 = full_vertex
 #--ADD_NEW_HELPER
-#H4
+#H6
 
 # Compilation Flags
 FLAGS = -O3 -Wall -pedantic -Warray-bounds -Werror
@@ -75,6 +81,9 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(EH)/$(MAIN)/$(SRC)/$(H1).c $(APP)/$(AUX)/$(SRC)
 	cp $(N)/$(MAIN)/$(SRC)/$(H2).c $(APP)/$(AUX)/$(SRC)
 	cp $(V)/$(MAIN)/$(SRC)/$(H3).c $(APP)/$(AUX)/$(SRC)
+	cp $(E)/$(HELPERS)/$(SRC)/$(H4).c $(APP)/$(AUX)/$(SRC)
+	cp $(FV)/$(HELPERS)/$(SRC)/$(H5).c $(APP)/$(AUX)/$(SRC)
+	cp $(UWG2)/$(MAIN)/$(SRC)/$(ED11).c $(APP)/$(AUX)/$(SRC)
 #--GET_SRC
 
 --private-get_headers:
@@ -91,6 +100,9 @@ LIBS = -l$(LIB_NAME) -L $(LIB)
 	cp $(EH)/$(MAIN)/$(INCLUDE)/$(H1).h $(APP)/$(INCLUDE)
 	cp $(N)/$(MAIN)/$(INCLUDE)/$(H2).h $(APP)/$(INCLUDE)
 	cp $(V)/$(MAIN)/$(INCLUDE)/$(H3).h $(APP)/$(INCLUDE)
+	cp $(E)/$(HELPERS)/$(INCLUDE)/$(H4).h $(APP)/$(INCLUDE)
+	cp $(FV)/$(HELPERS)/$(INCLUDE)/$(H5).h $(APP)/$(INCLUDE)
+	cp $(UWG2)/$(MAIN)/$(INCLUDE)/$(ED11).h $(APP)/$(INCLUDE)
 #--GET_H
 
 --private-get_eds: --private-create_lib --private-get_srcs --private-get_headers
@@ -122,6 +134,9 @@ compile: $(APP)/$(AUX)/$(OBJ)/$(ED1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(H1).o \
 	$(APP)/$(AUX)/$(OBJ)/$(H2).o \
 	$(APP)/$(AUX)/$(OBJ)/$(H3).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H4).o \
+	$(APP)/$(AUX)/$(OBJ)/$(H5).o \
+	$(APP)/$(AUX)/$(OBJ)/$(ED11).o \
 #--ADD_TO_COMPILE
 	ar -rcs $(APP)/$(LIB)/lib$(LIB_NAME).a $(APP)/$(AUX)/$(OBJ)/*.o
 	rm -rf $(APP)/$(AUX)
